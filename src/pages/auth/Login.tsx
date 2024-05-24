@@ -1,0 +1,96 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '../../store';
+import React, { useEffect, useState } from 'react';
+import { setCrmToken, setPageTitle, setUserData } from '../../store/themeConfigSlice';
+import axios from 'axios';
+import PageLoader from '../../components/PageLoader';
+import EmailLogin from './EmailLogin';
+
+const Login = () => {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    const crmData = useSelector((state: IRootState) => state.themeConfig.crmData);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        crmToken ? checkTokenValidity() : (
+            dispatch(setCrmToken('')),
+            dispatch(setUserData({})),
+            setIsLoading(false),
+            dispatch(setPageTitle('Login'))
+        )
+    }, [])
+
+    const checkTokenValidity = async () => {
+        setIsLoading(true)
+        try {
+            const response = await axios({
+                method: 'get',
+                url: window.location.origin + "/api/dashboard/check-login-validity",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + crmToken,
+                },
+            });
+            if (response.data.status == 'success' && response.data.action == "redirect") navigate('/')
+            else if (response.data.status == 'success' && response.data.action == "login") {
+                dispatch(setCrmToken(''))
+                dispatch(setUserData({}))
+            }
+
+        } catch (error) {
+
+        } finally {
+            setIsLoading(false)
+        }
+    }
+    const [isEmailLogin, setIsEmailLogin] = useState(true);
+    return (
+        <>
+            {isLoading ? <PageLoader /> : (
+                <div>
+                    <div style={{  fontFamily: 'Poppins'}} className="relative flex min-h-screen items-center justify-center bg-cover bg-[url(/restaurant/kot/images/auth/login-bg.jpeg)] bg-[#323232] bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
+                        <div className="relative flex w-full max-w-[1502px] flex-col justify-between bg-cover bg-center bg-no-repeat overflow-hidden rounded-md    dark:bg-black/50  lg:flex-row lg:gap-10 xl:gap-0">
+
+                            <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6">
+                                <div className="w-full max-w-[440px] bg-white rounded-xl lg:mt-16 p-10">
+                                    {isEmailLogin && <EmailLogin />}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    )
+
+    // const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+    // const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+    // const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+    // const setLocale = (flag: string) => {
+    //     setFlag(flag);
+    //     if (flag.toLowerCase() === 'ae') {
+    //         dispatch(toggleRTL('rtl'));
+    //     } else {
+    //         dispatch(toggleRTL('ltr'));
+    //     }
+    // };
+    // const [flag, setFlag] = useState(themeConfig.locale);
+    // const [showLoginForm, setShowLoginForm] = useState(true);
+
+    // const toggleLoginForm = () => {
+    //     setShowLoginForm(!showLoginForm);
+    // };
+
+    // const submitForm = () => {
+    //     navigate('/dashboard');
+    // };
+
+
+};
+
+export default Login;
