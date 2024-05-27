@@ -71,7 +71,7 @@ const AddFeatures = () => {
               <img
                 // src={delet}
                 alt=""
-                srcset=""
+               
                 className=" w-[22px] h-[22px]"
               />
             </div>
@@ -90,7 +90,7 @@ const AddFeatures = () => {
                 <img
                 //   src={plus}
                   alt=""
-                  srcset=""
+                 
                   className=" w-[18px] h-[18px]"
                 />
               </div>

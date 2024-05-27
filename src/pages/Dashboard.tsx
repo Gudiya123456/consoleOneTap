@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,20 +6,16 @@ import ReactApexChart from 'react-apexcharts';
 import { setPageTitle } from '../store/themeConfigSlice'
 import PageLoader from '../components/PageLoader'
 import axios from 'axios';
-import { BsFillPersonVcardFill } from 'react-icons/bs';
-import { HiBuildingStorefront } from 'react-icons/hi2';
-import { MdVerifiedUser } from 'react-icons/md';
-import { IoFastFood } from 'react-icons/io5';
 import box1 from '../assets/images/box1.png';
-
 import box2 from '../assets/images/box2.png';
 import box3 from '../assets/images/box3.png';
 const Index = () => {
     const dispatch = useDispatch();
     const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
     const navigate = useNavigate();
-    const [homeData, setHomeData] = useState([])
+    const [homeData, setHomeData] = useState<string[]>([]);
     const colors = useSelector((state: IRootState) => state.themeConfig.colors);
+    
 
     useEffect(() => {
         dispatch(setPageTitle('Console'));
@@ -28,6 +23,7 @@ const Index = () => {
     }, [crmToken]);
 
     const [isLoading, setIsLoading] = useState(true);
+
 
     const fetchHomeData = async () => {
         try {
@@ -41,11 +37,10 @@ const Index = () => {
                     Authorization: 'Bearer ' + crmToken,
                 },
             });
-            console.log(" Home Data", response.data);
             if (response.data.status == 'success') {
                 setHomeData(response.data);
             }
-        } catch (error) {
+        } catch (error:any) {
             if (error.response.status == 401) navigate('/login')
         } finally {
             setIsLoading(false)
@@ -88,7 +83,9 @@ const Index = () => {
              className={`${colors == '#C65BCF' || colors == "#03AED2" || colors == "#344C64" || colors == "#0A6847" ? " text-white "
              : 'dark:text-white text-black '} ml-7 font-bold text-4xl`}
 
-            >{homeData.restaurants}</h1>
+            >
+                {homeData?.restaurants}
+                </h1>
         </div>
         <div
         className={`${colors == '#C65BCF' ? "bg-[#C65BCF] text-white "
@@ -102,7 +99,7 @@ const Index = () => {
             <img
                 src={box1}
                 alt=""
-                srcset=""
+              
                 className=" object-contain  w-12 h-12 "
             />
         </div>
@@ -137,7 +134,9 @@ const Index = () => {
              className={`${colors == '#C65BCF' || colors == "#03AED2" || colors == "#344C64" || colors == "#0A6847" ? " text-white "
              : 'dark:text-white text-black '} ml-7 font-bold text-4xl`}
 
-            >{homeData.employees}</h1>
+            >
+                {homeData?.employees}
+            </h1>
         </div>
         <div
         className={`${colors == '#C65BCF' ? "bg-[#C65BCF] text-white "
@@ -151,7 +150,7 @@ const Index = () => {
             <img
                 src={box2}
                 alt=""
-                srcset=""
+               
                 className=" object-contain  w-12 h-12 "
             />
         </div>

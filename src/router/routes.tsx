@@ -9,30 +9,21 @@ import Payment from '../pages/payment/Index';
 
 import Features from '../pages/features/Index';
 import Roles from '../pages/roles/Roles';
-import RestaurantView from '../pages/restaurant/Show';
 import Login from '../pages/auth/Login';
-import ForgotPassword from '../pages/auth/ForgotPassword';
 import Banner from '../pages/public-site/Banner';
 import Integration from '../pages/public-site/Integration';
-import Settings from '../pages/public-site/Settings';
-import View from '../pages/roles/View';
 import Demorequest from '../pages/public-site/Demorequest';
 import RolesView from '../pages/roles/View';
 import SettingsIndex from '../pages/public-site/Index';
-import Profile from '../pages/profile/Index';
 import Support from '../pages/support/Support';
 import Billing from '../pages/billing/Billing';
 import Invoice from '../pages/invoice/Invoice';
 import NewForgot from '../pages/auth/NewForgot';
 import NewResetPassword from '../pages/auth/NewResetPassword';
+import Show from '../pages/restaurant/Show';
 
 const routes = [
-    // dashboard
-    // {
-    //     path: '/',
-    //     element: <Index/>,
-    //     layout: 'blank',
-    // },
+
     {
         path: '/login',
         element: <Login />,
@@ -62,16 +53,12 @@ const routes = [
         layout: 'default',
     },
     {
-        path: '/restaurants/view',
-        element: <RestaurantView />,
+        path: '/restaurant/view',
+        element: <Show/>,
         layout: 'default',
     },
-    {
-        path: '/profile',
-        element: <Profile />,
-        layout: 'default',
-    },
-
+   
+  
 
 
     //Authorization

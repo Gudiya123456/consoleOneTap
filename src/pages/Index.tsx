@@ -25,7 +25,7 @@ const Index = () => {
                 },
             });
             console.log(response)
-        } catch (error) {
+        } catch (error:any) {
             if (error.response.status == 401) navigate('/login')
         } finally {
             setIsLoading(false)

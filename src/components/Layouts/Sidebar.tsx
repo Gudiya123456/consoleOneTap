@@ -32,15 +32,6 @@ import lightlogo from '../../assets/images/lightlogo.svg'
 import leftmenubLight from '../../assets/images/leftmenubLight.svg'
 import llogo from "../../assets/images/Group 319 (1).svg";
 
-
-import sidelogo2 from '../../assets/images/Group 208.svg'
-import sidelogo from '../../assets/images/Untitled design.png'
-import sidelogo1 from '../../assets/images/Untitled design (1).png'
-
-import sidelogoblack from '../../assets/images/Untitled design (3).png'
-
-import pinkbottom1 from '../../assets/images/pinkbottom.png'
-
 // images for sidebar icons for dashboard
 import skydashboard from "../../assets/images/sidebarIcons/skydashboard.svg"
 import pinkdashboard from "../../assets/images/sidebarIcons/pinkdashboard.svg"
@@ -112,19 +103,10 @@ const Sidebar = () => {
     const path = window.location.pathname
     // console.log(window.location.pathname)
     const [currentMenu, setCurrentMenu] = useState<string>("");
-    const [errorSubMenu, setErrorSubMenu] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-    const restaurantData = useSelector((state: IRootState) => state.themeConfig.restaurantData);
-    // localStorage.setItem("selcolor", selectedcolor);
-    // const selcolor = localStorage.getItem("selcolor");
-    //    console.log("selcolor",selcolor);
-
-    // console.log("themeConfig.theme",themeConfig.theme)
-
-    const userData = useSelector((state: IRootState) => state.themeConfig.userData);
     const colors = useSelector((state: IRootState) => state.themeConfig.colors);
 
-    console.log('selected color', colors);
+ 
 
 
 

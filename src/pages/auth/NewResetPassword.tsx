@@ -122,12 +122,12 @@ const NewForgot = () => {
             </h1>
 
             <div style={{fontFamily:'Roboto', fontWeight:200, fontStyle:'normal', fontSize:'14px'}}>
-                <input type="password" value={params.password} name='password' onChange={(e) => changeValue(e)} placeholder='New Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm font-robotoLight  text-black mb-1 " />
+                <input type="password" value={params.password} name='password' onChange={(e) => changeValue(e)} placeholder='New Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm font-normal  text-black mb-1 " />
 
                 <span className="text-danger font-semibold text-sm p-2">{errors.password}</span>
             </div>
             <div style={{fontFamily:'Roboto', fontWeight:200, fontStyle:'normal', fontSize:'14px'}}>
-                <input type="password" value={params.password_confirmation} name='password_confirmation' onChange={(e) => changeValue(e)} placeholder='Confirm Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm focus font-robotoLight text-black mb-1 " />
+                <input type="password" value={params.password_confirmation} name='password_confirmation'  onChange={(e) => changeValue(e)} placeholder='Confirm Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm focus font-normal text-black mb-1 " />
 
                 <span className="text-danger font-semibold text-sm p-2">{errors.password_confirmation}</span>
             </div>

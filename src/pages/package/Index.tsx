@@ -51,7 +51,6 @@ const Pricing = () => {
           <img
             src={plus}
             alt=""
-            srcset=""
             className=" w-[18px] h-[18px] cursor-pointer"
           />
           <h5 className=" text-sm font-semibold">Add Pricing</h5>
@@ -60,7 +59,6 @@ const Pricing = () => {
           <img
             src={plus}
             alt=""
-            srcset=""
             className=" w-[18px] h-[18px] cursor-pointer"
           />
           <h5 className=" text-sm font-semibold">Add Features</h5>
@@ -348,7 +346,6 @@ const Pricing = () => {
                       <img
                         src={leftarrow}
                         alt=""
-                        srcset=""
                         className=" object-contain w-[15px] h-[15px] "
                         onClick={() => {
                           setModal(false);
@@ -386,7 +383,6 @@ const Pricing = () => {
                             <img
                               src={rupee}
                               alt=""
-                              srcset=""
                               className=" w-[22px] h-[22px]"
                             />
                             <h4 className=" ml-3">Indian rupee</h4>
@@ -428,7 +424,6 @@ const Pricing = () => {
                             <img
                               src={dirham}
                               alt=""
-                              srcset=""
                               className=" w-[22px] h-[22px]"
                             />
                             <h4 className=" ml-3">Dirham</h4>
@@ -470,7 +465,6 @@ const Pricing = () => {
                             <img
                               src={pound}
                               alt=""
-                              srcset=""
                               className=" w-[22px] h-[22px]"
                             />
                             <h4 className=" ml-3">Pound</h4>

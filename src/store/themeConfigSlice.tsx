@@ -6,7 +6,6 @@ const defaultState = {
     isDarkMode: false,
     mainLayout: 'app',
     theme: 'light',
-    colors:'',
     menu: 'horizontal',
     layout: 'full',
     rtlClass: 'ltr',
@@ -36,7 +35,8 @@ const defaultState = {
     crmToken: '',
     permissions: {},
     profile: {},
-    profileToken: ''
+    profileToken: '',
+    colors:'',
 };
 
 const initialState = {
@@ -70,12 +70,14 @@ const initialState = {
     ],
 
     crmToken: localStorage.getItem('crmToken') || themeConfig.crmToken,
-    userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,
-    crmData: JSON.parse(localStorage.getItem('crmData')) || themeConfig.crmData || themeConfig.crmData,
-    permissions: JSON.parse(localStorage.getItem('permissions')) || themeConfig.permissions,
-    profileData: JSON.parse(localStorage.getItem('profileData')) || themeConfig.profileData || themeConfig.profileData,
-    profileToken: localStorage.getItem('profileToken') || themeConfig.profileToken,
-    colors:localStorage.getItem('colors') || themeConfig.colors,
+    userData: localStorage.getItem('userData') || themeConfig.userData || themeConfig.userData,
+    crmData: localStorage.getItem('userData') || themeConfig.crmData || themeConfig.crmData,
+    
+    // crmData: JSON.parse(localStorage.getItem('crmData')) || themeConfig.crmData || themeConfig.crmData,
+    // permissions: JSON.parse(localStorage.getItem('permissions')) || themeConfig.permissions,
+    // profileData: JSON.parse(localStorage.getItem('profileData')) || themeConfig.profileData || themeConfig.profileData,
+    // profileToken: localStorage.getItem('profileToken') || themeConfig.profileToken,
+    colors: localStorage.getItem('colors') || themeConfig.colors,
 
 
 
@@ -91,11 +93,20 @@ const themeConfigSlice = createSlice({
             state.theme = payload;
             if (payload === 'light') {
                 state.isDarkMode = false;
+               if( state.colors=='black')
+                {
+                    state.colors='white'
+                }
             } else if (payload === 'dark') {
                 state.isDarkMode = true;
+                if( state.colors=='white')
+                    {
+                        state.colors='black'
+                    }
             }
 
             if (state.isDarkMode) {
+
                 document.querySelector('body')?.classList.add('dark');
             } else {
                 document.querySelector('body')?.classList.remove('dark');
@@ -151,13 +162,18 @@ const themeConfigSlice = createSlice({
             state.crmToken = payload;
         },
         setColors(state, { payload }) {
+            console.log('#####')
+            console.log('payload',payload)
+
+            console.log('#####')
+
             localStorage.setItem('colors', payload);
             state.colors = payload;
         },
-        setProfileToken(state, { payload }) {
-            localStorage.setItem('profileToken', payload);
-            state.profileToken = payload;
-        },
+        // setProfileToken(state, { payload }) {
+        //     localStorage.setItem('profileToken', payload);
+        //     state.profileToken = payload;
+        // },
 
         setUserData(state, { payload }) {
             localStorage.setItem('userData', JSON.stringify(payload));
@@ -166,22 +182,24 @@ const themeConfigSlice = createSlice({
         setCrmData(state, { payload }) {
             localStorage.setItem('crmData', JSON.stringify(payload));
             state.crmData = payload;
-            document.getElementById('favIcon').href = window.location.origin + '/storage/' + payload.fav_icon;
+            // document.getElementById('favIcon').href = window.location.origin + '/storage/' + payload.fav_icon;
+             document.getElementById('favIcon') as HTMLLinkElement | null;
+
         },
 
-        setPermissions(state, { payload }) {
-            localStorage.setItem('permissions', JSON.stringify(payload));
-            state.permissions = payload;
-        },
-        setProfileData(state, { payload }) {
-            localStorage.setItem('profileData', JSON.stringify(payload));
-            state.profileData = payload;
-        },
+        // setPermissions(state, { payload }) {
+        //     localStorage.setItem('permissions', JSON.stringify(payload));
+        //     state.permissions = payload;
+        // },
+        // setProfileData(state, { payload }) {
+        //     localStorage.setItem('profileData', JSON.stringify(payload));
+        //     state.profileData = payload;
+        // },
 
 
     },
 });
 
-export const {setColors, setPermissions, setCrmData, setProfileToken, setProfileData, setUserData, setCrmToken, toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleLocale, toggleSidebar, setPageTitle } = themeConfigSlice.actions;
+export const { setCrmData,setColors,  setUserData, setCrmToken, toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleLocale, toggleSidebar, setPageTitle } = themeConfigSlice.actions;
 
 export default themeConfigSlice.reducer;

@@ -1,308 +1,640 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import Swal from 'sweetalert2';
-import { setPageTitle } from '../../store/themeConfigSlice';
-import Dropdown from '../../components/Dropdown';
-import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../../store';
-import IconEye from '../../components/Icon/IconEye';
-import IconUserPlus from '../../components/Icon/IconUserPlus';
-import IconSearch from '../../components/Icon/IconSearch';
-import IconUser from '../../components/Icon/IconUser';
-import IconX from '../../components/Icon/IconX';
-import axios from 'axios';
-import Header from '../../components/Layouts/Header';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react'
+import { BsFillPersonVcardFill } from 'react-icons/bs'
+import restaurant from "../../assets/images/Service Bell.png"
+import restaurantd from "../../assets/images/Room Service (1).svg"
+import items from "../../assets/images/Food.svg"
+import employee from "../../assets/images/Users.svg"
+import next from "../../assets/images/Next page.svg"
+import gridbox from "../../assets/images/Maximize Window.svg"
 
-const RestaurantView = ({ id }) => {
-    const location = useLocation()
-    const navigate = useNavigate();
-    console.log(location)
-    const restaurantId = location.state.restaurantId
+import add from '../../assets/images/Add (2).svg'
+import delete1 from '../../assets/images/delete.svg'
 
+import grid1 from "../../assets/images/grid.svg"
+import view from "../../assets/images/view.svg"
 
-    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+import griddark from "../../assets/images/griddark.svg"
+import viewdark from "../../assets/images/viewdark.svg"
+import { useSelector } from 'react-redux'
+import nextwhite from "../../assets/images/nextwhite.svg"
+import nextblack from "../../assets/images/nextblack.svg"
+import edit from "../../assets/images/Edit.svg";
+import viewBlack from "../../assets/images/Group 188.svg";
+import GridWhite from "../../assets/images/View Module (2).svg";
+import GridBlack from "../../assets/images/View Module (3).svg";
+import gridSelect from "../../assets/images/Group 201.svg";
 
-    const [addContactModal, setAddContactModal] = useState<any>(false);
-    const [resList, setResList] = useState<any>([]);
-    const [activityList, setActivityList] = useState<any>([]);
-    const [branchList, setBranchList] = useState<any>([]);
-    const [data, setData] = useState<any>([]);
+import viewSelectD from "../../assets/images/Group 202.svg";
+import viewSelect from "../../assets/images/Group 203.svg";
+import box1 from '../../assets/images/box1.png';
+import box2 from '../../assets/images/box2.png';
+import box3 from '../../assets/images/box3.png';
 
-    const dispatch = useDispatch();
-    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+import { Dialog, Transition } from "@headlessui/react";
+import { IRootState } from '../../store'
 
-    useEffect(() => {
-        dispatch(setPageTitle('Restaurant'));
-        fetchRestaurantList();
-    }, []);
+const Cards = [
+    {
+        name: ' Total number of branches',
+        count: '23',
+        img: box1
+    }, {
+        name: 'Total number of  employees',
+        count: '08',
+        img: box2
+    },
+    {
+        name: 'Total number of items',
+        count: '230',
+        img: box3
+    }
+]
 
-    // fetch Restaurant data
-    const fetchRestaurantList = async () => {
-        try {
-            const response = await axios({
-                method: 'get',
-                // url: window.location.origin + "/api/restaurant/dashboard/branches",
-                url: window.location.origin + '/api/dashboard/restaurants/' + restaurantId,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + crmToken,
-                },
-            });
+export default function Show() {
+    const [deletes, setDelete] = useState(false);
+    const [grid, setGrid] = useState(false)
+    const themeConfig = useSelector((state: IRootState) => state.themeConfig);
 
-            setResList(response.data.restaurant);
-            setActivityList(response.data.activities)
-            setBranchList(response.data.branches)
-            setData(response.data.data);
+    const [model, setModal] = useState(false);
 
-            console.log('helloooo data:::', response.data);
-        } catch (error: any) {
-            if (error.response.status == 401) navigate('/login')
-           console.log(error)
-            // else ErrorHandle(error);
+    const filteredItems = [
+        {
+            ContactName: 'Ram',
+            Address: ' BTM Layout 8th cross',
+            City: 'Bangalore',
+            Country: 'India',
+            Status: '1',
+
+        },
+        {
+            ContactName: 'Ram',
+            Address: ' BTM Layout 8th cross',
+            City: 'Bangalore',
+            Country: 'India',
+            Status: '1',
+
+        },
+        {
+            ContactName: 'Ram',
+            Address: ' BTM Layout 8th cross',
+            City: 'Bangalore',
+            Country: 'India',
+            Status: '1',
+
+        },
+        {
+            ContactName: 'Ram',
+            Address: ' BTM Layout 8th cross',
+            City: 'Bangalore',
+            Country: 'India',
+            Status: '1',
+
         }
-    };
+    ]
 
-    const [filteredItems, setFilteredItems] = useState<any>(branchList);
-    const [search, setSearch] = useState<any>("");
-
-    useEffect(() => {
-        setFilteredItems(() => {
-            return branchList.filter((item: any) => {
-                return item.branch_name
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
-            });
-        });
-    }, [search, branchList]);
-
-
-
-
-
+    const Activities=[
+        {
+            branch_name:'Seasons (Main Branch)',
+            date:'11/05/2024 | 12:23pm',
+            message:'Employee added a waiter',
+        },
+        {
+            branch_name:' Branch name : Seasons ( BTM )',
+            date:'08/05/2024 | 11:30am',
+            message:'Employee Changed manager name',
+        },
+        {
+            branch_name:'Manager removed Employee',
+            date:'11/05/2024 | 12:23pm',
+            message:' Seasons (Main Branch)',
+        },
+        {
+            branch_name:'Manager removed Employee',
+            date:'11/05/2024 | 12:23pm',
+            message:' Seasons (Main Branch)',
+        },
+        {
+            branch_name:'Manager removed Employee',
+            date:'11/05/2024 | 12:23pm',
+            message:' Seasons (Main Branch)',
+        }
+    ]
 
     return (
-        <div>
+        <div className=' font-robotoLight'>
+            <div className='flex justify-end gap-3 mb-5' >
 
-            <div className='p-4' >
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6 text-white">
-                    <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
-                        <div className="flex justify-between">
-                            <div className="ltr:mr-1 rtl:ml-1 text-xl font-semibold">Branches</div>
-                        </div>
-                        <div className="flex items-center mt-5">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {data.branches}</div>
-                        </div>
-                        {/* <div className="flex items-center font-semibold mt-5">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 70
-                        </div> */}
-                    </div>
-
-                    {/* Sessions */}
-                    <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                        <div className="flex justify-between">
-                            <div className="ltr:mr-1 rtl:ml-1 text-xl font-semibold">Employee</div>
-                        </div>
-                        <div className="flex items-center mt-5">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{data.employees} </div>
-                        </div>
-                        {/* <div className="flex items-center font-semibold mt-5">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 84,709
-                        </div> */}
-                    </div>
-
-                    {/*  Time On-Site */}
-                    <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
-                        <div className="flex justify-between">
-                            <div className="ltr:mr-1 rtl:ml-1 text-xl font-semibold">Customer</div>
-                        </div>
-                        <div className="flex items-center mt-5">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {data.customers} </div>
-                        </div>
-                        {/* <div className="flex items-center font-semibold mt-5">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 3789
-                        </div> */}
-                    </div>
-
-                    {/* Bounce Rate */}
-                    <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
-                        <div className="flex justify-between">
-                            <div className="ltr:mr-1 rtl:ml-1 text-xl font-semibold">Items</div>
-                        </div>
-                        <div className="flex items-center mt-5">
-                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {data.items}</div>
-                        </div>
-                        {/* <div className="flex items-center font-semibold mt-5">
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Last Week 50.01%
-                        </div> */}
-                    </div>
+                <div className='flex gap-1 '   >
+                    <img src={edit} />
+                    <button type="button" className=' text-black dark:text-white font-extrabold text-[15px]' >
+                        Edit Restaurant
+                    </button>
                 </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <div className="grid gap-6 xl:grid-flow-row">
-                        {/*  Previous Statement  */}
-                        <div className="panel overflow-hidden">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-3xl font-bold">{resList.restaurant_name}</div>
-                                    <div className="text-success"> {resList.sub_domain}</div>
-                                </div>
-
-                            </div>
-                            <div className="relative mt-10">
-
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                    <div>
-                                        <div className="text-primary">Person Name</div>
-                                        <div className="mt-2 font-semibold ">{resList.contact_person_name}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Phone Number</div>
-                                        <div className="mt-2 font-semibold ">{resList.contact_person_phone}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Email</div>
-                                        <div className="mt-2 font-semibold ">{resList.contact_person_email}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Branches</div>
-                                        <div className="mt-2 font-semibold ">{resList.branches}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Mode</div>
-                                        <div className="mt-2 font-semibold ">{resList.mode==1? 'Live':'Demo'}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary">Status</div>
-                                        <div className="mt-2 font-semibold ">{resList.status==1? 'Active':'Blocked'}</div>
-                                    </div>
-                                </div>
-
-
-
-
-                            </div>
-                        </div>
-                        {/*  Current Statement */}
-                    </div>
-
-                    {/*  Recent Transactions  */}
-                    <div className="panel">
-                        <div className="mb-5 text-lg font-bold">Recent Activities</div>
-                        { activityList ?(
-                            activityList.map((activity: any)=>{
-                                return(
-                                    <>
-                                    <div className='panel mb-2' >
-                                        <div>
-                                            <p className='font-semibold' >{activity.title}</p>
-                                        </div>
-                                        <div>
-                                            <p className='font-semibold'>{activity.created_at}</p>
-                                        </div>
-                                        <div>
-                                            <p >{activity.message}</p>
-                                        </div>
-                                    </div>
-                                    </>
-                                )
-
-                            }
-                        )
-                        ):'No Activity Found'
-
-
-                        }
-
-                    </div>
+                <div className='flex gap-1' onClick={() => { setModal(true) }}  >
+                    <img src={delete1} />
+                    <button type="button" className=' text-black dark:text-white whitespace-nowrap font-extrabold text-[15px]' >
+                        Delete Restaurant
+                    </button>
                 </div>
-                <div className="flex items-center justify-between flex-wrap gap-4 my-4">
-                    <h2 className="text-2xl font-semibold">Branches</h2>
-                    <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
-                        {/* <div className="flex gap-3">
-                            <div>
-                                <button type="button" className="btn btn-primary" onClick={() => editUser()}>
-                                    <IconUserPlus className="ltr:mr-2 rtl:ml-2" />
-                                    Add Branches
-                                </button>
-                            </div>
-                        </div> */}
-                        <div className="relative">
-                            <input type="text" placeholder="Search Branches" value={search}
-                                        onChange={(e) => setSearch(e.target.value)} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" />
-                            <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
-                                <IconSearch className="mx-auto" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-5 panel p-0 border-0 overflow-hidden">
-                    <div className="table-responsive">
-                        <table className="table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Branch Name</th>
-                                    <th>Type</th>
-                                    <th>Country</th>
-                                    <th>Address</th>
-                                    <th>Status</th>
-
-                                    <th className="!text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredItems.map((contact: any) => {
-                                    return (
-                                        <tr key={contact.id}>
-                                            <td>
-                                                <div className="flex items-center w-max">
-
-                                                    <div>{contact.branch_name}</div>
-                                                </div>
-                                            </td>
-
-                                            <td>{contact.type}</td>
-
-
-
-                                            <td className="whitespace-nowrap">{contact.country}</td>
-
-                                            <td className="whitespace-nowrap">{contact.address1}</td>
-                                            <td className="">{contact.status==1?<div className='btn btn-success btn-sm'>Active</div>:<div className='  btn btn-sm btn-danger'>Blocked</div>}</td>
-
-
-                                            <td onClick={()=>{setAddContactModal(true)}} >
-                                                <div className="flex gap-4 items-center justify-center">
-                                                    <button type="button" className="btn btn-sm btn-outline-primary">
-                                                        View
-                                                    </button>
-
-
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
 
 
-            <Transition appear show={addContactModal} as={Fragment}>
-                <Dialog as="div" open={addContactModal} onClose={() => setAddContactModal(false)} className="relative z-[51]">
-                    <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
-                        <div className="fixed inset-0 bg-[black]/60" />
+            <div className="  grid lg:grid-cols-3 md:grid-cols-2 gap-10">
+
+                {
+                    Cards.length ? (
+                        Cards.map((card) => {
+                            return (
+                                <div className="rounded-lg  ">
+                                    <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
+                                        <h2 className=" dark:text-white text-black ml-7 font-medium text-xl">
+                                            {card.name}
+                                        </h2>
+                                    </div>
+                                    <div className=" flex ">
+                                        <div className=" flex-1 dark:text-white text-black dark:bg-black bg-white rounded-b-3xl  secondbox">
+                                            <h1 className=" ml-7 font-bold dark:text-white text-black text-4xl">{card.count}</h1>
+                                        </div>
+                                        <div className=" w-5 h-5 dark:bg-black bg-white  "></div>
+                                        <div className=" dark:bg-[#202125] bg-[#f2f2f2]     w-28   flex  justify-center items-center rounded-tl-2xl  -ml-5 -mt-0">
+                                            <img
+                                                src={card.img}
+                                                alt=""
+                                               
+                                                className=" object-contain  w-12 h-12 "
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    ) : 'No data found'
+                }
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-5 mt-5">
+                <div className=" dark:bg-black bg-white p-3 pl-7 rounded-lg text-white">
+                    <div className=" flex">
+                        <div className=" dark:bg-[#3D3D3D] bg-[#F2F2F2] rounded-3xl w-56 text-center mb-1 py-1">
+                            <h1 className="text-lg font-robotoLight dark:text-white text-black ">
+                                Restaurants Details
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Restaurants Name </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : Seasons Restaurant </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Name</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : XXXXXX </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Email</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Seasons12@gmail.com </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Number</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 9876XXX10 </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">
+                                : BTM Layout, Whitefield, JP nagar
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Live</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Status</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Active</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight ">Date Created </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 09/11/2015</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div className=" dark:bg-black bg-white p-3 px-7  rounded-lg text-white">
+
+
+                    <div className=" flex">
+                        <div className=" dark:bg-[#3D3D3D] bg-[#F2F2F2]  rounded-3xl w-56 text-center mb-1 py-1">
+                            <h1 className="text-lg font-robotoLight dark:text-white text-black ">
+                                Recent Activities{" "}
+                            </h1>
+                        </div>
+                    </div>
+                    <div className='h-[280px] overflow-auto' >
+                    {
+                        Activities.length?(
+                            Activities.map((activity)=>{
+                                return(
+                                    <>
+                                    <div className="p-2 px-3 dark:bg-[#3D3D3D] bg-[#EEEEEE] text-black dark:text-white rounded-xl mt-2">
+                        <h5 className="text-md font-robotoLight ">{activity.message}</h5>
+                        {/* <h5 className="text-md font-robotoLight ">
+                            Branch name : {activity.branch_name}
+                        </h5> */}
+                        <h5 className="text-md font-robotoLight ">{activity.date}</h5>
+                    </div>
+                                    </>
+                                )
+                            })
+                        ):'No Activities Found'
+                    }
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div className='mt-5 ' >
+                <div className='flex justify-between' >
+                    <h1 className=' font-robotoLight text-black dark:text-white text-lg' >Branch Details</h1>
+                    <div className='flex bg-white px-2 py-1 gap-2 rounded-2xl' >
+                        <img className={`${grid == false ? '' : 'w-5'}`} src={grid == false ? viewSelect : viewBlack} alt="" onClick={() => { setGrid(false) }} />
+                        <img className={`${grid == true ? '' : 'w-5'}`} src={grid == true ? gridSelect : GridBlack} alt="" onClick={() => { setGrid(true) }} />
+                    </div>
+                </div>
+                {
+                    grid == true ? (
+                        <div className="mt-2  grid grid-cols-2 gap-5 ">
+                            <div className=" bg-white dark:bg-black p-3 pl-7 rounded-lg text-white">
+                                <div className=" flex text-center justify-center items-center">
+                                    <h1 className="text-lg font-robotoLight dark:text-white text-black">
+                                        Restaurants Details{" "}
+                                    </h1>
+                                </div>
+
+                                <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Restaurants Name </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : Seasons Restaurant </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Name</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : XXXXXX </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Email</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Seasons12@gmail.com </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Number</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 9876XXX10 </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">
+                                : BTM Layout, Whitefield, JP nagar
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Live</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Status</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Active</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight ">Date Created </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 09/11/2015</p>
+                        </div>
+                    </div>
+                            </div>
+                            <div className=" text-black dark:text-white p-3 pl-7 rounded-lg bg-white dark:bg-black ">
+                                <div className=" flex text-center justify-center items-center">
+                                    <h1 className="text-lg font-robotoLight text-white ">
+                                        Restaurants Details{" "}
+                                    </h1>
+                                </div>
+
+                                <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Restaurants Name </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : Seasons Restaurant </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Name</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : XXXXXX </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Email</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Seasons12@gmail.com </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Number</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 9876XXX10 </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">
+                                : BTM Layout, Whitefield, JP nagar
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Live</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Status</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Active</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight ">Date Created </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 09/11/2015</p>
+                        </div>
+                    </div>
+                            </div>
+                            <div className=" bg-white dark:bg-black p-3 pl-7 rounded-lg dark:text-white text-black">
+                                <div className=" flex text-center justify-center items-center">
+                                    <h1 className="text-lg font-robotoLight text-white ">
+                                        Restaurants Details{" "}
+                                    </h1>
+                                </div>
+
+                                <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Restaurants Name </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : Seasons Restaurant </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Name</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight "> : XXXXXX </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Email</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Seasons12@gmail.com </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Contact Number</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 9876XXX10 </p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">
+                                : BTM Layout, Whitefield, JP nagar
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Live</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">Status</h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: Active</p>
+                        </div>
+                    </div>
+
+                    <div className="flex  items-center m-2 text-black dark:text-white ">
+                        <div className=" w-36">
+                            <h5 className="text-md font-robotoLight ">Date Created </h5>
+                        </div>
+                        <div className=" ">
+                            <p className="text-sm font-robotoLight ">: 09/11/2015</p>
+                        </div>
+                    </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="panel dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2"
+                        >
+                            {filteredItems.length ? (
+                                <div className="table-responsive mb-5 p-3 ">
+                                    <>
+                                        <div className=" dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-6 p-2 rounded-lg ">
+                                            <div className=" flex items-center justify-center">
+                                                <h3>Contact Name</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>Address</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>City</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>Country</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>Status</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>View Details</h3>
+                                            </div>
+                                        </div>
+
+                                        {filteredItems.map((data:any) => {
+                                            return (
+                                                <div
+                                                    className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-6 p-2 rounded-lg mt-1"
+                                                    key={data.id}
+                                                >
+                                                    <div className=" flex items-center justify-center">
+                                                        <h3> {data.ContactName}</h3>
+                                                    </div>
+                                                    <div className=" flex items-center justify-center">
+                                                        <h3>{data.Address}</h3>
+                                                    </div>
+                                                    <div className=" flex items-center justify-center">
+                                                        <h3>{data.City}</h3>
+                                                    </div>
+                                                    <div className=" flex items-center justify-center">
+                                                        <h3>{data.Country}</h3>
+                                                    </div>
+                                                    <div className=" flex items-center justify-center">
+                                                        <div
+                                                            className={`badge text-center w-20 rounded-lg h-6  text-[#12DD00]  ${data.Status == "1"
+                                                                    ? "bg-[#FFFFFF] text-[#12DD00] text-center"
+                                                                    : "text-[#D10000] bg-[#FFFFFF] text-center"
+                                                                }`}
+                                                        >
+                                                            {data.Status == 1 ? "Active" : "Blocked"}
+                                                        </div>
+                                                    </div>
+                                                    <div className=" flex items-center justify-center">
+                                                        <img
+                                                            src={themeConfig.theme == 'dark' ? nextwhite : nextblack}
+                                                            // src={require("./images/arrow.png")}
+                                                            className=" w-5 h-5"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </>
+                                </div>
+                            ) : (
+                                <>
+                                    <b>No Details Found</b>
+                                </>
+                            )}
+                        </div>
+                    )
+                }
+
+
+            </div>
+
+            <Transition appear show={model} as={Fragment}>
+                <Dialog as="div" open={model} onClose={() => setModal(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0" />
                     </Transition.Child>
-                    <div className="fixed inset-0 overflow-y-auto">
-                        <div className="flex min-h-full items-center justify-center px-4 py-8">
+                    <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                        <div className="flex items-center justify-center min-h-screen px-4">
                             <Transition.Child
                                 as={Fragment}
                                 enter="ease-out duration-300"
@@ -312,55 +644,41 @@ const RestaurantView = ({ id }) => {
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-2xl text-black dark:text-white-dark">
-                                    <button
-                                        type="button"
-                                        onClick={() => setAddContactModal(false)}
-                                        className="absolute top-4 ltr:right-4 rtl:left-4 text-gray-400 hover:text-gray-800 dark:hover:text-gray-600 outline-none"
-                                    >
-                                        <IconX />
+                                <Dialog.Panel as="div" className="panel border-0 py-8 rounded-xl overflow-hidden w-full max-w-[460px] my-8 text-black dark:text-white  bg-white dark:bg-[#202125]">
 
-                                    </button>
-
-                                    <div className="p-5 mt-5">
-                                     <form action="">
-                                        {
-                                            branchList.map((branch,id)=>{
-                                                return(
-                                                    <>
-                                                        <b className='mb-2' >View Branch Details</b>
-
-                                                    <div className='panel mb-2 grid grid-cols-2 ' >
-                                                        <div>Id:{branch.id}</div>
-                                                        <div>Date:{branch.created_at}</div>
-
-                                                        <div>Type:{branch.type}</div>
-                                                        <div>Branch Name:{branch.branch_name}</div>
-                                                        <div>Mobile No:{branch.mobile}</div>
-                                                        <div>Landline:{branch.landline}</div>
-                                                        <div>Email Id:{branch.email}</div>
-                                                        <div>Type:{branch.type}</div>
-                                                        <div>Tax Name:{branch.tax_name}</div>
-                                                        <div>Tax Value:{branch.tax_value}</div>
-                                                        <div>Time Zone:{branch.time_zone}</div>
-                                                        <div>Status:{branch.status}</div>
-                                                        <div>Mode:{branch.mode}</div>
-                                                        <div>Address 1:{branch.address1}</div>
-                                                        <div>Address 2:{branch.address2}</div>
-                                                        <div>Area:{branch.area}</div>
-                                                        <div>City:{branch.city}</div>
-                                                        <div>State:{branch.state}</div>
-                                                        <div>Country:{branch.country}</div>
-                                                        <div>Pincode:{branch.pincode}</div>
+                                    <form>
 
 
 
-                                                    </div>
-                                                    </>
-                                                )
-                                            })
-                                        }
-                                     </form>
+                                        <div className="grid grid-cols-1 gap-2  ">
+                                            <div className=" flex justify-center text-center">
+                                                <label className=' text-[18px] font-robotoLight font-bold roboto-light' htmlFor="rname"  >
+                                                    Are you sure you want to delete this resturaunt?
+                                                </label>
+
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div className="mt-3 flex items-center justify-center gap-4">
+                                        <button
+
+                                            type="button"
+                                            className=" px-6 p-[3px]  text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
+                                            onClick={() => { setModal(false) }}
+
+                                        >
+                                            No
+
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className=" px-6 p-[3px] text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
+
+                                        >
+                                            Yes
+
+                                        </button>
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
@@ -369,8 +687,5 @@ const RestaurantView = ({ id }) => {
                 </Dialog>
             </Transition>
         </div>
-    );
-};
-
-
-export default RestaurantView;
+    )
+}

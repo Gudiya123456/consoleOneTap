@@ -1,12 +1,9 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react'
-import ResetPassword from './ResetPassword';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import IconMail from '../../components/Icon/IconMail';
 import forgot from '../../assets/images/auth/forgot-password 1.svg'
-import NewResetPassword from './NewResetPassword';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 const CrmSwal = withReactContent(Swal);
@@ -155,7 +152,7 @@ const NewForgot = () => {
                                                 id="Email"
                                                 type="email"
                                                 placeholder='Enter Email'
-                                                className="w-full rounded-xl border border-black bg-white px-4 py-2 text-sm font-robotoLight text-black" />
+                                                className="w-full rounded-xl border border-black bg-white px-4 py-2 text-sm font-normal text-black" />
                                         <span className="text-danger font-semibold text-sm p-2">{errors.email}</span>
 
                                         </div>
@@ -170,7 +167,7 @@ const NewForgot = () => {
                                                 id="otp"
                                                 type="text"
                                                 placeholder='Enter Otp'
-                                                className="w-full rounded-xl border border-black bg-white px-4 py-2 text-sm font-robotoLight text-black" />
+                                                className="w-full rounded-xl border border-black bg-white px-4 py-2 text-sm font-normal text-black" />
                                             <span className="text-danger font-semibold text-sm p-2">{errors.otp}</span>
                                            </div>
                                         </>)}
