@@ -31,6 +31,8 @@ import dashboardDark from '../../assets/images/Group 123 (1).svg'
 import lightlogo from '../../assets/images/lightlogo.svg'
 import leftmenubLight from '../../assets/images/leftmenubLight.svg'
 import llogo from "../../assets/images/Group 319 (1).svg";
+import pricing from "../../assets/images/Tags.svg";
+
 
 // images for sidebar icons for dashboard
 import skydashboard from "../../assets/images/sidebarIcons/skydashboard.svg"

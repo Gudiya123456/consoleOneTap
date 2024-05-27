@@ -3,47 +3,65 @@ import React, { useState, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import darkview from "../../assets/images/darkview.png"
 import view from "../../assets/images/view.png"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../store";
 import PlusDark from '../../assets/images/PlusDark.svg'
 import Plus from '../../assets/images/Plus (1).svg'
 import leftarrow from '../../assets/images/leftarrow.png'
 import leftDark from '../../assets/images/Chevron Left (1).svg'
+import axios from "axios";
 
-
+// import ErrorHandle from "../common/ErrorHandle"
+import { setPageTitle } from "../../store/themeConfigSlice";
+import { ErrorHandle } from "../common/ErrorHandle";
+import PageLoader from "../../components/PageLoader";
 const Authorization = () => {
     //   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const [modal, setModal] = useState(false);
     const [permissionmodal, setpermissionModal] = useState(false);
     const [status, setStatus] = useState("");
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+    const[isLoading,setIsLoading]=useState(true);
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    const [authList, setAuthList] = useState<any>([]);
+    const dispatch=useDispatch();
 
-    const filteredItems = [
-        {
-            Slno: 1,
-            Name: "Pradeep",
-            Email: "abc@efgh.ijk",
-            role: "super admin",
-            phone: "9038949996",
-            Status: "1",
-        },
-        {
-            Slno: 2,
-            Name: "Pradeep",
-            Email: "abc@efgh.ijk",
-            role: "super admin",
-            phone: "9038949996",
-            Status: "1",
-        },
-        {
-            Slno: 3,
-            Name: "Pradeep",
-            Email: "abc@efgh.ijk",
-            role: "super admin",
-            phone: "9038949996",
-            Status: "0",
-        },
-    ];
+    useEffect(() => {
+        dispatch(setPageTitle('Authorization'));
+        fetchAuthorization();
+    }, []);
+
+    // fetch Restaurant data
+    const fetchAuthorization = async () => {
+        setIsLoading(true)
+        try {
+            const response = await axios({
+                method: 'get',
+                url:"https://cdn.onetapdine.com/api/authorizations",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + crmToken,
+                },
+            });
+            if (response.data.status == 'success') {
+                setAuthList(response.data.users);
+            }
+
+            console.log(response.data);
+           
+
+        } catch (error: any) {
+            if (error.response.status == 401) {
+                ErrorHandle();
+             }
+           
+            else console.log(error)
+        }
+        finally {
+            setIsLoading(false)
+
+        }
+    };
     return (
         <>
             <div className=""></div>
@@ -59,93 +77,98 @@ const Authorization = () => {
                 </div>
 
             </div>
-            <div className="panel p-0 dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
-                {filteredItems.length ? (
-                    <div className="table-responsive mb-5 p-3 ">
-                        <>
-                            <div className=" dark:bg-[#202125] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-8 p-2 rounded-lg">
-                                <div className=" flex items-center justify-center">
-                                    <h3>Sl.No</h3>
+            {
+                isLoading?(<PageLoader/>):(
+                    <div className="panel p-0 dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
+                    {authList.length ? (
+                        <div className="table-responsive mb-5 p-3 ">
+                            <>
+                                <div className=" dark:bg-[#202125] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-8 p-2 rounded-lg">
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Sl.No</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Name</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Email</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Role</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Phone</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Status</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Permission</h3>
+                                    </div>
+                                    <div className=" flex items-center justify-center">
+                                        <h3>Action</h3>
+                                    </div>
                                 </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Name</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Email</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Role</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Phone</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Status</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Permission</h3>
-                                </div>
-                                <div className=" flex items-center justify-center">
-                                    <h3>Action</h3>
-                                </div>
-                            </div>
-
-                            {filteredItems.map((data:any, index) => {
-                                return (
-                                    <div
-                                        className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-8 p-2 rounded-lg mt-1"
-                                        key={data.Slno}
-                                    >
-                                        <div className=" flex items-center justify-center">
-                                            <h3> {data.Slno}</h3>
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <h3>{data.Name}</h3>
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <h3>{data.Email}</h3>
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <h3>{data.role}</h3>
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <h3>{data.phone}</h3>
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <div
-                                                className={`badge text-center w-20 rounded-lg h-6 text-[#12DD00] ${data.Status == "1"
-                                                        ? " dark:bg-[#000000] bg-[#FFFFFF] text-[#12DD00] text-center"
-                                                        : "text-[#FF0000] bg-[#FFFFFF] dark:bg-[#000000] text-center"
-                                                    }`}
-                                            >
-                                                {data.Status == 1 ? "Active" : "Blocked"}
+    
+                                {authList.map((data:any, index) => {
+                                    return (
+                                        <div
+                                            className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-8 p-2 rounded-lg mt-1"
+                                            key={data.id}
+                                        >
+                                            <div className=" flex items-center justify-center">
+                                                <h3> {data.id}</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>{data.name}</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>{data.email}</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>{data.role}</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <h3>{data.phone}</h3>
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <div
+                                                    className={`badge text-center w-20 rounded-lg h-6 text-[#12DD00] ${data.status == "1"
+                                                            ? " dark:bg-[#000000] bg-[#FFFFFF] text-[#12DD00] text-center"
+                                                            : "text-[#FF0000] bg-[#FFFFFF] dark:bg-[#000000] text-center"
+                                                        }`}
+                                                >
+                                                    {data.status == 1 ? "Active" : "Blocked"}
+                                                </div>
+                                            </div>
+                                            <div className=" flex items-center justify-center " onClick={()=>{setpermissionModal(true)}}>
+                                                <img
+                                                    src={themeConfig.theme == 'dark' ? darkview : view}
+                                                    alt=""
+                                                   
+                                                    className=" object-contain w-4 h-4 cursor-pointer"
+                                                />
+    
+                                            </div>
+                                            <div className=" flex items-center justify-center">
+                                                <button className=" w-[56px] h-[26px] bg-[#DDDDDD] rounded-2xl text-[#000000] dark:bg-[#000000] dark:text-[#FFFFFF]">
+                                                    Edit
+                                                </button>
                                             </div>
                                         </div>
-                                        <div className=" flex items-center justify-center " onClick={()=>{setpermissionModal(true)}}>
-                                            <img
-                                                src={themeConfig.theme == 'dark' ? darkview : view}
-                                                alt=""
-                                               
-                                                className=" object-contain w-4 h-4 cursor-pointer"
-                                            />
-
-                                        </div>
-                                        <div className=" flex items-center justify-center">
-                                            <button className=" w-[56px] h-[26px] bg-[#DDDDDD] rounded-2xl text-[#000000] dark:bg-[#000000] dark:text-[#FFFFFF]">
-                                                Edit
-                                            </button>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </>
+                        </div>
+                    ) : (
+                        <>
+                            <b>No Details Found</b>
                         </>
-                    </div>
-                ) : (
-                    <>
-                        <b>No Details Found</b>
-                    </>
-                )}
-            </div>
+                    )}
+                </div>
+                )
+            }
+           
             <Transition appear show={permissionmodal} as={Fragment}>
                 <Dialog
                     as="div"

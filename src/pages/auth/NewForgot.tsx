@@ -70,7 +70,7 @@ const NewForgot = () => {
 
 
         if(response.data.action=='reset'){
-        navigate('/reset',{state:{ email:params.email, token:response.data.token}})
+        navigate('/reset',{state:{ email:params.email, auth_token:response.data.auth_token}})
 
 
         }

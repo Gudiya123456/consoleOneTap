@@ -7,6 +7,7 @@ import { IRootState } from '../../store';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo1 from '../../assets/images/auth/Logo 1.svg'
 import {  setCrmToken, setUserData } from '../../store/themeConfigSlice';
+import { ErrorHandle } from '../common/ErrorHandle';
 
 const CrmSwal = withReactContent(Swal);
 export default function EmailLogin() {
@@ -66,7 +67,10 @@ export default function EmailLogin() {
                 alert("Error")
             }
         } catch (error: any) {
-            if (error?.response?.status === 422) {
+            if(error?.response?.status==401){
+                ErrorHandle()
+            }
+            else if (error?.response?.status === 422) {
                 const serveErrors = error.response.data.errors;
                 for (var key in serveErrors) {
                     setErros({ ...errors, [key]: serveErrors[key][0] });

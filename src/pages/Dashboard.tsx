@@ -3,15 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../store';
 import ReactApexChart from 'react-apexcharts';
-import { setPageTitle } from '../store/themeConfigSlice'
+import { setCrmToken, setPageTitle } from '../store/themeConfigSlice'
 import PageLoader from '../components/PageLoader'
 import axios from 'axios';
 import box1 from '../assets/images/box1.png';
 import box2 from '../assets/images/box2.png';
 import box3 from '../assets/images/box3.png';
+import { ErrorHandle } from './common/ErrorHandle';
 const Index = () => {
     const dispatch = useDispatch();
     const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
+    console.log('crm tokennn', crmToken)
+
     const navigate = useNavigate();
     const [homeData, setHomeData] = useState<string[]>([]);
     const colors = useSelector((state: IRootState) => state.themeConfig.colors);
@@ -41,7 +45,9 @@ const Index = () => {
                 setHomeData(response.data);
             }
         } catch (error:any) {
-            if (error.response.status == 401) navigate('/login')
+            if (error.response.status == 401) {
+               ErrorHandle();
+            }
         } finally {
             setIsLoading(false)
         }

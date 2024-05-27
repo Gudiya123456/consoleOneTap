@@ -11,7 +11,7 @@ import { IRootState } from '../../store';
 const NewForgot = () => {
 
     const {state} = useLocation();
-    console.log(state.email)
+    console.log("state", state);
     const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
 
     console.log('new reset')
@@ -100,7 +100,7 @@ const NewForgot = () => {
         data.append("password_confirmation", params.password_confirmation);
         data.append("password", params.password);
         data.append("email", params.email);
-        data.append("token", state.token);
+        data.append("auth_token", state.auth_token);
         resetPasswordApi(data);
     }
 

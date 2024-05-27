@@ -12,45 +12,18 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    console.log('crm tokennnn', crmToken);
     const crmData = useSelector((state: IRootState) => state.themeConfig.crmData);
     const [isLoading, setIsLoading] = useState(true);
+    useEffect(()=>{
+        if(crmToken) navigate('/');
+        else navigate('/login')
+    },[crmToken]);
 
-    useEffect(() => {
-        crmToken ? checkTokenValidity() : (
-            dispatch(setCrmToken('')),
-            dispatch(setUserData({})),
-            setIsLoading(false),
-            dispatch(setPageTitle('Login'))
-        )
-    }, [])
-
-    const checkTokenValidity = async () => {
-        setIsLoading(true)
-        try {
-            const response = await axios({
-                method: 'get',
-                url: window.location.origin + "/api/dashboard/check-login-validity",
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + crmToken,
-                },
-            });
-            if (response.data.status == 'success' && response.data.action == "redirect") navigate('/')
-            else if (response.data.status == 'success' && response.data.action == "login") {
-                dispatch(setCrmToken(''))
-                dispatch(setUserData({}))
-            }
-
-        } catch (error) {
-
-        } finally {
-            setIsLoading(false)
-        }
-    }
     const [isEmailLogin, setIsEmailLogin] = useState(true);
     return (
         <>
-            {isLoading ? <PageLoader /> : (
+          
                 <div>
                     <div style={{  fontFamily: 'Poppins'}} className="relative flex min-h-screen items-center justify-center bg-cover bg-[url(/restaurant/kot/images/auth/login-bg.jpeg)] bg-[#323232] bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
                         <div className="relative flex w-full max-w-[1502px] flex-col justify-between bg-cover bg-center bg-no-repeat overflow-hidden rounded-md    dark:bg-black/50  lg:flex-row lg:gap-10 xl:gap-0">
@@ -64,33 +37,9 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
-            )}
+        
         </>
     )
-
-    // const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
-    // const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-    // const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-    // const setLocale = (flag: string) => {
-    //     setFlag(flag);
-    //     if (flag.toLowerCase() === 'ae') {
-    //         dispatch(toggleRTL('rtl'));
-    //     } else {
-    //         dispatch(toggleRTL('ltr'));
-    //     }
-    // };
-    // const [flag, setFlag] = useState(themeConfig.locale);
-    // const [showLoginForm, setShowLoginForm] = useState(true);
-
-    // const toggleLoginForm = () => {
-    //     setShowLoginForm(!showLoginForm);
-    // };
-
-    // const submitForm = () => {
-    //     navigate('/dashboard');
-    // };
-
-
 };
 
 export default Login;
