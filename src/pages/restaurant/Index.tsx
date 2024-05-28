@@ -39,7 +39,14 @@ import Plus from '../../assets/images/Plus (1).svg'
 
 import arrow from '../../assets/images/arrow.svg'
 import arrowLight from '../../assets/images/Back To.svg'
+import logo from '../../assets/images/logo.svg'
+import dlogo from '../../assets/images/dlogo.svg'
+
+import favicon from '../../assets/images/favicon.svg'
+import dfavicon from '../../assets/images/dfavicon.svg'
+
 const CrmSwal = withReactContent(Swal);
+
 
 import { FaUser } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
@@ -85,6 +92,8 @@ const Restaurant = () => {
                 },
             });
             if (response.data.status == "success") {
+                setResList( resList.filter((d: any) => d.id !== resList.id));
+
                 setResList(response.data.restaurants);
                 setTimeZones(response.data.timeZones)
                 console.log(response.data.restaurantss);
@@ -99,12 +108,12 @@ const Restaurant = () => {
         }
     };
 
-
+console.log('reslist', resList);
 
     const fileLogoRef = useRef<HTMLInputElement>(null);
     const fileIconRef = useRef<HTMLInputElement>(null);
-    const [logoPriview, setLogoPriview] = useState<any>('https://dummyimage.com/600x400/000/fff');
-    const [iconPriview, setIconPriview] = useState<any>('https://dummyimage.com/600x400/000/fff');
+    const [logoPriview, setLogoPriview] = useState<any>(themeConfig.theme=='dark'?dlogo:logo);
+    const [iconPriview, setIconPriview] = useState<any>(themeConfig.theme=='dark'?dfavicon:favicon);
 
 
 
@@ -277,43 +286,6 @@ const Restaurant = () => {
         return { totalErrors: Object.keys(errors).length };
     };
 
-    const deleteUser = (user: any = null) => {
-        Swal.fire({
-            icon: "warning",
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            showCancelButton: true,
-            confirmButtonText: "Delete",
-            padding: "2em",
-            customClass: "sweet-alerts",
-        }).then(async (result) => {
-            if (result.value) {
-                try {
-                    const response = await axios({
-                        method: "delete",
-                        url:
-                            "https://cdn.onetapdine.com/api/restaurants/" + user.id,
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + crmToken,
-                        },
-                    });
-                    if (response.data.status === "success") {
-                        setFilteredItems(
-                            filteredItems.filter((d: any) => d.id !== user.id)
-                        );
-                        setResList(resList.filter((d: any) => d.id !== user.id));
-                        showMessage("Restaurant has been deleted successfully.");
-                    }
-                } catch (error: any) {
-                    if (error.response.status == 401) navigate('/login')
-                } finally {
-                    console.log(errors);
-                }
-            }
-        });
-    };
-
     const storeOrUpdateApi = async (data: any) => {
         setBtnLoading(true)
         try {
@@ -420,15 +392,15 @@ const Restaurant = () => {
 
             data.logo ?
                 setLogoPriview(window.location.origin + data.logo) :
-                setLogoPriview('https://dummyimage.com/600x400/000/fff');
+                setLogoPriview(themeConfig.theme=='dark'?dlogo:logo);
 
             data.fav_icon ?
                 setIconPriview(window.location.origin + data.fav_icon) :
-                setIconPriview('https://dummyimage.com/600x400/000/fff');
+                setIconPriview(themeConfig.theme=='dark'?dfavicon:favicon);
         } else {
             setParams(defaultParams);
-            setLogoPriview('https://dummyimage.com/600x400/000/fff');
-            setIconPriview('https://dummyimage.com/600x400/000/fff');
+            setLogoPriview(themeConfig.theme=='dark'?dlogo:logo);
+            setIconPriview(themeConfig.theme=='dark'?dfavicon:favicon);
         }
         setModal(true)
     }
@@ -460,7 +432,9 @@ const Restaurant = () => {
                                         key={restaurant.id}>
                                         {/* className={`dark:bg-[#202125] bg-[linear-gradient(to_bottom,rgba(0,0,0,0)53%,rgba(0,2,0.8)95%),url(http://cdn.onetapdine.com${restaurant.background})] bg-cover  h-[170px]   rounded-xl relative`}> */}
                                         <NavLink to='/restaurant/view' state={{restaurantId:restaurant.id}} >
-                                            <div className={` dark:bg-[#202125] bg-[linear-gradient(to_bottom,rgba(0,0,0,0)53%,rgba(0,2,0.8)95%),url(https://cdn.onetapdine.com${restaurant.background})] bg-cover  h-[170px]   rounded-xl relative`}>
+                                            <div className={` dark:bg-[#202125]  bg-[linear-gradient(to_bottom,rgba(0,0,0,0)53%,rgba(0,2,0.8)95%)] rounded-3xl h-[160px]  relative`}
+                                            style={{height:'180px', backgroundSize:'cover', backgroundImage:`linear-gradient(to bottom, rgba(0,0,0,0)53%, rgba(0,2,0.8)95%), url(https://cdn.onetapdine.com${restaurant.background})`}}
+                                            >
                                                 {/* <img src={restaurant.background?restaurant.background:'/restaurant/kot/images/auth/forgot-bg.jpeg'} alt="" className='bg-cover   bg-center bg-no-repeat saturate-20  h-[160px] w-[500px] relative   rounded-xl' /> */}
                                                 <div className="absolute bottom-0 px-2 py-2   w-full">
                                                     <h1 className="text-white font-extrabold  text-md">{restaurant.restaurant_name}</h1>
@@ -480,7 +454,6 @@ const Restaurant = () => {
 
                 )
             }
-
 
             <Transition appear show={modal} as={Fragment}>
                 <Dialog as="div" open={modal} onClose={() => setModal(true)}>
@@ -514,14 +487,14 @@ const Restaurant = () => {
                                                 {
                                                     params.id ? 'Edit' : 'Add'
                                                 }
-                                                Add Restaurant
+                                                 Restaurant
                                             </h5>
                                         </div>
                                     </div>
                                     <div className="px-10 pb-5 dark:bg-[#202125] bg-white">
                                         <form>
                                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 gap-x-5">
-                                                <div className="">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="rname"  >
                                                         Restaurant Name
                                                     </label>
@@ -542,8 +515,10 @@ const Restaurant = () => {
                                                         ""
                                                     )}
                                                 </div>
+                                               
 
-                                                <div className="">
+
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="subdomain">
                                                         Subdomain Name
                                                     </label>
@@ -566,7 +541,7 @@ const Restaurant = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Branch Name
                                                     </label>
@@ -587,7 +562,7 @@ const Restaurant = () => {
                                                         ""
                                                     )}
                                                 </div>
-                                                <div className="">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Branch No
                                                     </label>
@@ -608,7 +583,7 @@ const Restaurant = () => {
                                                         ""
                                                     )}
                                                 </div>
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="name">
                                                         Branch Manager Name
                                                     </label>
@@ -631,7 +606,7 @@ const Restaurant = () => {
                                                 </div>
 
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="phone">
                                                         Email Id
                                                     </label>
@@ -656,7 +631,7 @@ const Restaurant = () => {
                                                 </div>
 
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Contact Number
                                                     </label>
@@ -678,7 +653,7 @@ const Restaurant = () => {
                                                     )}
 
                                                 </div>
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Address
                                                     </label>
@@ -700,7 +675,7 @@ const Restaurant = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Area
                                                     </label>
@@ -721,7 +696,7 @@ const Restaurant = () => {
                                                         ""
                                                     )}
                                                 </div>
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         City
                                                     </label>
@@ -743,7 +718,7 @@ const Restaurant = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         State
                                                     </label>
@@ -765,7 +740,7 @@ const Restaurant = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label htmlFor="name" className='text-style roboto-light'>
                                                         Country
                                                     </label>
@@ -784,7 +759,7 @@ const Restaurant = () => {
                                                 </div>
 
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
                                                         Pincode
                                                     </label>
@@ -806,7 +781,7 @@ const Restaurant = () => {
                                                     )}
                                                 </div>
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <label htmlFor="name" className='text-style roboto-light'>
                                                         Timezone
                                                     </label>
@@ -825,41 +800,7 @@ const Restaurant = () => {
                                                 </div>
 
 
-                                                {/* <div className=" mt-2 ml-2">
-                                                    <h5 className="text-style roboto-light ">Mode</h5>
-                                                    <div className="flex mt-1">
-                                                        <div className=" flex items-center">
-                                                            <div
-                                                                className=" border border-[#12DD00] w-[20px] h-[20px] rounded-full flex justify-center items-center"
-                                                                onClick={() => setStatus1("active")}
-                                                            >
-                                                                <div
-                                                                    style={{
-                                                                        display: status1 == "active" ? "flex" : "none",
-                                                                    }}
-                                                                    className=" bg-[#12DD00] w-[14px] h-[14px] rounded-full "
-                                                                ></div>
-                                                            </div>
-                                                            <div className=" ml-1 text-[#12DD00]">Live</div>
-                                                        </div>
-                                                        <div className=" flex items-center ml-3">
-                                                            <div
-                                                                className=" border border-[#FF0000] w-[20px] h-[20px] rounded-full flex justify-center items-center"
-                                                                onClick={() => setStatus1("disable")}
-                                                            >
-                                                                <div
-                                                                    style={{
-                                                                        display:
-                                                                            status1 == "disable" ? "flex" : "none",
-                                                                    }}
-                                                                    className=" bg-[#FF0000] w-[14px] h-[14px] rounded-full"
-                                                                ></div>
-                                                            </div>
-                                                            <div className=" ml-1 text-[#FF0000]">Demo</div>
-                                                        </div>
-                                                    </div>
-                                                </div> */}
-
+                                         
                                                 {/* <div className=" mt-2 ml-2">
                                                     <h5 className="text-style roboto-light ">Status</h5>
                                                     <div className="flex mt-1">
@@ -921,17 +862,17 @@ const Restaurant = () => {
 
                                             <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <div className="mt-4">
                                                         <label htmlFor="status" className='text-style roboto-light'>Mode</label>
                                                         <div className="mt-3">
                                                             <label className="inline-flex">
-                                                                <input type="radio" name="mode" value="1"  defaultChecked={params.mode == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
-                                                                <span className="peer-checked:text-success text-style roboto-light">Live</span>
+                                                                <input type="radio" name="mode" value="1"  defaultChecked={params.mode == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio border-[#B3B3B3] text-success peer" />
+                                                                <span style={{color:'#5E5E5E'}} className="peer-checked:text-success text-success text-style roboto-light">Live</span>
                                                             </label>
                                                             <label className="inline-flex px-5">
-                                                                <input type="radio" name="mode" value="0" defaultChecked={params.mode == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
-                                                                <span className="peer-checked:text-secondary text-style roboto-light">Demo</span>
+                                                                <input type="radio" name="mode" value="0" defaultChecked={params.mode == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio border-[#B3B3B3] text-success peer" />
+                                                                <span style={{color:'#5E5E5E'}} className="peer-checked:text-secondary text-style roboto-light">Demo</span>
                                                             </label>
                                                         </div>
                                                         <span className="text-danger font-semibold text-sm p-2">{errors.mode}</span>
@@ -940,17 +881,17 @@ const Restaurant = () => {
 
                                                 
 
-                                                <div className="mb-1">
+                                                <div className="mb-3">
                                                     <div className="mt-4">
                                                         <label htmlFor="status" className='text-style roboto-light'>Status</label>
                                                         <div className="mt-3">
                                                             <label className="inline-flex">
                                                                 <input type="radio" name="status" value='1' defaultChecked={params.status == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
-                                                                <span className="peer-checked:text-success text-style roboto-light">Active</span>
+                                                                <span style={{color:'#32e01d'}} className="peer-checked:text-success text-style roboto-light">Active</span>
                                                             </label>
                                                             <label className="inline-flex px-5">
-                                                                <input type="radio" name="status" value='0' defaultChecked={params.status == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
-                                                                <span className="peer-checked:text-secondary text-style roboto-light">Blocked</span>
+                                                                <input type="radio" name="status" value='0' defaultChecked={params.status == '0' ? true : false} onChange={(e) => changeValue(e)} className=" form-radio border-danger  w-5 h-5 text-danger peer" />
+                                                                <span style={{color:'red'}} className="peer-checked:text-denger text-style roboto-light">Disable</span>
                                                             </label>
                                                         </div>
                                                         <span className="text-danger font-semibold text-sm p-2">{errors.status}</span>
@@ -958,22 +899,22 @@ const Restaurant = () => {
                                                 </div>
 
 
-                                                <div className="mb-5 mt-2">
-                                                    <label htmlFor="image" className='text-style roboto-light'>Logo</label>
+                                                <div className="mb-3 mt-4">
+                                                    {/* <label htmlFor="image" className='text-style roboto-light'>Logo</label> */}
                                                     <input ref={fileLogoRef} name="logo" type="file" onChange={(e) => setImage(e)} className="form-input hidden" accept="image/*" />
                                                     <span className="w-full h-20 relative">
-                                                        <img className="w-40 h-20 rounded overflow-hidden object-cover" id="logo" onClick={() => {
+                                                        <img className="w-30 h-20 rounded overflow-hidden object-cover" id="logo" onClick={() => {
                                                             fileLogoRef.current!.click()
                                                         }} src={logoPriview} alt="logo" />
                                                     </span>
                                                     {errors?.logo ? <div className="text-danger mt-1">{errors.logo}</div> : ''}
                                                 </div>
 
-                                                <div className="mb-5 mt-2">
-                                                    <label htmlFor="fav_icon" className='text-style roboto-light'>Fav Icon</label>
+                                                <div className="mb-3 mt-4 ">
+                                                    {/* <label htmlFor="fav_icon" className='text-style roboto-light'>Fav Icon</label> */}
                                                     <input ref={fileIconRef} name="fav_icon" type="file" onChange={(e) => setImage(e)} className="form-input hidden" accept="image/*" />
                                                     <span className="w-full h-20 relative">
-                                                        <img className="w-20 h-20 rounded  overflow-hidden object-cover" id="fav_icon" onClick={() => {
+                                                        <img className="w-30 h-20 rounded  overflow-hidden object-cover" id="fav_icon" onClick={() => {
                                                             fileIconRef.current!.click()
                                                         }} src={iconPriview} alt="fav_icon" />
                                                     </span>
@@ -987,7 +928,7 @@ const Restaurant = () => {
                                         <div className="mt-8 flex items-center justify-end">
                                             <button
                                                 type="button"
-                                                className="btn  btn-dark btn-sm px-10 rounded-2xl dark:bg-white dark:text-black "
+                                                className="btn  btn-dark btn-sm px-10 rounded-2xl bg-[#000000] text-white dark:bg-white dark:text-black "
                                                 onClick={() => { formSubmit() }}
                                             >
                                                 Add Restaurant

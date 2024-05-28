@@ -142,17 +142,8 @@ export default function Show() {
         return { totalErrors: Object.keys(errors).length };
     };
 
-    const deleteUser = (user: any = null) => {
-        Swal.fire({
-            icon: "warning",
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            showCancelButton: true,
-            confirmButtonText: "Delete",
-            padding: "2em",
-            customClass: "sweet-alerts",
-        }).then(async (result) => {
-            if (result.value) {
+    const deleteUser = async(user: any = null) => {
+    //   setModal(true)
                 try {
                     const response = await axios({
                         method: "delete",
@@ -164,20 +155,20 @@ export default function Show() {
                         },
                     });
                     if (response.data.status === "success") {
-                        setResList(
-                            resList.filter((d: any) => d.id !== user.id)
-                        );
-                        setResList(resList.filter((d: any) => d.id !== user.id));
-                        showMessage("Restaurant has been deleted successfully.");
+                        // setResList(resList.filter((d: any) => d.id !== user.id));
+                        console.log('sucesss');
+                        // alert("Restaurant has been deleted successfully.");
+                        navigate('/restaurants')
                     }
-                } catch (error: any) {
-                    if (error.response.status == 401) navigate('/login')
+                } catch (error) {
+                    // if (error.response.status == 401) navigate('/login')
+                        console.log(error);
                 } finally {
                     console.log(errors);
                 }
             }
-        });
-    };
+    
+    
 
     const storeOrUpdateApi = async (data: any) => {
         setBtnLoading(true)
@@ -281,7 +272,7 @@ export default function Show() {
                 </div>
                 <div className='flex gap-1'  >
                     <img src={delete1} />
-                    <button type="button" onClick={()=>{deleteUser(resList)}} className=' text-black dark:text-white whitespace-nowrap font-extrabold text-[15px]' >
+                    <button type="button" onClick={()=>{setModal(true)}} className=' text-black dark:text-white whitespace-nowrap font-extrabold text-[15px]' >
                         Delete Restaurant
                     </button>
                 </div>
@@ -458,7 +449,7 @@ export default function Show() {
                                 return(
                                     <>
                                     <div className="p-2 px-3 dark:bg-[#3D3D3D] bg-[#EEEEEE] text-black dark:text-white rounded-xl mt-2">
-                        <h5 className="text-md font-robotoLight ">{activity.message}</h5>
+                        <h5 className="text-md font-robotoLight ">{activity.description}</h5>
                         <h5 className="text-md font-robotoLight ">{activity.created_at}</h5>
                     </div>
                                     </>
@@ -686,16 +677,11 @@ export default function Show() {
                                 <Dialog.Panel as="div" className="panel border-0 py-8 rounded-xl overflow-hidden w-full max-w-[460px] my-8 text-black dark:text-white  bg-white dark:bg-[#202125]">
 
                                     <form>
-
-
-
                                         <div className="grid grid-cols-1 gap-2  ">
                                             <div className=" flex justify-center text-center">
                                                 <label className=' text-[18px] font-robotoLight font-bold roboto-light' htmlFor="rname"  >
                                                     Are you sure you want to delete this resturaunt?
                                                 </label>
-
-
                                             </div>
                                         </div>
                                     </form>
@@ -705,12 +691,12 @@ export default function Show() {
                                             type="button"
                                             className=" px-6 p-[3px]  text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
                                             onClick={() => { setModal(false) }}
-
                                         >
                                             No
 
                                         </button>
                                         <button
+                                        onClick={()=>{deleteUser(resList)}}
                                             type="button"
                                             className=" px-6 p-[3px] text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
 

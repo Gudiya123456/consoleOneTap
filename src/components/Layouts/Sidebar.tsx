@@ -39,6 +39,10 @@ import skydashboard from "../../assets/images/sidebarIcons/skydashboard.svg"
 import pinkdashboard from "../../assets/images/sidebarIcons/pinkdashboard.svg"
 import browndashboard from "../../assets/images/sidebarIcons/browndashboard.svg"
 import greendashboard from "../../assets/images/sidebarIcons/greendashboard.svg"
+import whitedashboard from "../../assets/images/sidebarIcons/whitedashboard.svg"
+import blackdashboard from "../../assets/images/sidebarIcons/blackdashboard.svg"
+
+
 
 // images for sidebar icons for Restaurant
 import pinkrestaurant from "../../assets/images/sidebarIcons/pinkrestaurant.svg"
@@ -245,7 +249,7 @@ const Sidebar = () => {
                                             :themeConfig.theme == 'light' && colors=='white'?dashboardDark
 
 
-                                            :dashboard
+                                            :whitedashboard
                                         }
                                             className="flex justify-center text-center align-items-canter" />
                                         </div>
