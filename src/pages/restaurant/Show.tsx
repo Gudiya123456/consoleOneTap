@@ -30,6 +30,8 @@ export default function Show() {
     const location = useLocation()
     const navigate = useNavigate();
     const restaurantId = location.state.restaurantId
+    console.log(restaurantId)
+    // alert('issss', restaurantId)
     const [resList, setResList] = useState<any>([]);
     const [activityList, setActivityList] = useState<any>([]);
     const [branchList, setBranchList] = useState<any>([]);
@@ -56,11 +58,19 @@ export default function Show() {
                     Authorization: 'Bearer ' + crmToken,
                 },
             });
+            console.log('fetch restaiurant', response.data)
 
-            setResList(response.data.restaurant);
-            setActivityList(response.data.activities)
-            setBranchList(response.data.branches)
-            setData(response.data);
+            if(response.data.status=='success'){
+                setResList(response.data.restaurant);
+                setActivityList(response.data.activities)
+                setBranchList(response.data.branches)
+                setData(response.data);
+            }
+            else if(response.data.status=='error'){
+                // navigate('/restaurants')
+                // alert(99)
+            }
+          
 
         } catch (error: any) {
             if (error.response.status == 401) {

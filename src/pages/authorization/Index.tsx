@@ -16,6 +16,7 @@ import { ErrorHandle } from "../common/ErrorHandle";
 import PageLoader from "../../components/PageLoader";
 import { useNavigate } from "react-router-dom";
 const CrmSwal = withReactContent(Swal);
+import { MdRemoveRedEye } from "react-icons/md";
 
 const Authorization = () => {
     const [modal, setModal] = useState(false);
@@ -222,100 +223,92 @@ const Authorization = () => {
                 </div>
 
             </div>
-            {
-                isLoading?(<PageLoader/>):(
-                    <div className="panel p-0 dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
-                    {authList.length ? (
-                        <div className="table-responsive mb-5 p-3 ">
-                            <>
-                                <div className=" dark:bg-[#202125] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-8 p-2 rounded-lg">
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Sl.No</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Name</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Email</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Role</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Phone</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Status</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Permission</h3>
-                                    </div>
-                                    <div className=" flex items-center justify-center">
-                                        <h3>Action</h3>
-                                    </div>
-                                </div>
-    
-                                {authList.map((data:any, index) => {
-                                    return (
-                                        <div
-                                            className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-8 p-2 rounded-lg mt-1"
-                                            key={data.id}
-                                        >
-                                            <div className=" flex items-center justify-center">
-                                                <h3> {data.id}</h3>
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <h3>{data.name}</h3>
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <h3>{data.email}</h3>
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <h3>{data.role}</h3>
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <h3>{data.phone}</h3>
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <div
-                                                    className={`badge text-center w-20 rounded-lg h-6 text-[#12DD00] ${data.status == "1"
-                                                            ? " dark:bg-[#000000] bg-[#FFFFFF] text-[#12DD00] text-center"
-                                                            : "text-[#FF0000] bg-[#FFFFFF] dark:bg-[#000000] text-center"
-                                                        }`}
-                                                >
-                                                    {data.status == 1 ? "Active" : "Blocked"}
-                                                </div>
-                                            </div>
-                                            <div className=" flex items-center justify-center " onClick={()=>{setpermissionModal(true)}}>
-                                                <img
-                                                    src={themeConfig.theme == 'dark' ? darkview : view}
-                                                    alt=""
-                                                   
-                                                    className=" object-contain w-4 h-4 cursor-pointer"
-                                                />
-    
-                                            </div>
-                                            <div className=" flex items-center justify-center">
-                                                <button 
-                                                onClick={()=>storeOrUpdate(data)}
-                                                className=" w-[56px] h-[26px] bg-[#DDDDDD] rounded-2xl text-[#000000] dark:bg-[#000000] dark:text-[#FFFFFF]">
-                                                    Edit
-                                                </button>
+           {
+            isLoading?(<PageLoader/>):(
+                <>
+                <div className="panel dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
+        {authList.length ? (
+          <div className="table-responsive mb-5 p-3">
+            <div className="overflow-x-auto ">
+                <div className="w-svw ">
+                {/* <div className="min-w-max  "> */}
 
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </>
-                        </div>
-                    ) : (
-                        <>
-                            <b>No Details Found</b>
-                        </>
-                    )}
+                <div className="dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white  grid grid-cols-8 p-2 rounded-lg md:gap-3 break-all">
+                  <div className="flex items-center justify-center ">
+                    <h3>Sl.no</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Name</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Email</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Role</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Phone</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Status</h3>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <h3>Permission</h3>
+                  </div>
                 </div>
-                )
-            }
+
+                {authList.map((data,index) => (
+                  <div
+                    className="dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-8 p-2 rounded-lg mt-1 md:gap-3 break-all"
+                    key={data.id}
+                  >
+                    <div className="flex items-center justify-center ">
+                      <h3>{index+1}</h3>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <h3>{data.name}</h3>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <h3>{data.email}</h3>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <h3>{data.role}</h3>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <h3>{data.phone}</h3>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div
+                        className={`badge text-center w-20 rounded-lg h-6 ${
+                          data.status ==1
+                            ? "bg-[#FFFFFF] text-[#12DD00]"
+                            : "text-[#D10000] bg-[#FFFFFF]"
+                        }`}
+                      >
+                        {data.status == 1 ? "Active" : "Disable"}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                        <MdRemoveRedEye  className="object-contain w-4 h-4 cursor-pointer"/>
+                    
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <button onClick={()=>{storeOrUpdate(data)}} className="w-[56px] h-[26px] bg-[#DDDDDD] rounded-2xl text-black">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <b>No Details Found</b>
+        )}
+      </div>
+                </>
+            )
+           }
            
             {/* Add / Edit Authoriation? modal */}
             <Transition appear show={modal} as={Fragment}>
@@ -349,15 +342,16 @@ const Authorization = () => {
                             >
                                 <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white-dark ">
                                     <div className=" dark:bg-[#202125]  w-[600px] bg-[#FFFFFF] text-black dark:text-white p-4 px-6 rounded-2xl ">
-                                        <div className=" flex items-center">
+                                        <div className=" flex gap-2 items-center">
                                             <img
                                                 src={themeConfig.theme=='dark'?leftDark:leftarrow}
                                                 alt=""
                                               
                                                 className=" object-contain w-4 h-4"
+
+                                                onClick={()=>setModal(false)}
                                             />
                                             <h3 className=" font-bold dark:text-white text-xl">
-                                               
                                         {params.id ? 'Edit Authorization' : 'Add Authorization'}
 
                                             </h3>
@@ -455,7 +449,21 @@ const Authorization = () => {
                                                 </div>
 
                                             </div>
-                                            <div className=" mt-2 ml-2">
+                                            <div className=" mt-2">
+                                                        <label htmlFor="status" className='text-style roboto-light ml-2'>Status</label>
+                                                        <div className="mt-3 ml-2">
+                                                            <label className="inline-flex">
+                                                                <input type="radio" name="status" value='1' defaultChecked={params.status == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
+                                                                <span style={{color:'#32e01d'}} className="peer-checked:text-success text-style roboto-light">Active</span>
+                                                            </label>
+                                                            <label className="inline-flex px-5">
+                                                                <input type="radio" name="status" value='0' defaultChecked={params.status == '0' ? true : false} onChange={(e) => changeValue(e)} className=" form-radio border-danger  w-5 h-5 text-danger peer" />
+                                                                <span style={{color:'red'}} className="peer-checked:text-denger text-style roboto-light">Disable</span>
+                                                            </label>
+                                                        </div>
+                                                        <span className="text-danger font-semibold text-sm p-2">{errors.status}</span>
+                                                    </div>
+                                            {/* <div className=" mt-2 ml-2">
                                                 <h5 className="text-style roboto-light ">Status</h5>
                                                 <div className="flex mt-1">
                                                     <div className=" flex items-center">
@@ -488,7 +496,7 @@ const Authorization = () => {
                                                         <div className=" ml-1 text-[#FF0000]">Disable</div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </form>
                                         <div className="mt-4 flex items-center justify-end">
                                             <button

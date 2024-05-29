@@ -1,298 +1,123 @@
-
-// import React, { useState, Fragment } from "react";
-
-// import { Dialog, Transition } from "@headlessui/react";
-// import leftarrow from "../../assets/images/leftarrow.png";
-// import rupee from "../../assets/images/rupee.png";
-// import dirham from "../../assets/images/dirahm.png";
-// import pound from "../../assets/images/pound.png";
-
-
-// const AddPricing = () => {
-//   const [modal, setModal] = useState(false);
-
-//   return (
-//     <>
-//       <div className="">
-//         <div className="flex justify-between mb-2">
-//           <div
-//             className="flex gap-1"
-//             onClick={() => {
-//               setModal(true);
-//             }}
-//           >
-//             <button
-//               type="button"
-//               className=" text-black dark:text-white font-extrabold text-[15px]"
-//             >
-//               openprice
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       <Transition appear show={modal} as={Fragment}>
-//         <Dialog as="div" open={modal} onClose={() => setModal(true)}>
-//           <Transition.Child
-//             as={Fragment}
-//             enter="ease-out duration-300"
-//             enterFrom="opacity-0"
-//             enterTo="opacity-100"
-//             leave="ease-in duration-200"
-//             leaveFrom="opacity-100"
-//             leaveTo="opacity-0"
-//           >
-//             <div className="fixed inset-0" />
-//           </Transition.Child>
-//           <div
-//             className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
-//             // onClick={() => {
-//             //   setModal(false);
-//             // }}
-//           >
-//             <div className="flex items-center justify-center min-h-screen px-4">
-//               <Transition.Child
-//                 as={Fragment}
-//                 enter="ease-out duration-300"
-//                 enterFrom="opacity-0 scale-95"
-//                 enterTo="opacity-100 scale-100"
-//                 leave="ease-in duration-200"
-//                 leaveFrom="opacity-100 scale-100"
-//                 leaveTo="opacity-0 scale-95"
-//               >
-//                 <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white ">
-//                   {/* <div className="  bg-white  dark:bg-[#202125]"> */}
-//                   <div className=" bg-white px-7 py-6 rounded-2xl dark:text-white dark:bg-[#202125] w-[924px] font-[400]">
-//                     <div className=" flex items-center">
-//                       <img
-//                         src={leftarrow}
-//                         alt=""
-//                         srcset=""
-//                         className=" object-contain w-[15px] h-[15px] "
-//                         onClick={() => {
-//                           setModal(false);
-//                         }}
-//                       />
-//                       <h3 className=" font-semibold  text-lg">Add Pricing</h3>
-//                     </div>
-//                     <div className=" ml-3 mt-3">
-//                       <h3 className=" font-semibold  text-lg">Package Name</h3>
-//                       <div className=" flex mt-3">
-//                         <div className=" flex items-center ml-7">
-//                           <input type="checkbox" name="" id="" />
-//                           <h4 className=" ml-2">Basic Plan</h4>
-//                         </div>
-//                         <div className=" flex items-center ml-7">
-//                           <input type="checkbox" name="" id="" />
-//                           <h4 className=" ml-2">Pro Plan</h4>
-//                         </div>
-//                       </div>
-//                       <div className="  mt-3">
-//                         <h3 className=" font-semibold  text-lg">Currency</h3>
-//                       </div>
-//                       <div className="  mt-2 grid grid-cols-3 gap-5 ml-7">
-//                         <div></div>
-//                         <div>
-//                           <h4 className=" ml-6">Monthly Price</h4>
-//                         </div>
-//                         <div>
-//                           <h4 className=" ml-5">Yearly Price</h4>
-//                         </div>
-//                       </div>
-//                       <div className=" mt-[4px]  grid grid-cols-3 gap-5 ml-7">
-//                         <div className=" flex items-center">
-//                           <div className=" flex  flex-1 items-center">
-//                             <img
-//                               src={rupee}
-//                               alt=""
-//                               srcset=""
-//                               className=" w-[22px] h-[22px]"
-//                             />
-//                             <h4 className=" ml-3">Indian rupee</h4>
-//                           </div>
-
-//                           <div className="flex justify-self-end bg-black w-auto mr-3">
-//                             <input type="checkbox" name="" id="" />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                       </div>
-//                       <div className="  mt-5 grid grid-cols-3 gap-5 ml-7">
-//                         <div></div>
-//                         <div>
-//                           <h4 className=" ml-6">Monthly Price</h4>
-//                         </div>
-//                         <div>
-//                           <h4 className=" ml-5">Yearly Price</h4>
-//                         </div>
-//                       </div>
-//                       <div className=" mt-[4px]  grid grid-cols-3 gap-5 ml-7">
-//                         <div className=" flex items-center">
-//                           <div className=" flex  flex-1 items-center">
-//                             <img
-//                               src={dirham}
-//                               alt=""
-//                               srcset=""
-//                               className=" w-[22px] h-[22px]"
-//                             />
-//                             <h4 className=" ml-3">Dirham</h4>
-//                           </div>
-
-//                           <div className="flex justify-self-end bg-black w-auto mr-3">
-//                             <input type="checkbox" name="" id="" />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                       </div>
-//                       <div className="  mt-5 grid grid-cols-3 gap-5 ml-7">
-//                         <div></div>
-//                         <div>
-//                           <h4 className=" ml-6">Monthly Price</h4>
-//                         </div>
-//                         <div>
-//                           <h4 className=" ml-5">Yearly Price</h4>
-//                         </div>
-//                       </div>
-//                       <div className=" mt-[4px]  grid grid-cols-3 gap-5 ml-7">
-//                         <div className=" flex items-center">
-//                           <div className=" flex  flex-1 items-center">
-//                             <img
-//                               src={pound}
-//                               alt=""
-//                               srcset=""
-//                               className=" w-[22px] h-[22px]"
-//                             />
-//                             <h4 className=" ml-3">Pound</h4>
-//                           </div>
-
-//                           <div className="flex justify-self-end bg-black w-auto mr-3">
-//                             <input type="checkbox" name="" id="" />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                         <div className=" flex items-center">
-//                           <div className="flex  flex-1 border border-[#D6D6D6] rounded-3xl ml-2 px-[15px] h-[26px] items-center">
-//                             <input
-//                               type="text"
-//                               className=" bg-transparent flex-1 focus:outline-none "
-//                             />
-//                           </div>
-//                         </div>
-//                       </div>
-//                       <div className="  mt-3">
-//                         <h3 className=" font-semibold  text-lg">Features</h3>
-//                         <div className=" mt-3  flex flex-wrap gap-5 ml-7">
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Live Monitoring</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Customer Support</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Onboarding Setup</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Menu Setup</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">POS System</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Order Manager</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Take away</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">KOT Dashbaord</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Payment Gateway</h4>
-//                           </div>
-//                           <div className=" flex items-center">
-//                             <input type="checkbox" name="" id="" />
-//                             <h4 className=" ml-2">Menus</h4>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-
-//                     <div className="mt-10 flex items-center justify-end mb-5">
-//                       <button
-//                         type="button"
-//                         className="  w-[107px] h-[26px] rounded-full  dark:border-white   border border-black border-solid text-sm"
-//                       >
-//                         Cancel
-//                       </button>
-//                       <button
-//                         type="button"
-//                         className=" w-[107px] h-[26px] rounded-full dark:bg-white dark:text-black bg-[#000000] text-white text-sm ml-2"
-//                       >
-//                         Add
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </Dialog.Panel>
-//               </Transition.Child>
-//             </div>
-//           </div>
-//         </Dialog>
-//       </Transition>
-//     </>
-//   );
-// };
-
-// export default AddPricing;
-import React from 'react'
-
-export default function Support() {
+import React, { useState } from "react";
+// import delet from "./images/delete.png";
+// import plus from "./images/plus.png";
+const AddFeatures = () => {
+  const [inputvisible, setInputvisible] = useState(false);
+  const features = [
+    {
+      slno: 1,
+      fn: "Live Monitoring",
+    },
+    {
+      slno: 2,
+      fn: "Customer Support",
+    },
+    {
+      slno: 3,
+      fn: "Oboarding Setup",
+    },
+    {
+      slno: 4,
+      fn: "menu Setup",
+    },
+    {
+      slno: 6,
+      fn: "POS System",
+    },
+    {
+      slno: 7,
+      fn: "Takeaway",
+    },
+    {
+      slno: 8,
+      fn: "KOT Dashboard",
+    },
+    {
+      slno: 9,
+      fn: "Payment Gateway",
+    },
+    {
+      slno: 10,
+      fn: "Menus",
+    },
+  ];
   return (
-    <div>Support</div>
-  )
-}
+    <div className=" mx-10 dark:[#000000]  bg-[#FFFFFF] p-2 rounded-xl">
+      <div className=" overflow-x-auto ">
+        <div className=" w-svw md:w-full">
+          <div className=" grid grid-cols-12 bg-[#EEEEEE] py-3 items-center rounded-lg dark:bg-[#35373B] text-black dark:text-white break-all">
+            <div className="  col-span-1 justify-center text-center font-semibold">
+              SL:No
+            </div>
+            <div className="  justify-center text-center font-semibold">
+              Features
+            </div>
+          </div>
+          {features.map((f) => (
+            <div
+              key={f.slno}
+              className=" grid grid-cols-12 bg-[#F2F2F2] py-3 items-center rounded-lg mt-1 dark:bg-[#202125] break-all"
+            >
+              <div className=" col-span-1 justify-center text-center font-semibold">
+                {f.slno}
+              </div>
+              <div className=" col-span-2 justify-center ">
+                <div>{f.fn}</div>
+              </div>
+
+              <div className=" col-span-9 flex justify-end items-center text-center ">
+                <div className=" w-[64px] h-[26px] rounded-full text-white bg-black dark:bg-[#FFFFFF] dark:text-[black]">
+                  Edit
+                </div>
+                <div className=" mx-9">
+                  <img
+                    // src={delet}
+                    alt=""
+                 
+                    className=" w-[22px] h-[22px]"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div className=" grid md:grid-cols-12 bg-[#F2F2F2] py-3 items-center rounded-lg mt-1">
+            <div className=" col-span-1 justify-center text-center font-semibold"></div>
+            <div className=" col-span-4 justify-center ">
+              {!inputvisible ? (
+                <div className=" flex items-center">
+                  <div
+                    className=" cursor-pointer "
+                    onClick={() => setInputvisible(true)}
+                  >
+                    <img
+                      // src={plus}
+                      alt=""
+                     
+                      className=" w-[18px] h-[18px]"
+                    />
+                  </div>
+                  Add new feature
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  className="input-form flex-1 focus:outline-none h-[34px]  rounded-3xl w-[289px] px-5 bg-[#FFFFFF]"
+                />
+              )}
+            </div>
+
+            <div className=" col-span-7 flex justify-end mr-12 items-center text-center ">
+              <div className=" w-[64px] h-[26px] rounded-full text-white bg-black dark:bg-[#FFFFFF] dark:text-[black]">
+                Add
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddFeatures;

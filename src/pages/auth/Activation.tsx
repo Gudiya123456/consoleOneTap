@@ -5,12 +5,21 @@ import PageLoader from '../../components/PageLoader';
 import { RiLockPasswordFill } from "react-icons/ri";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import logo1 from '../../assets/images/auth/Logo 1.svg'
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../store';
+
 const CrmSwal = withReactContent(Swal);
 export default function Activation() {
     const location = useLocation()
     const navigate = useNavigate();
     const query = new URLSearchParams(location.search);
     const token = query.get('token')
+    console.log('token', token)
+    console.log('query', query)
+    const path = window.location.pathname
+    console.log(path)
+
 
     useEffect(() => {
         if (token) checkUser();
@@ -23,13 +32,14 @@ export default function Activation() {
         setIsLoading(true)
         try {
             const response = await axios({
-                method: 'get',
-                url: window.location.origin + "/api/dashboard/authorizations/check-activation",
-                params: { token: token },
+                method: 'post',
+                url:"https://cdn.onetapdine.com/api/check-activation",
+                params: { activation_code: token },
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
+            console.log(response.data);
 
             if (response.data.status == 'success') {
                 setUser(response.data.user);
@@ -49,6 +59,8 @@ export default function Activation() {
     const defaultParams = { password: '', password_confirmation: '', token: token };
     const [errors, setErros] = useState<any>({});
     const [params, setParams] = useState<any>(JSON.parse(JSON.stringify(defaultParams)));
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    console.log(crmToken);
 
     const changeValue = (e: any) => {
         const { value, name } = e.target;
@@ -81,8 +93,8 @@ export default function Activation() {
         try {
             const response = await axios({
                 method: 'post',
-                // url: window.location.origin + "/api/dashboard/authorizations/activation",
-                url:'',
+               
+                url:'https://cdn.onetapdine.com/api/activate',
                 data,
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,62 +136,56 @@ export default function Activation() {
         const data = new FormData();
         data.append("password", params.password);
         data.append("password_confirmation", params.password_confirmation);
-        data.append("token", token);
+        data.append("activation_code", token);
         console.log(data)
         activateApi(data);
     };
     return (
         <div>{
-            !token ? <><h1>Invalid</h1></> : isLoading ? <PageLoader /> : user?.name ? (
+            !token ? <><h1>Invalid Token</h1></> : isLoading ? <PageLoader /> : user?.name ? (
 
 
                 <>
-                    <div className='bg-[#1b2e4b]'>
-                        <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400 }} className='bg-white min-h-[400px]  rounded-3xl shadow-[0_0_4px_2px_rgb(31_45_61_/_10%)]'>
+                  
+                     <div className="relative flex min-h-screen items-center justify-center bg-cover bg-[url(/restaurant/kot/images/auth/forgot-bg.jpeg)] bg-[#050100] bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
+                    <div className="relative flex w-full max-w-[1502px] flex-col justify-between bg-cover bg-center bg-no-repeat overflow-hidden rounded-md    dark:bg-black/50   lg:flex-row lg:gap-10 xl:gap-0">
 
-                            <div className='text-center '>
-                                <h1 className='text-2xl font-extrabold py-4 text-[#3b3f5c]'>Create Password</h1>
-                                <img src="https://www.piftechnologies.com/wp-content/uploads/secure-icon-300x300.gif" alt="Login" className='w-20 h-20 m-auto' />
-                            </div>
+                        <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6
 
+                            ">
+                             <div className='w-full max-w-[440px] bg-white rounded-xl lg:mt-16 p-10' >
 
+                             <form className="space-y-1 dark:text-white h-full rounded-xl">
+            <h1 className="text-2xl mt-1 font-bold  !leading-snug text-black md:text-2xl text-center">
+                <img className='text-center ml-20 mb-2 items-center w-1/2' src={logo1} alt="" />
+            </h1>
 
-                            <div className='px-5 mt-5'>
+            <div style={{fontFamily:'Roboto', fontWeight:200, fontStyle:'normal', fontSize:'14px'}}>
+                <input type="password" value={params.password} name='password' onChange={(e) => changeValue(e)} placeholder='Create New Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm font-normal  text-black mb-1 " />
 
-                                <div className='mb-4'>
-                                    <div className="flex ">
-                                        <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                            <RiLockPasswordFill />
-                                        </div>
-                                        <input type="text" value={params.password} name='password' onChange={(e) => changeValue(e)} placeholder="Enter new password" className="form-input ltr:rounded-l-none rtl:rounded-r-none" />
-                                    </div>
-                                    {errors.password ? <b className="text-danger font-semibold text-sm p-2">{errors.password}</b> : ''}
+                <span className="text-danger font-semibold text-sm p-2">{errors.password}</span>
+            </div>
+            <div style={{fontFamily:'Roboto', fontWeight:200, fontStyle:'normal', fontSize:'14px'}}>
+                <input type="password" value={params.password_confirmation} name='password_confirmation'  onChange={(e) => changeValue(e)} placeholder='Confirm Password' className="w-full rounded-lg border border-black bg-white px-4 py-2 text-sm focus font-normal text-black mb-1 " />
+
+                <span className="text-danger font-semibold text-sm p-2">{errors.password_confirmation}</span>
+            </div>
+            <button type="button" onClick={() => activate()} disabled={isBtnLoading} style={{fontFamily:'Roboto', fontWeight:600, fontStyle:'normal', fontSize:'14px'}} className="btn bg-black text-white  w-full rounded-lg border-0 !mt-2 ">
+                {isBtnLoading ? 'Please Wait...' : 'Create Password'}
+            </button>
+            <div className='mt-5 '>
+                                   
                                 </div>
+            
+                            </form>
 
-                                <div className='mb-4'>
-                                    <div className="flex ">
-                                        <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                            <RiLockPasswordFill />
-                                        </div>
-                                        <input type="tel" value={params.password_confirmation} name='password_confirmation' onChange={(e) => changeValue(e)} placeholder="Re-enter Password" className="form-input ltr:rounded-l-none rtl:rounded-r-none" />
-                                    </div>
-                                    {errors.password_confirmation ? <b className="text-danger font-semibold text-sm p-2">{errors.password_confirmation}</b> : ''}
-                                </div>
-
-
-
-
-                                <div className='mt-5 '>
-                                    <button className='btn btn-dark w-40 m-auto' disabled={isBtnLoading} onClick={() => activate()}>
-                                        {isBtnLoading ? 'Please Waite ...' : 'Submit'}
-                                    </button>
-                                </div>
-                            </div>
+                             </div>
                         </div>
                     </div>
+                </div>
 
                 </>
-            ) : <>Invali</>
+            ) : <>Invalid Token</>
         }</div>
     )
 }

@@ -71,6 +71,11 @@ const initialState = {
 
     crmToken: localStorage.getItem('crmToken') || themeConfig.crmToken,
     userData: localStorage.getItem('userData') || themeConfig.userData || themeConfig.userData,
+    // userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,
+    // profileData: JSON.parse(localStorage.getItem('profileData')) || themeConfig.profileData || themeConfig.profileData,
+
+    // userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,
+
     crmData: localStorage.getItem('userData') || themeConfig.crmData || themeConfig.crmData,
     
     // crmData: JSON.parse(localStorage.getItem('crmData')) || themeConfig.crmData || themeConfig.crmData,
@@ -175,6 +180,7 @@ const themeConfigSlice = createSlice({
         //     state.profileToken = payload;
         // },
 
+      
         setUserData(state, { payload }) {
             localStorage.setItem('userData', JSON.stringify(payload));
             state.userData = payload;

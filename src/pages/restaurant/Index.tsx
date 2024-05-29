@@ -98,6 +98,10 @@ const Restaurant = () => {
                 setTimeZones(response.data.timeZones)
                 console.log(response.data.restaurantss);
             }
+
+            if(response.data.status=='error'){
+                alert(99999)
+            }
         } catch (error: any) {
             if (error.response.status == 401) {
                 ErrorHandle();
@@ -439,7 +443,7 @@ console.log('reslist', resList);
                                                 <div className="absolute bottom-0 px-2 py-2   w-full">
                                                     <h1 className="text-white font-extrabold  text-md">{restaurant.restaurant_name}</h1>
                                                     {/* <h1 className="text-white font-extrabold  text-md">{restaurant.background}</h1> */}
-
+                                                    <h1 className="text-white" >{restaurant.id}</h1>
                                                 </div>
                                             </div>
                                         </NavLink>

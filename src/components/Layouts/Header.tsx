@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { IRootState } from '../../store';
-import { toggleTheme, toggleSidebar, setUserData, setCrmToken, toggleRTL, setColors } from '../../store/themeConfigSlice';
+import { toggleTheme, toggleSidebar, setUserData, setCrmToken, toggleRTL } from '../../store/themeConfigSlice';
 import Dropdown from '../Dropdown';
 import bell from '../../assets/images/Service Bell.png'
 import doorbell from '../../assets/images/Doorbell.svg'
@@ -20,7 +20,6 @@ import wpen from "../../assets/images/wpen.png";
 import wemail from "../../assets/images/wemail.png";
 import wphone from "../../assets/images/wphone.png";
 import IconSearch from '../Icon/IconSearch';
-
 import lightmode from "../../assets/images/lightmode.svg";
 import darkmode from "../../assets/images/darkmode.svg";
 import { FaSearch } from "react-icons/fa";
@@ -29,11 +28,170 @@ import { IoNotifications } from "react-icons/io5";
 import { HiMiniHome } from "react-icons/hi2";
 
 import { MdOutlineLightMode } from "react-icons/md";
+import axios from 'axios';
+import { ErrorHandle } from '../../pages/common/ErrorHandle';
+import Swal from 'sweetalert2';
 
 
 const Header = () => {
   const path = window.location.pathname
   const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+  const userData = useSelector((state: IRootState) => state.themeConfig.userData);
+  // const profileData = useSelector((state: IRootState) => state.themeConfig.profileData);
+
+  const [clicked, setClicked] = useState(false);
+  console.log(userData)
+  console.log(crmToken)
+  // console.log('profileData', profileData)
+
+  const [btnLoading, setBtnLoading] = useState(false);
+
+
+  // profile functionalitiess
+
+  const [defaultParams] = useState({
+    name: userData.name,
+    email: userData.email,
+    phone: userData.phone
+
+
+  });
+
+  const [params, setParams] = useState<any>(
+    JSON.parse(JSON.stringify(defaultParams))
+  );
+  const [errors, setErros] = useState<any>({});
+
+  const changeValue = (e: any) => {
+    const { value, name } = e.target;
+    setErros({ ...errors, [name]: "" });
+    setParams({ ...params, [name]: value });
+  };
+  console.table(params)
+
+  const validate = () => {
+    setErros({});
+    let errors = {};
+
+    if (!params.name) {
+      errors = {
+        ...errors,
+        name: "name is required",
+      };
+    }
+    if (!params.email) {
+      errors = {
+        ...errors,
+        email: "email is required",
+      };
+    }
+    if (!params.phone) {
+      errors = {
+        ...errors,
+        phone: " phone is required",
+      };
+    }
+
+
+    console.log(errors);
+    setErros(errors);
+    return { totalErrors: Object.keys(errors).length };
+  };
+
+  console.log('userDatte', userData);
+
+  const storeOrUpdateApi = async (data: any) => {
+    setBtnLoading(true)
+    try {
+      const response = await axios({
+        method: 'post',
+        url: "https://cdn.onetapdine.com/api/update-profile",
+        data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + crmToken,
+        },
+      });
+      if (response.data.status == 'success') {
+        Swal.fire({
+          icon: response.data.status,
+          title: response.data.title,
+          text: response.data.message,
+          padding: '2em',
+          customClass: 'sweet-alerts',
+        });
+
+        setProfileModal(false)
+        dispatch(setUserData(JSON.parse(response.data.user)))
+        setClicked(false);
+
+      } else {
+        alert("Failed")
+      }
+
+    } catch (error: any) {
+      console.log(error)
+      if (error.response.status === 401) {
+        ErrorHandle();
+      }
+      if (error?.response?.status === 422) {
+        const serveErrors = error.response.data.errors;
+        let serverErrors = {};
+        for (var key in serveErrors) {
+          serverErrors = { ...serverErrors, [key]: serveErrors[key][0] };
+          console.log(serveErrors[key][0])
+        }
+        setErros(serverErrors);
+        CrmSwal.fire({
+          title: "Server Validation Error! Please solve",
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          showCancelButton: false,
+          width: 450,
+          timer: 2000,
+          customClass: {
+            popup: "color-danger"
+          }
+        });
+      }
+    } finally {
+      setBtnLoading(false)
+    }
+  };
+
+  const formSubmit = () => {
+    const isValid = validate();
+    if (isValid.totalErrors) return false;
+    const data = new FormData();
+    data.append("id", params.id);
+    data.append("name", params.name);
+    data.append("email", params.email);
+    data.append("phone", params.phone);
+    storeOrUpdateApi(data);
+  };
+
+  const storeOrUpdate = (data) => {
+    setErros({});
+    if (data) {
+      setParams({
+        id: data.id,
+        restaurant_name: data.restaurant_name,
+        branches: data.branches,
+        admin_name: data.admin_name,
+        admin_email: data.admin_email,
+        admin_phone: data.admin_phone,
+        mode: data.mode ? '1' : '0',
+        status: data.status ? '1' : '0',
+      });
+    }
+    setProfileModal(true)
+  }
+  const profileUpdate = () => {
+    alert(9999)
+  }
+
+
   const navigate = useNavigate();
   const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
@@ -162,7 +320,7 @@ const Header = () => {
                 }}
               >
                 {/* <img className='w-7 h-7' src={lightmode} alt="" /> */}
-                <MdOutlineDarkMode className='w-7 h-7'  />
+                <MdOutlineDarkMode className='w-7 h-7' />
               </button>
             ) : (
               ''
@@ -177,7 +335,7 @@ const Header = () => {
                 }}
               >
                 {/* <img className='w-7 h-7' src={darkmode} alt="" /> */}
-                <MdOutlineLightMode  className='w-7 h-7' />
+                <MdOutlineLightMode className='w-7 h-7' />
               </button>
             )}
 
@@ -186,7 +344,7 @@ const Header = () => {
           </div>
           <div className='w-7 h-7'>
             {/* {themeConfig.theme == 'dark' ? <IoNotifications /> : "hhh"} */}
-            <IoNotifications className='w-7 h-7' /> 
+            <IoNotifications className='w-7 h-7' />
           </div>
 
           <div className="dropdown  shrink-0 flex ">
@@ -348,7 +506,7 @@ const Header = () => {
                       <div className="ml-1 ">
                         <div className=" mt-2 ">
                           <label
-                            className="text-style roboto-light  text-[16px] font-semibold ml-12"
+                            className="text-style-profile roboto-light  text-[16px] font-semibold ml-5"
                             htmlFor="status"
                           >
                             Profile Name
@@ -363,11 +521,24 @@ const Header = () => {
                               />
                             </div>
                             <div className="flex  flex-1 border border-[#ADADAD] rounded-3xl ml-2 px-[15px] h-[36px] items-center">
-                              <input
-                                type="text"
+
+                              <div
                                 className=" bg-transparent flex-1 focus:outline-none pr-[5px]"
-                              />
+
+                              >
+                                {
+                                  clicked == false ? <h1>{params.name}</h1> : <input
+                                    type="text"
+                                    className='focus:outline-none '
+                                    value={params.name}
+                                    name='name'
+                                    onChange={(e) => changeValue(e)}
+                                  />
+                                }
+                              </div>
+
                               <img
+                                onClick={() => { setClicked(true) }}
                                 src={themeConfig.theme == 'dark' ? wpen : pen}
                                 alt=""
 
@@ -375,12 +546,15 @@ const Header = () => {
                               />
 
                             </div>
+
                           </div>
+                          <span className="text-danger font-semibold text-sm  ml-8">{errors.name}</span>
+
                         </div>
 
                         <div className=" mt-2">
                           <label
-                            className="text-style roboto-light  text-[16px] font-semibold ml-12"
+                            className="text-style-profile roboto-light  text-[16px] font-semibold ml-12"
                             htmlFor="status"
                           >
                             Contact Number
@@ -397,15 +571,26 @@ const Header = () => {
 
                             </div>
                             <div className="flex  flex-1 border border-[#ADADAD] rounded-3xl ml-2 px-[15px] h-[36px] items-center">
-                              <input
-                                type="text"
-                                className="bg-transparent flex-1 focus:outline-none pr-[5px]"
-                              />
+
+
+                            <div
+                                className=" bg-transparent flex-1 focus:outline-none pr-[5px]"
+
+                              >
+                                {
+                                  clicked == false ? <h1>{params.phone}</h1> : <input
+                                    type="text"
+                                    className='focus:outline-none '
+                                    value={params.phone}
+                                    name='phone'
+                                    onChange={(e) => changeValue(e)}
+                                  />
+                                }
+                              </div>
                               <img
+                                onClick={() => { setClicked(true) }}
                                 src={themeConfig.theme == 'dark' ? wpen : pen}
-
                                 alt=""
-
                                 className=" object-contain w-4 "
                               />
 
@@ -414,7 +599,7 @@ const Header = () => {
                         </div>
                         <div className=" mt-2">
                           <label
-                            className="text-style roboto-light  text-[16px] font-semibold ml-12"
+                            className="text-style-profile roboto-light  text-[16px] font-semibold ml-12"
                             htmlFor="status"
                           >
                             Email Address
@@ -437,11 +622,22 @@ const Header = () => {
                               /> */}
                             </div>
                             <div className="flex  flex-1 border border-[#ADADAD] rounded-3xl ml-2 px-[15px] h-[36px] items-center">
-                              <input
-                                type="text"
+                            <div
                                 className=" bg-transparent flex-1 focus:outline-none pr-[5px]"
-                              />
+
+                              >
+                                {
+                                  clicked == false ? <h1>{params.email}</h1> : <input
+                                    type="text"
+                                    className='focus:outline-none '
+                                    value={params.email}
+                                    name='email'
+                                    onChange={(e) => changeValue(e)}
+                                  />
+                                }
+                              </div>
                               <img
+                              onClick={()=>{setClicked(true)}}
                                 src={themeConfig.theme == 'dark' ? wpen : pen}
                                 alt=""
 
@@ -456,6 +652,7 @@ const Header = () => {
                     <div className="mt-5 flex items-center justify-end">
                       <button
                         type="button"
+                        onClick={() => { formSubmit() }}
                         className="btn  btn-dark btn-sm w-[86px] h-[31px] rounded-full dark:bg-white dark:text-black bg-[#000000] text-white text-sm"
                       >
                         Save

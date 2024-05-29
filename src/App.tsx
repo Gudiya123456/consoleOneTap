@@ -23,7 +23,7 @@ function App({ children }: PropsWithChildren) {
         <div
             className={`${(store.getState().themeConfig.sidebar && 'toggle-sidebar') || ''} ${themeConfig.menu} ${themeConfig.layout} ${
                 themeConfig.rtlClass
-            } main-section antialiased relative font-nunito text-sm font-normal dark:bg-[#202125] bg-[#F2F2F2]`}
+            } main-section antialiased relative font-nunito text-sm font-normal dark:bg-[#202125] bg-[#F2F2F2] overflow-hidden`}
         >
             {children}
         </div>

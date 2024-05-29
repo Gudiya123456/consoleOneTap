@@ -2,13 +2,14 @@ import { lazy } from 'react';
 import Dashboard from '../pages/Dashboard';
 import Restaurant from '../pages/restaurant/Index';
 import Authorization from '../pages/authorization/Index';
-import Activation from '../pages/authorization/Activation';
+// import Activation from '../pages/authorization/Activation';
 import Pricing from '../pages/package/Index';
 import Payment from '../pages/payment/Index';
 
 
-import Features from '../pages/features/Index';
 import Roles from '../pages/roles/Roles';
+import Features from '../pages/features/Index';
+
 import Login from '../pages/auth/Login';
 import Banner from '../pages/public-site/Banner';
 import Integration from '../pages/public-site/Integration';
@@ -21,6 +22,7 @@ import Invoice from '../pages/invoice/Invoice';
 import NewForgot from '../pages/auth/NewForgot';
 import NewResetPassword from '../pages/auth/NewResetPassword';
 import Show from '../pages/restaurant/Show';
+import Activation from '../pages/auth/Activation';
 
 const routes = [
 
@@ -103,11 +105,7 @@ const routes = [
         layout: 'default',
     },
 
-    {
-        path: '/pricing/features',
-        element: <Features />,
-        layout: 'default',
-    },
+   
 
     //Packages
     {
