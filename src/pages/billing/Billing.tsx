@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Piechart from "./Piechart";
-// import downarrow from "../../images/downarrow.png";
-// import downarrowwhite from "./images/downarrowwhite.png";
+import { IoIosArrowDown } from "react-icons/io";
 const Billing = () => {
   const [payment, setPayment] = useState("paymentreceived");
   const bill = [
@@ -68,9 +67,9 @@ const Billing = () => {
     },
   ];
   return (
-    <div className=" mx-10 mt-10   font-semibold text-black dark:text-white">
-      <div className=" flex flex-wrap items-center lg:ml-3 gap-5">
-        <div className="relative w-full flex justify-center lg:w-[152px] h-[152px]">
+    <div className=" mx-3   font-semibold text-black dark:text-white">
+      <div className=" flex flex-wrap items-center xl:ml-3 gap-4">
+        <div className="relative w-full flex justify-center  xl:w-[152px] h-[152px] ">
           <Piechart completed={3} pending={1} />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className=" text-sm font-bold">Total</span>
@@ -78,14 +77,14 @@ const Billing = () => {
             <span className=" text-2xl font-bold">3</span>
           </div>
         </div>
-        <div className=" flex justify-center gap-3 w-full  lg:w-auto ">
-          <div className=" md:w-[347px] md:h-[107px] bg-[#FFFFFF] dark:bg-[#000000] lg:ml-10 rounded-lg  px-4 py-4 flex flex-col  border-b-2 border-[#4AB541]">
+        <div className=" flex justify-center gap-3 w-full  xl:w-auto ">
+          <div className=" lg:w-[347px] md:h-[107px] bg-[#FFFFFF] dark:bg-[#000000] lg:ml-10 rounded-lg  px-4 py-4 flex flex-col  border-b-2 border-[#4AB541]">
             <h3 className=" text-[#4AB541] text-[18px] font-semibold">
               Payment Completed Branches
             </h3>
             <h3 className="text-[#4AB541] text-4xl font-bold ml-3 ">2</h3>
           </div>
-          <div className=" md:w-[347px] md:h-[107px] dark:bg-[#000000] bg-[#FFFFFF] rounded-lg  px-4 py-4 flex flex-col  border-b-2 border-[#BD8800]">
+          <div className=" lg:w-[347px] md:h-[107px] dark:bg-[#000000] bg-[#FFFFFF] rounded-lg  px-4 py-4 flex flex-col  border-b-2 border-[#BD8800]">
             <h3 className=" text-[#BD8800] text-[18px] font-semibold">
               Payment pending Branches
             </h3>
@@ -104,6 +103,7 @@ const Billing = () => {
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
             {/* <img src={downarrow} alt="img" className=" w-[17px] h-[17px] " /> */}
             {/* <img src={downarrowwhite} alt="img" className=" w-[17px] h-[17px] " /> */}
+            <IoIosArrowDown size={17} />
           </div>
         </div>
         <div className="relative  inline-block  font-semibold text-sm justify-center">
@@ -113,6 +113,7 @@ const Billing = () => {
             </option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
+            <IoIosArrowDown size={17} />
             {/* <img src={downarrow} alt="img" className=" w-[17px] h-[17px] " /> */}
             {/* <img src={downarrowwhite} alt="img" className=" w-[17px] h-[17px] " /> */}
           </div>
@@ -126,6 +127,7 @@ const Billing = () => {
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
             {/* <img src={downarrow} alt="img" className=" w-[17px] h-[17px] " /> */}
             {/* <img src={downarrowwhite} alt="img" className=" w-[17px] h-[17px] " /> */}
+            <IoIosArrowDown size={17} />
           </div>
         </div>
       </div>
@@ -158,7 +160,7 @@ const Billing = () => {
           <div className=" overflow-x-auto ">
             {/* <div className="min-w-max md:min-w-full "> */}
 
-            <div className="w-svw md:w-full">
+            <div className="min-w-max md:min-w-full">
               <div className=" grid grid-cols-5  bg-[#DDDDDD] py-3 items-center rounded-lg dark:bg-[#35373B] text-black dark:text-white md:gap-3 break-all break-words">
                 <div className="  flex justify-center">
                   <h1>Sl:No</h1>
@@ -203,7 +205,7 @@ const Billing = () => {
           <div className=" overflow-x-auto ">
             {/* <div className="min-w-max md:min-w-full "> */}
 
-            <div className="w-svw md:w-full">
+            <div className="min-w-max md:min-w-full">
               <div className=" grid grid-cols-6  bg-[#DDDDDD] py-3 items-center rounded-lg dark:bg-[#35373B] md:gap-3 text-black dark:text-white break-all">
                 <div className="  flex justify-center">
                   <h1>Sl:No</h1>
@@ -251,7 +253,6 @@ const Billing = () => {
           </div>
         </div>
       </div>
-    
     </div>
   );
 };

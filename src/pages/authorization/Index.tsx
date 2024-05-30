@@ -288,7 +288,7 @@ const Authorization = () => {
                         {data.status == 1 ? "Active" : "Disable"}
                       </div>
                     </div>
-                    <div className="flex items-center justify-center">
+                    <div onClick={()=>{setpermissionModal(true)}} className="flex items-center justify-center">
                         <MdRemoveRedEye  className="object-contain w-4 h-4 cursor-pointer"/>
                     
                     </div>

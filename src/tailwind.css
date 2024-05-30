@@ -197,11 +197,11 @@ font-size:18px;
 
     .sidebar .nav-item > button,
     .sidebar .nav-item > a {
-        @apply mb-1 flex w-full items-center justify-between overflow-hidden whitespace-nowrap rounded-md p-2.5 text-[#506690] hover:bg-[#000]/[0.08] hover:text-black dark:hover:bg-[#181f32] dark:hover:text-white-dark;
+        @apply mb-1 flex w-full   items-center justify-between overflow-hidden whitespace-nowrap rounded-md p-2.5  text-[#506690] hover:bg-[#000]/[0.08] hover:text-black dark:hover:bg-[#181f32] dark:hover:text-white;
     }
     .sidebar .nav-item > button.active,
     .sidebar .nav-item > a.active {
-        @apply bg-[#000]/[0.08] text-black dark:bg-[#181f32] dark:text-white-dark;
+        @apply bg-[#000]/[0.08] text-black dark:bg-[#202125] dark:text-red-500;
     }
 
     .sidebar .nav-item > button.active > div > span,
@@ -221,7 +221,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
 
     .sidebar .nav-item a div:first-child svg,
     .sidebar .nav-item button div:first-child svg {
-        @apply h-5 w-5 text-black/50 dark:text-white/50;
+        @apply h-5 w-5   text-black dark:text-white/90;
     }
 
     .main-container .main-content {
@@ -475,7 +475,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
     .form-textarea,
     .form-select,
     .form-multiselect {
-        @apply w-full rounded-md border border-white-light bg-white px-4 py-2 text-sm font-semibold text-black !outline-none focus:border-primary focus:ring-transparent dark:border-[#17263c] dark:bg-[#121e32] dark:text-white-dark dark:focus:border-primary;
+        @apply w-full rounded-md border border-white-light  bg-white px-4 py-2 text-sm font-semibold text-black !outline-none focus:border-primary  focus:ring-transparent dark:border-[#17263c] dark:bg-white dark:rounded-2xl dark:text-white-dark dark:focus:border-primary;
     }
 
     .form-input-lg,

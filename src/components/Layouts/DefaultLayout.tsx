@@ -83,7 +83,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     <div className="main-content flex flex-col min-h-screen">
                         <Header />
                         <Suspense>
-                            <div className={`${themeConfig.animation} p-6 animate__animated`}>{children}</div>
+                            <div className={`${themeConfig.animation} p-6 px-8  animate__animated`}>{children}</div>
                         </Suspense>
                         <Footer />
                         <Portals />

@@ -489,9 +489,9 @@ console.log('reslist', resList);
                                             <img src={themeConfig.theme == 'dark' ? arrow : arrowLight} className='w-5' alt="" onClick={() => { setModal(false) }} />
                                             <h5 className="text-lg font-bold dark:text-white ">
                                                 {
-                                                    params.id ? 'Edit' : 'Add'
+                                                    params.id ? 'Edit' : 'Add '
                                                 }
-                                                 Restaurant
+                                                  Restaurant
                                             </h5>
                                         </div>
                                     </div>
