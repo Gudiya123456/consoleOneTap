@@ -499,7 +499,7 @@ const Header = () => {
               >
                 <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white-dark ">
                   {/* <div className="  bg-white  dark:bg-[#202125]"> */}
-                  <div className=" dark:bg-[#202125] bg-white text-black px-9 rounded-2xl w-[421px] pt-6 pb-5 dark:text-white font-[500]">
+                  <div className=" dark:bg-[#202125] bg-white text-black px-9 rounded-2xl max-w-[471px] pt-6 pb-5 dark:text-white font-[500]">
                     <h5 className="text-lg font-bold  ">Profile Details</h5>
 
                     <form>
@@ -548,8 +548,10 @@ const Header = () => {
                             </div>
 
                           </div>
-                          <span className="text-danger font-semibold text-sm  ml-8">{errors.name}</span>
-
+                          <div className='ml-8'>
+                          <span className='text-danger' >{errors.name}</span>
+                          </div>
+                          {/* <span className="text-danger font-semibold text-sm  ml-8">{errors.name}</span> */}
                         </div>
 
                         <div className=" mt-2">
@@ -595,6 +597,9 @@ const Header = () => {
                               />
 
                             </div>
+                          </div>
+                          <div className='ml-8'>
+                          <span className='text-danger' >{errors.phone}</span>
                           </div>
                         </div>
                         <div className=" mt-2">
@@ -647,6 +652,9 @@ const Header = () => {
                             </div>
                           </div>
                         </div>
+                        <div className='ml-8'>
+                          <span className='text-danger' >{errors.email}</span>
+                          </div>
                       </div>
                     </form>
                     <div className="mt-5 flex items-center justify-end">
