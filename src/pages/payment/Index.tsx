@@ -15,7 +15,7 @@ const Payment = () => {
       </div>
       <div className=" flex mt-10 flex-wrap mr-10 gap-10">
         <div className=" ">
-          <div className=" flex items-center  text-lg font-semibold  md:justify-start justify-center">
+          <div className=" flex items-center  text-lg font-[500]  md:justify-start justify-center">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
                 <img
@@ -24,7 +24,7 @@ const Payment = () => {
                   className=" w-[51px] h[38px] -mt-3"
                 />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">Razorpay</h2>
                 <input
                   type="radio"
@@ -41,16 +41,12 @@ const Payment = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-3 text-lg font-semibold flex-wrap md:justify-start justify-center mt-4">
+          <div className=" flex items-center gap-3 text-lg font-[500] flex-wrap md:justify-start justify-center mt-4">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
-                <img
-                  src={gpay}
-                  alt=""
-                  className=" w-[39px] h[16px] "
-                />
+                <img src={gpay} alt="" className=" w-[39px] h[16px] " />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">Google Pay</h2>
                 <input
                   type="radio"
@@ -64,16 +60,12 @@ const Payment = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-3 text-lg font-semibold flex-wrap md:justify-start justify-center mt-4">
+          <div className=" flex items-center gap-3 text-lg font-[500] flex-wrap md:justify-start justify-center mt-4">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
-                <img
-                  src={stripe}
-                  alt=""
-                  className=" w-[51px] h[29px] "
-                />
+                <img src={stripe} alt="" className=" w-[51px] h[29px] " />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">Stripe</h2>
                 <input
                   type="radio"
@@ -87,16 +79,12 @@ const Payment = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-3 text-lg font-semibold flex-wrap md:justify-start justify-center mt-4">
+          <div className=" flex items-center gap-3 text-lg font-[500] flex-wrap md:justify-start justify-center mt-4">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
-                <img
-                  src={paypal}
-                  alt=""
-                  className=" w-[60px] h[30px] "
-                />
+                <img src={paypal} alt="" className=" w-[60px] h[30px] " />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">Paypal</h2>
                 <input
                   type="radio"
@@ -110,16 +98,12 @@ const Payment = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-3 text-lg font-semibold flex-wrap md:justify-start justify-center mt-4">
+          <div className=" flex items-center gap-3 text-lg font-[500] flex-wrap md:justify-start justify-center mt-4">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
-                <img
-                  src={amazon}
-                  alt=""
-                  className=" w-[32px] h[32px] "
-                />
+                <img src={amazon} alt="" className=" w-[32px] h[32px] " />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">Amazon Pay</h2>
                 <input
                   type="radio"
@@ -133,16 +117,12 @@ const Payment = () => {
             </div>
           </div>
 
-          <div className=" flex items-center gap-3 text-lg font-semibold flex-wrap md:justify-start justify-center mt-4">
+          <div className=" flex items-center gap-3 text-lg font-[500] flex-wrap md:justify-start justify-center mt-4">
             <div className=" flex items-center">
               <div className="  w-[51px]  h[38px] flex justify-center">
-                <img
-                  src={phonepe}
-                  alt=""
-                  className=" w-[60px] h[30px] "
-                />
+                <img src={phonepe} alt="" className=" w-[60px] h[30px] " />
               </div>
-              <div className="flex  ml-1">
+              <div className="flex  ml-2">
                 <h2 className=" w-40">phonepe</h2>
                 <input
                   type="radio"
