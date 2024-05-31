@@ -23,6 +23,9 @@ import NewForgot from '../pages/auth/NewForgot';
 import NewResetPassword from '../pages/auth/NewResetPassword';
 import Show from '../pages/restaurant/Show';
 import Activation from '../pages/auth/Activation';
+import InvoiceOverview from '../pages/invoice/InvoiceOverview';
+import ViewInvoice from '../pages/invoice/ViewInvoice';
+import ViewStatement from '../pages/invoice/ViewStatement';
 
 const routes = [
 
@@ -83,6 +86,21 @@ const routes = [
     {
         path: '/invoice',
         element: <Invoice />,
+        layout: 'default',
+    },
+    {
+        path: '/invoice/overview',
+        element: <InvoiceOverview/>,
+        layout: 'default',
+    },
+    {
+        path: '/invoice/view',
+        element: <ViewInvoice/>,
+        layout: 'default',
+    },
+    {
+        path: '/invoice/view/statement',
+        element: <ViewStatement/>,
         layout: 'default',
     },
 

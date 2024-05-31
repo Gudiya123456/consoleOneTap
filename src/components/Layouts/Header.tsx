@@ -58,7 +58,7 @@ import lightlogo from '../../assets/images/lightlogo.svg'
 import llogo from "../../assets/images/Group 319 (1).svg";
 import { RiDashboardFill } from 'react-icons/ri';
 import { FaBellConcierge } from 'react-icons/fa6';
-import { IoIosFingerPrint, IoIosHome, IoMdPricetags } from 'react-icons/io';
+import { IoIosFingerPrint, IoIosHome, IoMdEye, IoMdPricetags } from 'react-icons/io';
 import { LiaCoinsSolid } from 'react-icons/lia';
 import { BsCardHeading } from 'react-icons/bs';
 import { MdSupportAgent } from 'react-icons/md';
@@ -351,7 +351,7 @@ const Header = () => {
       <div className="">
         <div className="relative  flex w-full items-center px-8 py-2.5 h-[150px] dark:bg-[#202125]">
           <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
-            <NavLink to="/" className="main-logo flex items-center shrink-0">
+            <NavLink to="/" className="main-logo flex justify-between items-center shrink-0">
               <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">
                 <img src={themeConfig.theme == 'dark' ? llogo : lightlogo} alt="" />
               </span>
@@ -364,11 +364,12 @@ const Header = () => {
               }}
             >
               <IconMenu className="w-5 h-5" />
+             
             </button>
           </div>
 
 
-          <div className="ltr:mr-2 rtl:ml-2 mt-5 ">
+          <div className="ltr:mr-2 rtl:ml-2 mt-5 sm:hidden md:hidden lg:block  ">
             <ul className="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
               <div>
                 <div className='flex gap-2 mb-4' >
@@ -379,11 +380,15 @@ const Header = () => {
                       path == "/" ? 'Dashboard'
                         : path == "/restaurants" ? 'Restaurants'
                           : path == "/restaurant/view" ? 'Restaurant View'
+                          :path=='/invoice/overview'?'Invoice Overview'
+                          :path=='/invoice/view'?'Invoice'
+                          :path=='/invoice/view/statement'?'Invoice'
                             : path == "/authorization" ? ' Authorization'
                               : path == "/payment" ? ' Payment'
                                 : path == "/invoice" ? ' Invoice'
                                   : path == "/billing" ? ' Billing'
                                     : path == '/pricing' ? 'Pricing'
+                                    : path == '/pricing/features' ? 'Feature'
                                       : path == "/support" ? ' Support'
                                         : path == "/settings" ? 'Settings'
                                           : ''
@@ -402,14 +407,18 @@ const Header = () => {
                     </Link>
                   </li>
                   <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2 flex items-center gap-1">
-                    <div className='w-4' >{themeConfig.theme == 'light' && path == "/" ? <RiDashboardFill />
+                    <div className='w-4' >{path == "/" ? <RiDashboardFill />
                       : path == "/restaurants" ? <FaBellConcierge />
                         : path == "/restaurant/view" ? <IoIosFingerPrint />
                           : path == "/authorization" ? <LiaCoinsSolid />
                             : path == "/payment" ? <LiaCoinsSolid />
                               : path == "/invoice" ? <BsCardHeading />
+                              :path=='/invoice/overview'? <IoMdEye/>
+                              :path=='/invoice/view'?<IoMdEye/>
+                              :path=='/invoice/view/statement'?<IoMdEye/>
                                 : path == "/billing" ? <HiOutlineNewspaper />
                                   : path == '/pricing' ? <IoMdPricetags />
+                              :path=='/pricing/features'?<IoMdPricetags/>
                                     : path == "/support" ? <MdSupportAgent />
                                       : path == "/settings" ? <FiSettings />
                                         : '' ? serviceDark : bell} </div>
@@ -420,8 +429,12 @@ const Header = () => {
                             : path == "/authorization" ? ' Authorization'
                               : path == "/payment" ? ' Payment'
                                 : path == "/invoice" ? ' Invoice'
+                                : path == "/invoice/overview" ? 'View Invoice'
+                                : path == "/invoice/view" ? 'View Invoice'
+                                : path == "/invoice/view/statement" ? 'View Invoice'
                                   : path == "/billing" ? ' Billing'
                                     : path == '/pricing' ? 'Pricing'
+                                    : path == '/pricing/features' ? 'Pricing Feature'
                                       : path == "/support" ? ' Support'
                                         : path == "/settings" ? 'Settings'
                                           : ''

@@ -70,8 +70,8 @@ const initialState = {
     ],
 
     crmToken: localStorage.getItem('crmToken') || themeConfig.crmToken,
-    userData: localStorage.getItem('userData') || themeConfig.userData || themeConfig.userData,
-    // userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,
+    // userData: localStorage.getItem('userData') || themeConfig.userData || themeConfig.userData,
+    userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,
     // profileData: JSON.parse(localStorage.getItem('profileData')) || themeConfig.profileData || themeConfig.profileData,
 
     // userData: JSON.parse(localStorage.getItem('userData')) || themeConfig.userData || themeConfig.userData,

@@ -124,6 +124,10 @@ import blackbottom from "../../assets/images/sidebarIcons/blackbottom.svg";
 
 
 
+// src/assets/images/sidebarIcons/authbottom.svg src/assets/images/sidebarIcons/authBottomDark.svg src/assets/images/sidebarIcons/billBo.svg src/assets/images/sidebarIcons/billingDarkBo.png src/assets/images/sidebarIcons/billBottom.svg src/assets/images/sidebarIcons/billDarkBottom.svg src/assets/images/sidebarIcons/supportBottom.svg src/assets/images/sidebarIcons/supportDarkBottom.svg
+
+
+
 import { RiDashboardFill } from "react-icons/ri";
 import { FaBellConcierge } from "react-icons/fa6";
 import { IoIosFingerPrint, IoMdPricetags } from "react-icons/io";
@@ -282,11 +286,17 @@ const Sidebar = () => {
                             <div className="fixed bottom-0">
                                 <img src={
                                    
-                                    themeConfig.theme=="dark"  ? blackbottom
-                                    :themeConfig.theme == 'light' ? greybottom
+                                    // themeConfig.theme=="dark"  ? blackbottom
+                                    themeConfig.theme=='dark' && path=='/authorization'?authDark
+
+
+                                    // :themeConfig.theme == 'light' ? greybottom
+                                    :themeConfig.theme=='light' && path=='/authorization'?auth
+
+                                    
                                     : blackbottom
 
-                                } alt="" className="w-[250px] -ml-5" />
+                                } alt="" className="sm:w-[200px] md:w-[250px] lg:w-[200px] xl:w-[200px] 2xl:w-[250px] -ml-5" />
 
                             </div>
                         </ul>

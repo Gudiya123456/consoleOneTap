@@ -1,5 +1,6 @@
 import React from "react";
 import PieChart from "../billing/Piechart";
+import { NavLink } from "react-router-dom";
 
 const Invoice = () => {
   const bill = [
@@ -86,11 +87,14 @@ const Invoice = () => {
                     {i.status}
                   </button>
                 </div>
+                <NavLink to='/invoice/overview'>
                 <div className="flex justify-center  font-normal text-sm">
                   <button className=" bg-[#DDDDDD] text-center w-[141px] h-[26px] rounded-xl dark:bg-[#000000] text-black  dark:text-white">
                     View Invoices
                   </button>
                 </div>
+                </NavLink>
+             
               </div>
             ))}
           </div>

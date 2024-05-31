@@ -443,7 +443,7 @@ console.log('reslist', resList);
                                                 <div className="absolute bottom-0 px-2 py-2   w-full">
                                                     <h1 className="text-white font-extrabold  text-md">{restaurant.restaurant_name}</h1>
                                                     {/* <h1 className="text-white font-extrabold  text-md">{restaurant.background}</h1> */}
-                                                    <h1 className="text-white" >{restaurant.id}</h1>
+                                                    {/* <h1 className="text-white" >{restaurant.id}</h1> */}
                                                 </div>
                                             </div>
                                         </NavLink>

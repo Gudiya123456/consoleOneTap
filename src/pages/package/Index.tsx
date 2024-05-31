@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import { MdEdit, MdDelete } from "react-icons/md";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { FcCheckmark } from "react-icons/fc";
 import { MdClose } from "react-icons/md";
 import {NavLink} from 'react-router-dom'
+import { Dialog, Transition } from "@headlessui/react";
+
 const Pricing = () => {
   const [selectedplan, setSelectedPlan] = useState("monthly");
+
+  const [modal,setModal]=useState(false);
   const plans = [
     {
       back: "#04B84D",
@@ -45,7 +49,7 @@ const Pricing = () => {
   return (
     <div className="dark:bg-[#202125] bg-[#F2F2F2] dark:text-[#FFFFFF] text-[#000000] p-2 px-8">
       <div className=" flex justify-center md:justify-end">
-        <div className="mt-1 flex items-center">
+        <div className="mt-1 flex items-center " onClick={()=>{setModal(true)}}>
           <AiFillPlusCircle size={18} />
 
           <h5 className=" text-[14px] font-semibold">Add Pricing</h5>
@@ -237,6 +241,201 @@ const Pricing = () => {
           </div>
         </div>
       </div>
+      <Transition appear show={modal} as={Fragment}>
+        <Dialog as="div" open={modal} onClose={() => setModal(true)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0" />
+          </Transition.Child>
+          <div
+            className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
+            // onClick={() => {
+            //   setModal(false);
+            // }}
+          >
+            <div className="flex items-center justify-center min-h-screen px-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white ">
+                  {/* <div className="  bg-white  dark:bg-[#202125]"> */}
+                  <div className=" bg-white px-7 py-6 rounded-2xl dark:text-white dark:bg-[#202125] max-w-[924px] font-[400]">
+                    <div className=" flex items-center">
+                      <div
+                        onClick={() => {
+                          setModal(false);
+                        }}
+                        className=" cursor-pointer"
+                      >
+                        <IoIosArrowBack />
+                      </div>
+                      <div>
+                        <h3 className=" font-bold  text-xl">Add Pricing</h3>
+                      </div>
+                    </div>
+                    <div className=" ml-4 mt-3">
+                      <h3 className=" font-bold  text-xl">Package Name</h3>
+                      <div className=" flex flex-wrap mt-5 gap-4 ml-7">
+                        <div className="relative  inline-block w-[194px] font-semibold text-sm">
+                          <select className="bg-[#FFFFFF]  text-[#B5B5B5] dark:bg-[#202125] border dark:border-[#515151] border-[#D6D6D6] appearance-none h-[26px] w-[194px] text-sm     pl-3 rounded-full py-[2px] pr-6     flex items-center ">
+                            <option selected disabled>
+                              Select Country
+                            </option>
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-3 text-gray-700">
+                            <IoIosArrowDown size={17} color="#B5B5B5" />
+                          </div>
+                        </div>
+                        <div className="relative  inline-block w-[194px] font-semibold text-sm">
+                          <select className="bg-[#FFFFFF]  text-[#B5B5B5] dark:bg-[#202125] border dark:border-[#515151] border-[#D6D6D6] appearance-none h-[26px] w-[194px] text-sm     pl-3 rounded-full py-[2px] pr-6     flex items-center ">
+                            <option selected disabled>
+                              Duration
+                            </option>
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-3 text-gray-700">
+                            <IoIosArrowDown size={17} color="#B5B5B5" />
+                          </div>
+                        </div>
+                        <div className="relative  inline-block w-[194px] font-semibold text-sm">
+                          <select className="bg-[#FFFFFF]  text-[#B5B5B5] dark:bg-[#202125] border dark:border-[#515151] border-[#D6D6D6] appearance-none h-[26px] w-[194px] text-sm     pl-3 rounded-full py-[2px] pr-6     flex items-center ">
+                            <option selected disabled>
+                              Package Name
+                            </option>
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-3 text-gray-700">
+                            <IoIosArrowDown size={17} color="#B5B5B5" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="  mt-3">
+                        <h3 className=" font-bold  text-lg">Price</h3>
+                        <div className="flex flex-wrap mt-2 gap-4 ml-7">
+                          <div className=" text-sm">
+                            <input
+                              type="text"
+                              placeholder=" Price"
+                              className="bg-[#FFFFFF] text-[#B5B5B5] dark:bg-[#202125] dark:border-[#515151]  border border-[#D6D6D6]  h-[26px] w-[262px] text-sm    rounded-full px-4 "
+                            />
+                          </div>
+                          <div>
+                            <label className=" ml-5">
+                              <input
+                                type="radio"
+                                name="status"
+                                value="1"
+                                className="form-radio text-success peer"
+                              />
+                              <span
+                                style={{ color: "#32e01d", fontSize: "18px" }}
+                                className="peer-checked:text-success  roboto-light"
+                              >
+                                Active
+                              </span>
+                            </label>
+                          </div>
+                          <div>
+                            <label className=" px-5">
+                              <input
+                                type="radio"
+                                name="status"
+                                value="0"
+                                className=" form-radio border-danger  w-5 h-5 text-danger peer"
+                              />
+                              <span
+                                style={{ color: "red", fontSize: "18px" }}
+                                className="peer-checked:text-success  roboto-light"
+                              >
+                                Blocked
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="font-semibold  mt-5">
+                        <h3 className=" font-bold  text-lg">Features</h3>
+                        <div className=" mt-3  flex flex-wrap gap-5 ml-7">
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Live Monitoring</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Customer Support</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Onboarding Setup</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Menu Setup</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">POS System</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Order Manager</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Take away</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">KOT Dashbaord</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Payment Gateway</h4>
+                          </div>
+                          <div className=" flex items-center">
+                            <input type="checkbox" name="" id="" />
+                            <h4 className=" ml-2">Menus</h4>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-10 font-bold flex items-center justify-end mb-5">
+                      <button
+                        type="button"
+                        className="  w-[107px] h-[26px] rounded-full  dark:border-white   border  border-black border-solid text-sm"
+                        onClick={() => {
+                          setModal(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        className=" w-[107px] h-[26px] rounded-full dark:bg-white dark:text-black bg-[#000000] text-white text-sm ml-2"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };
