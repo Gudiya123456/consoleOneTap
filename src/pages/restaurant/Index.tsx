@@ -93,7 +93,6 @@ const Restaurant = () => {
             });
             if (response.data.status == "success") {
                 setResList( resList.filter((d: any) => d.id !== resList.id));
-
                 setResList(response.data.restaurants);
                 setTimeZones(response.data.timeZones)
                 console.log(response.data.restaurantss);

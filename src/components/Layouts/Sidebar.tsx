@@ -155,6 +155,8 @@ import { HiOutlineNewspaper } from "react-icons/hi2";
 import { FiSettings } from "react-icons/fi";
 
 const Sidebar = () => {
+    console.log('************    sidebar')
+
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const [errorSubMenu, setErrorSubMenu] = useState(false);
     const path = window.location.pathname
@@ -302,8 +304,8 @@ const Sidebar = () => {
                             <div className="fixed bottom-0">
                                 <img src={
                                    
-                                    // themeConfig.theme=="dark"  ? greybottom
-                                    themeConfig.theme=='dark' && path=='/'?blackbottom
+                                    themeConfig.theme=="dark"  ? blackbottom
+                                    :themeConfig.theme=='dark' && path=='/'?blackbottom
                                     :themeConfig.theme=='dark' && path=='/authorization'?authBottomDark
                                     :themeConfig.theme=='dark' && path=='/restaurants'?blackbottom
                                     :themeConfig.theme=='dark' && path=='/billing'?billingDarkBo
@@ -324,7 +326,7 @@ const Sidebar = () => {
                                     :themeConfig.theme=='light' && path=='/support'?supportBottom
                                     :themeConfig.theme=='light' && path=='/settings'?setting
                                     
-                                    : blackbottom
+                                    : greybottom
 
                                 } alt="" className="sm:w-[200px] md:w-[250px] lg:w-[200px] xl:w-[200px] 2xl:w-[250px] -ml-5" />
 

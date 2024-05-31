@@ -66,6 +66,8 @@ import { FiSettings } from 'react-icons/fi';
 
 
 const Header = () => {
+  console.log('************    Heder')
+
   const location = useLocation();
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
 
@@ -409,7 +411,7 @@ const Header = () => {
                   <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2 flex items-center gap-1">
                     <div className='w-4' >{path == "/" ? <RiDashboardFill />
                       : path == "/restaurants" ? <FaBellConcierge />
-                        : path == "/restaurant/view" ? <IoIosFingerPrint />
+                        : path == "/restaurant/view" ? <FaBellConcierge />
                           : path == "/authorization" ? <LiaCoinsSolid />
                             : path == "/payment" ? <LiaCoinsSolid />
                               : path == "/invoice" ? <BsCardHeading />
