@@ -123,8 +123,24 @@ import greybottom from "../../assets/images/sidebarIcons/greybottom.svg";
 import blackbottom from "../../assets/images/sidebarIcons/blackbottom.svg";
 
 
+// buttom images based on routers
+import authbottom from "../../assets/images/sidebarIcons/authbottom.svg";
+import authBottomDark from "../../assets/images/sidebarIcons/authBottomDark.svg";
+import billBo from "../../assets/images/sidebarIcons/billBo.svg";
+import billingDarkBo from "../../assets/images/sidebarIcons/billingDarkBo.png";
 
-// src/assets/images/sidebarIcons/authbottom.svg src/assets/images/sidebarIcons/authBottomDark.svg src/assets/images/sidebarIcons/billBo.svg src/assets/images/sidebarIcons/billingDarkBo.png src/assets/images/sidebarIcons/billBottom.svg src/assets/images/sidebarIcons/billDarkBottom.svg src/assets/images/sidebarIcons/supportBottom.svg src/assets/images/sidebarIcons/supportDarkBottom.svg
+import supportBottom from "../../assets/images/sidebarIcons/supportBottom.svg";
+import supportDarkBottom from "../../assets/images/sidebarIcons/supportDarkBottom.svg";
+
+import setting from "../../assets/images/sidebarIcons/setting.svg";
+import darksetting from "../../assets/images/sidebarIcons/darksetting.svg";
+
+import invoiceBottom from "../../assets/images/sidebarIcons/invoiceBottom.svg";
+import invoiceDarkBottom from "../../assets/images/sidebarIcons/invoiceDarkBottom.png";
+
+import paymentb from "../../assets/images/sidebarIcons/payment.svg";
+import paymentdark from "../../assets/images/sidebarIcons/paymentdark.svg";
+
 
 
 
@@ -216,7 +232,7 @@ const Sidebar = () => {
                                         <NavLink to="/restaurants" className="group">
                                             <div className="flex items-center">
                                                 <FaBellConcierge className=" shrink-0" />
-                                                <span style={{letterSpacing:'1px'}} className="ltr:pl-4 rtl:pr-4  text-black text-[16px] font-medium dark:text-white dark:group-hover:text-white">{t(' Restaurants')}</span>
+                                                <span style={{letterSpacing:'1px'}} className="ltr:pl-4 rtl:pr-4  text-black text-[16px] font-medium dark:text-white dark:group-hover:text-white">{t(' Restaurant')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
@@ -286,13 +302,27 @@ const Sidebar = () => {
                             <div className="fixed bottom-0">
                                 <img src={
                                    
-                                    // themeConfig.theme=="dark"  ? blackbottom
-                                    themeConfig.theme=='dark' && path=='/authorization'?authDark
-
+                                    // themeConfig.theme=="dark"  ? greybottom
+                                    themeConfig.theme=='dark' && path=='/'?blackbottom
+                                    :themeConfig.theme=='dark' && path=='/authorization'?authBottomDark
+                                    :themeConfig.theme=='dark' && path=='/restaurants'?blackbottom
+                                    :themeConfig.theme=='dark' && path=='/billing'?billingDarkBo
+                                    :themeConfig.theme=='dark' && path=='/payment'?paymentdark
+                                    :themeConfig.theme=='dark' && path=='/pricing'?paymentdark
+                                    :themeConfig.theme=='dark' && path=='/invoice'?invoiceDarkBottom
+                                    :themeConfig.theme=='dark' && path=='/support'?supportDarkBottom
+                                    :themeConfig.theme=='dark' && path=='/settings'?darksetting
 
                                     // :themeConfig.theme == 'light' ? greybottom
-                                    :themeConfig.theme=='light' && path=='/authorization'?auth
-
+                                    :themeConfig.theme=='light' && path=='/'?greybottom
+                                    :themeConfig.theme=='light' && path=='/authorization'?authbottom
+                                    :themeConfig.theme=='light' && path=='/restaurants'?greybottom
+                                    :themeConfig.theme=='light' && path=='/billing'?billBo
+                                    :themeConfig.theme=='light' && path=='/payment'?paymentb
+                                    :themeConfig.theme=='light' && path=='/pricing'?paymentb
+                                    :themeConfig.theme=='light' && path=='/invoice'?invoiceBottom
+                                    :themeConfig.theme=='light' && path=='/support'?supportBottom
+                                    :themeConfig.theme=='light' && path=='/settings'?setting
                                     
                                     : blackbottom
 
