@@ -113,13 +113,10 @@ const Restaurant = () => {
     };
 
 console.log('reslist', resList);
-
     const fileLogoRef = useRef<HTMLInputElement>(null);
     const fileIconRef = useRef<HTMLInputElement>(null);
     const [logoPriview, setLogoPriview] = useState<any>(themeConfig.theme=='dark'?dlogo:logo);
     const [iconPriview, setIconPriview] = useState<any>(themeConfig.theme=='dark'?dfavicon:favicon);
-
-
 
     const [defaultParams] = useState({
         id: '',
