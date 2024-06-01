@@ -381,22 +381,23 @@ export default function Show() {
         setEditModal(true)
     }
 
-    // const editBranch=()=>{
-    //     setBranchModal(true)
-    // }
+   
 
-    const editBranch = async (data: any) => {
+    const editBranch= async(data)=>{
+        setBranchModal(true)
         setBtnLoading(true)
+        console.log( "https://cdn.onetapdine.com/api/restaurants/"+restaurantId+"/branch")
         try {
             const response = await axios({
                 method: 'post',
-                url: "https://cdn.onetapdine.com/api/restaurants",
+                url: "https://cdn.onetapdine.com/api/restaurants/"+restaurantId+"/branch",
                 data,
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: "Bearer " + crmToken,
                 },
             });
+            // alert('successsssssss');
             if (response.data.status == 'success') {
                 Swal.fire({
                     icon: response.data.status,
@@ -407,7 +408,7 @@ export default function Show() {
                 });
 
                 fetchRestaurantList()
-                setEditModal(false)
+                setBranchModal(false)
             } else {
                 alert("Failed")
             }
@@ -441,7 +442,106 @@ export default function Show() {
         } finally {
             setBtnLoading(false)
         }
+    }
+    const updateBranch = (data) => {
+        setErros({});
+        if (data) {
+            setParams({
+                id: data.id,
+                branch_name: data.branch_name,
+                address: data.address,
+                city: data.city,
+                state: data.state,
+                pincode: data.pincode,  
+                country: data.country,               
+                time_zone: data.time_zone,               
+                branch_email: data.branch_email,               
+                branch_phone: data.branch_phone,   
+                landline: data.landline,               
+                mode: data.mode ? '1' : '0',
+                status: data.status ? '1' : '0',
+            });
+        }
+        setBranchModal(true)
+    }
+
+    const branchForm = () => {
+        // const isValid = validate();
+        // if (isValid.totalErrors) return false;
+        // alert(99999)
+        const data = new FormData();
+        data.append("id", params.id);
+        data.append("branch_name", params.branch_name);
+        data.append("address", params.address);
+        data.append("area", params.area);
+        data.append("city", params.city);
+        data.append("state", params.state);
+        data.append("pincode", params.pincode);
+        data.append("country", params.country);
+        data.append("time_zone", params.time_zone);
+        data.append("landline", params.landline);
+        data.append("mode", params.mode);
+        data.append("status", params.status);
+        editBranch(data);
     };
+
+    // const editBranch = async (data: any) => {
+    //     setBtnLoading(true)
+    //     try {
+    //         const response = await axios({
+    //             method: 'post',
+    //             url: "https://cdn.onetapdine.com/api/restaurants",
+    //             data,
+    //             headers: {
+    //                 "Content-Type": "multipart/form-data",
+    //                 Authorization: "Bearer " + crmToken,
+    //             },
+    //         });
+    //         if (response.data.status == 'success') {
+    //             Swal.fire({
+    //                 icon: response.data.status,
+    //                 title: response.data.title,
+    //                 text: response.data.message,
+    //                 padding: '2em',
+    //                 customClass: 'sweet-alerts',
+    //             });
+
+    //             fetchRestaurantList()
+    //             setEditModal(false)
+    //         } else {
+    //             alert("Failed")
+    //         }
+
+    //     } catch (error: any) {
+    //         console.log(error)
+    //         if (error.response.status === 401) {
+    //             ErrorHandle();
+    //         }
+    //         if (error?.response?.status === 422) {
+    //             const serveErrors = error.response.data.errors;
+    //             let serverErrors = {};
+    //             for (var key in serveErrors) {
+    //                 serverErrors = { ...serverErrors, [key]: serveErrors[key][0] };
+    //                 console.log(serveErrors[key][0])
+    //             }
+    //             setErros(serverErrors);
+    //             CrmSwal.fire({
+    //                 title: "Server Validation Error! Please solve",
+    //                 toast: true,
+    //                 position: 'top',
+    //                 showConfirmButton: false,
+    //                 showCancelButton: false,
+    //                 width: 450,
+    //                 timer: 2000,
+    //                 customClass: {
+    //                     popup: "color-danger"
+    //                 }
+    //             });
+    //         }
+    //     } finally {
+    //         setBtnLoading(false)
+    //     }
+    // };
     
     return (
         <div className=' font-robotoLight'>
@@ -809,7 +909,7 @@ export default function Show() {
                                                     </div>
                                                     <div className=" flex items-center justify-center">
                                                         {
-                                                            branch.id=='1'?<div onClick={()=>{editBranch(branch)}}>Edit</div>: <img
+                                                            branch.id=='1'?<div onClick={()=>{updateBranch(branch)}}>Edit</div>: <img
                                                             src={themeConfig.theme == 'dark' ? nextwhite : nextblack}
                                                             // src={require("./images/arrow.png")}
                                                             className=" w-5 h-5"
@@ -1291,7 +1391,7 @@ export default function Show() {
                                                     TimeZone
                                                     </label>
                                                     <input
-                                                        type="number"
+                                                        type="text"
                                                         className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
                                                         name="time_zone"
                                                         value={params.time_zone}
@@ -1313,7 +1413,7 @@ export default function Show() {
                                                   Branch Email
                                                     </label>
                                                     <input
-                                                        type="number"
+                                                        type="text"
                                                         className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
                                                         name="branch_email"
                                                         value={params.branch_email}
@@ -1483,7 +1583,7 @@ export default function Show() {
                                             <button
                                                 type="button"
                                                 className="btn  btn-dark btn-sm px-10 rounded-2xl dark:bg-white dark:text-black "
-                                                onClick={() => { formSubmit() }}
+                                                onClick={() =>{branchForm()}}
                                             >
                                                 Update Branch
                                             </button>

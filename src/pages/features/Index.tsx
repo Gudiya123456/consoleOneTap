@@ -128,8 +128,6 @@ const AddFeatures = () => {
         if (!params.feature) {
             errors = { ...errors, feature: 'feature is required' };
         }
-        
-
         console.log(errors)
         setErros(errors);
         return { totalErrors: Object.keys(errors).length };
