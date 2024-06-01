@@ -1,50 +1,83 @@
 import { NavLink } from "react-router-dom";
 import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { IoIosArrowDown } from "react-icons/io";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaCalendarAlt } from "react-icons/fa";
 const Invoicesearch = () => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [modal, setModal] = useState(false);
   return (
-    <div className=" px-5">
-      <div className=" mt-5 text-lg font-bold">
+    <div className=" px-3 text-[15px] font-[500] dark:text-white">
+      <div className="  text-lg font-[600]">
         <h1>Search by date range</h1>
+        <div className="flex items-center mt-3 space-x-2 text-[12px] font-medium">
+          <div className="flex items-center space-x-2">
+            <FaCalendarAlt className="w-[20px] h-[20px] text-black dark:text-white" />
+
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="w-[96px] h-[29px] dark:bg-[#000000] text-center bg-[#DDDDDD] rounded dark:text-white"
+              dateFormat="dd/MM/yyyy"
+            />
+          </div>
+          <div className=" text-[15px] font-medium">to</div>
+          <div className="flex items-center space-x-2 ">
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              className="w-[96px] h-[29px] dark:bg-[#000000] text-center bg-[#DDDDDD] rounded dark:text-white"
+              dateFormat="dd/MM/yyyy"
+            />
+          </div>
+        </div>
       </div>
-      <div className=" mt-5 text-lg font-bold">
+      <div className=" mt-5 text-lg font-[600]">
         <h1>Search by branch</h1>
       </div>
-      <select name="" id="" className=" mt-3 text-sm px-3 rounded-full ">
-        <option value="" selected disabled>
-          Choose Branch
-        </option>
-      </select>
-      <div className=" mt-5 text-lg font-bold">Search by month</div>
-      <div className=" mt-3 ml-9 text-sm flex flex-wrap lg:gap-10 gap-2 md:gap-5">
+      <div className="relative  inline-block mt-3 font-semibold text-sm justify-center">
+        <select className="bg-[#DDDDDD] dark:text-white dark:bg-[#000000]  appearance-none min-w-[163px] h-[29px] text-[12px]     pl-3 rounded-full  pr-6   leading-tight focus:outline-none focus:shadow-outline flex items-center justify-between">
+          <option selected disabled>
+            Choose Branch
+          </option>
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
+          <IoIosArrowDown size={17} className=" text-black dark:text-white" />
+        </div>
+      </div>
+
+      <div className=" mt-5 text-lg font-[600]">Search by month</div>
+      <div className=" mt-3 ml-12 text-[15px] font-[500] flex flex-wrap lg:gap-10 gap-2 md:gap-5">
         <div className=" flex items-center gap-1">
           <input type="radio" name="month" id="" />
-          <label htmlFor="">Last Month</label>
+          <span htmlFor="">Last Month</span>
         </div>
         <div className=" flex items-center gap-1">
           <input type="radio" name="month" id="" />
-          <label htmlFor="">Last 3 Month</label>
+          <span htmlFor="">Last 3 Month</span>
         </div>
         <div className=" flex items-center gap-1">
           <input type="radio" name="month" id="" />
-          <label htmlFor="">Last 6 Month</label>
+          <span htmlFor="">Last 6 Month</span>
         </div>
         <div className=" flex items-center gap-1">
           <input type="radio" name="month" id="" />
-          <label htmlFor="">Last financial year</label>
+          <span htmlFor="">Last financial year</span>
         </div>
       </div>
 
       <div className=" flex flex-wrap justify-center mt-4 md:mt-12 gap-5">
         <NavLink to="/invoice/view/statement">
-          <button className=" w-[211px] h-[35px] flex justify-center items-center bg-[#ffffff] rounded-full">
+          <button className=" w-[211px] h-[35px] flex justify-center items-center dark:bg-[#000000] bg-[#DDDDDD] rounded-full">
             View Statement
           </button>
         </NavLink>
         {/* <NavLink to="/invoice/email"> */}
         <button
-          className=" w-[211px] h-[35px] flex justify-center items-center bg-[#ffffff] rounded-full"
+          className=" w-[211px] h-[35px] flex justify-center items-center dark:bg-[#000000] bg-[#DDDDDD] rounded-full"
           onClick={() => setModal(true)}
         >
           Email Statement
@@ -52,7 +85,7 @@ const Invoicesearch = () => {
         {/* </NavLink> */}
 
         <NavLink to="/invoice/download">
-          <button className=" w-[211px] h-[35px] flex justify-center items-center bg-[#ffffff] rounded-full">
+          <button className=" w-[211px] h-[35px] flex justify-center dark:bg-[#000000] items-center bg-[#DDDDDD] rounded-full">
             Download Statement
           </button>
         </NavLink>
@@ -92,10 +125,7 @@ const Invoicesearch = () => {
                     <div>
                       <h1 className=" text-[16px] font-bold">Confirm Email</h1>
                     </div>
-                    <h1
-                      htmlFor=""
-                      className=" text-[12px] font-semibold mt-2 -mb-[1px]"
-                    >
+                    <h1 className=" text-[12px] font-semibold mt-2 -mb-[1px]">
                       Email ID
                     </h1>
                     <input

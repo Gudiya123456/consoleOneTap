@@ -67,8 +67,8 @@ const Billing = () => {
     },
   ];
   return (
-    <div className=" mx-3   font-semibold text-black dark:text-white">
-      <div className=" flex flex-wrap items-center xl:ml-3 gap-4">
+    <div className="   font-semibold text-black dark:text-white">
+      <div className=" flex flex-wrap items-center 2xl:ml-3 gap-4">
         <div className="relative w-full flex justify-center  xl:w-[152px] h-[152px] ">
           <Piechart completed={3} pending={1} />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -101,8 +101,6 @@ const Billing = () => {
             </option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
-            {/* <img src={downarrow} alt="img" className=" w-[17px] h-[17px] " /> */}
-            {/* <img src={downarrowwhite} alt="img" className=" w-[17px] h-[17px] " /> */}
             <IoIosArrowDown size={17} />
           </div>
         </div>

@@ -30,8 +30,8 @@ const PieChart = ({ completed, pending }) => {
         cy="18"
       />
       <path
-        className="text-orange-500"
-        stroke="#BD8800"
+        className="text-[#FF8416]"
+        stroke="#FF8416"
         strokeWidth="3.8"
         fill="none"
         d={describeArc(

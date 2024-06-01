@@ -26,8 +26,8 @@ const Invoice = () => {
     },
   ];
   return (
-    <div className=" mx-3 mt-2  font-semibold text-black dark:text-white">
-      <div className=" flex flex-wrap items-center xl:ml-3 gap-4">
+    <div className="  mt-2  font-semibold text-black dark:text-white">
+      <div className=" flex flex-wrap items-center 2xl:ml-3 gap-4">
         <div className="relative w-full flex justify-center  xl:w-[152px] h-[152px] ">
           <PieChart completed={3} pending={1} />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -87,14 +87,13 @@ const Invoice = () => {
                     {i.status}
                   </button>
                 </div>
-                <NavLink to='/invoice/overview'>
-                <div className="flex justify-center  font-normal text-sm">
-                  <button className=" bg-[#DDDDDD] text-center w-[141px] h-[26px] rounded-xl dark:bg-[#000000] text-black  dark:text-white">
-                    View Invoices
-                  </button>
-                </div>
+                <NavLink to="/invoice/overview">
+                  <div className="flex justify-center  font-normal text-sm">
+                    <button className=" bg-[#DDDDDD] text-center w-[141px] h-[26px] rounded-xl dark:bg-[#000000] text-black  dark:text-white">
+                      View Invoices
+                    </button>
+                  </div>
                 </NavLink>
-             
               </div>
             ))}
           </div>
