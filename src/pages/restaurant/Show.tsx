@@ -650,7 +650,7 @@ export default function Show() {
                     </div>
                     <div className="flex  items-center m-2 text-black dark:text-white ">
                         <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">Contact Name</h5>
+                            <h5 className="text-md font-robotoLight font-bold ">Admin Name</h5>
                         </div>
                         <div className=" ">
                             <p className="text-sm font-robotoLight "> : {resList?.admin_name} </p>
@@ -659,7 +659,7 @@ export default function Show() {
 
                     <div className="flex  items-center m-2 text-black dark:text-white ">
                         <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">Email</h5>
+                            <h5 className="text-md font-robotoLight font-bold ">Admin Email</h5>
                         </div>
                         <div className=" ">
                             <p className="text-sm font-robotoLight ">: {resList?.admin_email} </p>
@@ -668,7 +668,7 @@ export default function Show() {
 
                     <div className="flex  items-center m-2 text-black dark:text-white ">
                         <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">Contact Number</h5>
+                            <h5 className="text-md font-robotoLight font-bold ">Admin Number</h5>
                         </div>
                         <div className=" ">
                             <p className="text-sm font-robotoLight ">: {resList?.admin_phone} </p>

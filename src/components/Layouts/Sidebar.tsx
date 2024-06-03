@@ -154,8 +154,13 @@ import { MdSupportAgent } from "react-icons/md";
 import { HiOutlineNewspaper } from "react-icons/hi2";
 import { FiSettings } from "react-icons/fi";
 
+
 const Sidebar = () => {
     console.log('************    sidebar')
+
+    // console.log('windwo heightttt', window.innerHeight())
+    const height=window.innerHeight;
+    console.log(height)
 
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const [errorSubMenu, setErrorSubMenu] = useState(false);
@@ -209,13 +214,13 @@ const Sidebar = () => {
                             </span>
                         </NavLink>
 
-                        <button
+                        {/* <button
                             type="button"
                             className="collapse-icon w-8 h-8 ml-2 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180"
                             onClick={() => dispatch(toggleSidebar())}
                         >
                             <IconCaretsDown className="m-auto rotate-90" />
-                        </button>
+                        </button> */}
                     </div>
                     <PerfectScrollbar className="h-[calc(100vh-80px)] relative">
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
@@ -301,36 +306,42 @@ const Sidebar = () => {
                                 </NavLink>
                             </li>
 
-                            <div className="fixed bottom-0">
-                                <img src={
-                                   
-                                    themeConfig.theme=="dark"  ? blackbottom
-                                    :themeConfig.theme=='dark' && path=='/'?blackbottom
-                                    :themeConfig.theme=='dark' && path=='/authorization'?authBottomDark
-                                    :themeConfig.theme=='dark' && path=='/restaurants'?blackbottom
-                                    :themeConfig.theme=='dark' && path=='/billing'?billingDarkBo
-                                    :themeConfig.theme=='dark' && path=='/payment'?paymentdark
-                                    :themeConfig.theme=='dark' && path=='/pricing'?paymentdark
-                                    :themeConfig.theme=='dark' && path=='/invoice'?invoiceDarkBottom
-                                    :themeConfig.theme=='dark' && path=='/support'?supportDarkBottom
-                                    :themeConfig.theme=='dark' && path=='/settings'?darksetting
-
-                                    // :themeConfig.theme == 'light' ? greybottom
-                                    :themeConfig.theme=='light' && path=='/'?greybottom
-                                    :themeConfig.theme=='light' && path=='/authorization'?authbottom
-                                    :themeConfig.theme=='light' && path=='/restaurants'?greybottom
-                                    :themeConfig.theme=='light' && path=='/billing'?billBo
-                                    :themeConfig.theme=='light' && path=='/payment'?paymentb
-                                    :themeConfig.theme=='light' && path=='/pricing'?paymentb
-                                    :themeConfig.theme=='light' && path=='/invoice'?invoiceBottom
-                                    :themeConfig.theme=='light' && path=='/support'?supportBottom
-                                    :themeConfig.theme=='light' && path=='/settings'?setting
-                                    
-                                    : greybottom
-
-                                } alt="" className="sm:w-[200px] md:w-[250px] lg:w-[200px] xl:w-[200px] 2xl:w-[250px] -ml-5" />
-
+                            <div>
+                                {
+                                     height > 750 &&  <div className="fixed bottom-0">
+                                    <img src={
+                                       
+                                        themeConfig.theme=="dark"  ? blackbottom
+                                        :themeConfig.theme=='dark' && path=='/'?blackbottom
+                                        :themeConfig.theme=='dark' && path=='/authorization'?authBottomDark
+                                        :themeConfig.theme=='dark' && path=='/restaurants'?blackbottom
+                                        :themeConfig.theme=='dark' && path=='/billing'?billingDarkBo
+                                        :themeConfig.theme=='dark' && path=='/payment'?paymentdark
+                                        :themeConfig.theme=='dark' && path=='/pricing'?paymentdark
+                                        :themeConfig.theme=='dark' && path=='/invoice'?invoiceDarkBottom
+                                        :themeConfig.theme=='dark' && path=='/support'?supportDarkBottom
+                                        :themeConfig.theme=='dark' && path=='/settings'?darksetting
+    
+                                        // :themeConfig.theme == 'light' ? greybottom
+                                        :themeConfig.theme=='light' && path=='/'?greybottom
+                                        :themeConfig.theme=='light' && path=='/authorization'?authbottom
+                                        :themeConfig.theme=='light' && path=='/restaurants'?greybottom
+                                        :themeConfig.theme=='light' && path=='/billing'?billBo
+                                        :themeConfig.theme=='light' && path=='/payment'?paymentb
+                                        :themeConfig.theme=='light' && path=='/pricing'?paymentb
+                                        :themeConfig.theme=='light' && path=='/invoice'?invoiceBottom
+                                        :themeConfig.theme=='light' && path=='/support'?supportBottom
+                                        :themeConfig.theme=='light' && path=='/settings'?setting
+                                        
+                                        : greybottom
+    
+                                    } alt="" className="sm:w-[200px] md:w-[250px] lg:w-[200px] xl:w-[200px] 2xl:w-[250px] -ml-5" />
+    
+                                </div>
+                                }
                             </div>
+
+                          
                         </ul>
                     </PerfectScrollbar>
                 </div>

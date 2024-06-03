@@ -585,7 +585,7 @@ console.log('reslist', resList);
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="name">
-                                                        Branch Manager Name
+                                                       Admin Name
                                                     </label>
                                                     <input
                                                         type="text"
@@ -608,7 +608,7 @@ console.log('reslist', resList);
 
                                                 <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="phone">
-                                                        Email Id
+                                                       Admin Email Id
                                                     </label>
                                                     <input
                                                         type="text"
@@ -633,7 +633,7 @@ console.log('reslist', resList);
 
                                                 <div className="mb-3">
                                                     <label className='text-style roboto-light' htmlFor="email">
-                                                        Contact Number
+                                                       Admin Contact Number
                                                     </label>
                                                     <input
                                                         type="text"
@@ -875,7 +875,7 @@ console.log('reslist', resList);
                                                                 <span style={{color:'#5E5E5E'}} className="peer-checked:text-secondary text-style roboto-light">Demo</span>
                                                             </label>
                                                         </div>
-                                                        <span className="text-danger font-semibold text-sm p-2">{errors.mode}</span>
+                                                        <span className="text-danger mt-1">{errors.mode}</span>
                                                     </div>
                                                 </div>
 
@@ -894,7 +894,7 @@ console.log('reslist', resList);
                                                                 <span style={{color:'red'}} className="peer-checked:text-denger text-style roboto-light">Disable</span>
                                                             </label>
                                                         </div>
-                                                        <span className="text-danger font-semibold text-sm p-2">{errors.status}</span>
+                                                        <span className="text-danger mt-1">{errors.status}</span>
                                                     </div>
                                                 </div>
 
