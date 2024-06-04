@@ -33,6 +33,7 @@ import InvoiceOverview from "../pages/invoice/InvoiceOverview";
 import ViewInvoice from "../pages/invoice/ViewInvoice";
 import ViewStatement from "../pages/invoice/ViewStatement";
 import Tables from "../pages/adminrestaurants/Tables";
+import InvoiceFormat from "../pages/invoice/InvoiceFormat";
 
 const routes = [
   {
@@ -134,6 +135,7 @@ const routes = [
     element: <Invoice />,
     layout: "default",
   },
+
   {
     path: "/invoice/overview",
     element: <InvoiceOverview />,
