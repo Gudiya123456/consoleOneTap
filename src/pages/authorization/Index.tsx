@@ -344,8 +344,8 @@ const Authorization = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white-dark ">
-                  <div className=" dark:bg-[#202125]  w-[600px] bg-[#FFFFFF] text-black dark:text-white p-4 px-6 rounded-2xl ">
+                <Dialog.Panel className=" border-0     my-8 text-black dark:text-white-dark ">
+                  <div className=" dark:bg-[#202125]  max-w-[600px] bg-[#FFFFFF] text-black dark:text-white p-4 px-6 rounded-2xl ">
                     <div className=" flex gap-2 items-center">
                       <img
                         src={themeConfig.theme == "dark" ? leftDark : leftarrow}
@@ -359,8 +359,8 @@ const Authorization = () => {
                     </div>
 
                     <form>
-                      <div className=" grid grid-cols-2 gap-2">
-                        <div className=" mt-2">
+                      <div className=" grid md:grid-cols-2 mt-2 gap-5">
+                        <div className=" ">
                           <label
                             className="text-style roboto-light ml-2"
                             htmlFor="status"
@@ -386,7 +386,7 @@ const Authorization = () => {
                             ""
                           )}
                         </div>
-                        <div className=" mt-2">
+                        <div className="">
                           <label
                             className="text-style roboto-light ml-2"
                             htmlFor="status"
@@ -413,8 +413,8 @@ const Authorization = () => {
                           )}
                         </div>
                       </div>
-                      <div className=" grid grid-cols-2 gap-5">
-                        <div className=" mt-2">
+                      <div className=" grid md:grid-cols-2 mt-2 gap-5">
+                        <div className=" ">
                           <label
                             className="text-style roboto-light ml-2"
                             htmlFor="status"
@@ -432,15 +432,13 @@ const Authorization = () => {
                               />
                             </div>
                           </div>
-                          {errors?.phone ? (
+                          {errors?.phone && (
                             <div className="text-danger mt-1">
                               {errors.phone}
                             </div>
-                          ) : (
-                            ""
                           )}
                         </div>
-                        <div className=" mt-2">
+                        <div className=" ">
                           <label
                             className="text-style roboto-light ml-2"
                             htmlFor="status"

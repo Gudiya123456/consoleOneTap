@@ -3,7 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoMdEye } from "react-icons/io";
 import { HiShare } from "react-icons/hi";
 import { IoIosDownload } from "react-icons/io";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 const InvoiceOverview = () => {
   const bill = [
     {
@@ -36,7 +36,7 @@ const InvoiceOverview = () => {
     <div className="  font-semibold text-black dark:text-white">
       <div className=" flex ml-3 gap-3 text-sm  text-black dark:text-white justify-center items-center md:justify-between flex-wrap">
         <div className=" flex gap-2 ">
-          <div className="relative  inline-block  font-semibold text-sm justify-center">
+          <div className="relative  inline-block  font-[500] text-[12px] justify-center">
             <select className="bg-[#FFFFFF]  dark:bg-[#000000]  appearance-none min-w-[81px] h-[22px] text-sm     pl-3 rounded-full  pr-6   leading-tight focus:outline-none focus:shadow-outline flex items-center justify-between">
               <option selected disabled>
                 Date
@@ -46,7 +46,7 @@ const InvoiceOverview = () => {
               <IoIosArrowDown size={13} />
             </div>
           </div>
-          <div className="relative  inline-block  font-semibold text-sm justify-center">
+          <div className="relative  inline-block  font-[500] text-[12px] justify-center">
             <select className="bg-[#FFFFFF]  dark:bg-[#000000]  appearance-none min-w-[81px] h-[22px] text-sm     pl-3 rounded-full  pr-6   leading-tight focus:outline-none focus:shadow-outline flex items-center justify-between">
               <option selected disabled>
                 Month
@@ -56,7 +56,7 @@ const InvoiceOverview = () => {
               <IoIosArrowDown size={13} />
             </div>
           </div>
-          <div className="relative  inline-block  font-semibold text-sm justify-center">
+          <div className="relative  inline-block  font-[500] text-[12px] justify-center">
             <select className="bg-[#FFFFFF]  dark:bg-[#000000]  appearance-none min-w-[81px] h-[22px] text-sm     pl-3 rounded-full  pr-6   leading-tight focus:outline-none focus:shadow-outline flex items-center justify-between">
               <option selected disabled>
                 Year
@@ -67,23 +67,25 @@ const InvoiceOverview = () => {
             </div>
           </div>
         </div>
-        <div className=" flex gap-2 text-sm">
-          <div className=" bg-[#FFFFFF] dark:bg-[#000000] px-4 rounded-full py-[2px] flex justify-center items-center">
-            <h3>View invoice Statement {">"}</h3>
+        <div className=" flex gap-2 font-[500] text-[14px] ">
+          <div className=" bg-[#FFFFFF] dark:bg-[#000000] cursor-pointer px-4 rounded-full py-[2px] flex justify-center items-center">
+            <h3>View invoice Statement </h3>
           </div>
-          <div className=" bg-[#FFFFFF] px-4 rounded-full py-[2px] dark:bg-[#000000] flex justify-center items-center">
-            <h3> invoice Format {">"}</h3>
-          </div>
+          <Link to={"/invoice/overview/format"}>
+            <div className=" bg-[#FFFFFF] px-4 rounded-full cursor-pointer py-[2px] dark:bg-[#000000] flex justify-center items-center">
+              <h3> invoice Format</h3>
+            </div>
+          </Link>
         </div>
       </div>
 
       <div className=" mt-3 dark:[#000000]  dark:bg-[#000000] bg-[#FFFFFF] p-2 rounded-xl">
-        <div className=" flex mt-1 mb-1 text-black dark:text-white  ml-7 gap-5 text-sm items-center">
+        {/* <div className=" flex mt-1 mb-1 text-black dark:text-white  ml-7 gap-5 text-sm items-center">
           <div className=" text-lg">Invoice Overview</div>
-        </div>
+        </div> */}
         <div className=" overflow-x-auto ">
           <div className=" min-w-max md:min-w-full">
-            <div className=" grid grid-cols-7  bg-[#DDDDDD] py-3 items-center rounded-lg dark:bg-[#35373B] text-black dark:text-white break-all gap-3">
+            <div className=" grid grid-cols-7  bg-[#DDDDDD] py-3 items-center font-[600] text-sm rounded-lg dark:bg-[#35373B] text-black dark:text-white break-all gap-3">
               <div className="  flex justify-center">
                 <h1>Sl:No</h1>
               </div>
@@ -103,7 +105,7 @@ const InvoiceOverview = () => {
             {bill.map((i) => (
               <div
                 key={i.sl}
-                className=" grid grid-cols-7 bg-[#F2F2F2] py-3 items-center rounded-lg dark:bg-[#202125] text-black dark:text-white mt-1 text-sm break-all gap-3"
+                className=" grid grid-cols-7 bg-[#F2F2F2] py-3 items-center text-[12px] font-[400] rounded-lg dark:bg-[#202125] text-black dark:text-white mt-1 text-sm break-all gap-3"
               >
                 <div className=" flex justify-center">
                   <h2>{i.sl}</h2>
@@ -119,17 +121,17 @@ const InvoiceOverview = () => {
                   <h2>{i.name}</h2>
                 </div>
 
-                    <NavLink to='/invoice/view'>
-                    <div  className="  flex justify-center ">
-                    <IoMdEye size={22} />
-                    </div>
-                    </NavLink>
-               
+                <NavLink to="/invoice/view">
+                  <div className="  flex justify-center ">
+                    <IoMdEye size={20} />
+                  </div>
+                </NavLink>
+
                 <div className="  flex justify-center ">
-                  <HiShare size={22} />
+                  <HiShare size={20} />
                 </div>
                 <div className="  flex justify-center ">
-                  <IoIosDownload size={22} />
+                  <IoIosDownload size={20} />
                 </div>
               </div>
             ))}

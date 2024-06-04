@@ -459,7 +459,7 @@ export default function Show() {
         </div>
       </div>
 
-      <div className="  grid lg:grid-cols-3 md:grid-cols-2 gap-10">
+      <div className="  grid xl:grid-cols-3 md:grid-cols-2 gap-10">
         <div className="rounded-lg  ">
           <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
             <h2 className=" dark:text-white text-black ml-5 mr-3 font-medium text-xl">
@@ -518,7 +518,7 @@ export default function Show() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-5 mt-5">
+      <div className="grid xl:grid-cols-2 gap-5 mt-5">
         <div className=" dark:bg-black bg-white p-3 pl-7 rounded-lg text-white">
           <div className=" flex">
             <div className=" dark:bg-[#3D3D3D] bg-[#F2F2F2] rounded-3xl w-56 text-center mb-1 py-1">
@@ -528,26 +528,26 @@ export default function Show() {
             </div>
           </div>
 
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">
                 Restaurants Name{" "}
               </h5>
             </div>
-            <div className=" ">
+            <div className=" flex-1">
               <p className="text-sm font-robotoLight ">
                 {" "}
                 : {resList?.restaurant_name}{" "}
               </p>
             </div>
           </div>
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">
                 Contact Name
               </h5>
             </div>
-            <div className=" ">
+            <div className="flex-1 ">
               <p className="text-sm font-robotoLight ">
                 {" "}
                 : {resList?.admin_name}{" "}
@@ -555,67 +555,66 @@ export default function Show() {
             </div>
           </div>
 
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex  m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">Email</h5>
             </div>
-            <div className=" ">
+            <div className=" flex-1">
               <p className="text-sm font-robotoLight ">
                 : {resList?.admin_email}{" "}
               </p>
             </div>
           </div>
 
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">
                 Contact Number
               </h5>
             </div>
-            <div className=" ">
+            <div className="flex-1 ">
               <p className="text-sm font-robotoLight ">
                 : {resList?.admin_phone}{" "}
               </p>
             </div>
           </div>
 
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
             </div>
-            <div className=" ">
+            <div className="flex-1 ">
               <p className="text-sm font-robotoLight ">: {resList.branches}</p>
             </div>
           </div>
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
             </div>
-            <div className=" ">
+            <div className="flex-1 ">
               <p className="text-sm font-robotoLight ">
                 : {resList.mode == 1 ? "Live" : "Demo"}
               </p>
             </div>
           </div>
 
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex   m-2 text-black dark:text-white ">
             <div className=" w-36">
               <h5 className="text-md font-robotoLight font-bold ">Status</h5>
             </div>
-            <div className=" ">
+            <div className="flex-1 ">
               <p className="text-sm font-robotoLight ">
                 : {resList.mode == 1 ? "Active" : "Blocked"}
               </p>
             </div>
           </div>
-
-          <div className="flex  items-center m-2 text-black dark:text-white ">
+          <div className="flex  m-2 text-black dark:text-white ">
             <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold">
+              <h5 className="text-md font-robotoLight font-bold ">
                 Date Created{" "}
               </h5>
             </div>
-            <div className=" ">
+            <div className="flex-1">
               <p className="text-sm font-robotoLight ">
                 : {resList.created_at}
               </p>
@@ -681,122 +680,124 @@ export default function Show() {
           </div>
         </div>
         {grid == true ? (
-          <div className="mt-2  grid grid-cols-2 gap-5 ">
+          <div>
             {branchList.length ? (
-              <div>
+              <div className="mt-2  grid xl:grid-cols-2 gap-5 ">
                 {branchList.map((branch1) => {
                   return (
-                    <div className=" bg-white dark:bg-black p-3 pl-7 rounded-lg text-white">
-                      <div className=" flex text-center justify-center items-center">
-                        <h1 className="text-lg font-robotoLight dark:text-white text-black">
-                          Branch Details{" "}
-                        </h1>
-                      </div>
+                    <>
+                      <div className=" bg-white dark:bg-black p-3 pl-7 rounded-lg text-white">
+                        <div className=" flex text-center justify-center items-center">
+                          <h1 className="text-lg font-robotoLight dark:text-white text-black">
+                            Branch Details{" "}
+                          </h1>
+                        </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Branch Name{" "}
-                          </h5>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Branch Name{" "}
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              {" "}
+                              : {branch1.branch_name}{" "}
+                            </p>
+                          </div>
                         </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            {" "}
-                            : {branch1.branch_name}{" "}
-                          </p>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Contact Name
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              {" "}
+                              : {resList.admin_name}{" "}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Contact Name
-                          </h5>
-                        </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            {" "}
-                            : {resList.admin_name}{" "}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Email
-                          </h5>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Email
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {resList.admin_email}{" "}
+                            </p>
+                          </div>
                         </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {resList.admin_email}{" "}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Contact Number
-                          </h5>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Contact Number
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {resList.admin_phone}{" "}
+                            </p>
+                          </div>
                         </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {resList.admin_phone}{" "}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Branches
-                          </h5>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Branches
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {resList.branches}
+                            </p>
+                          </div>
                         </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {resList.branches}
-                          </p>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Mode
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {branch1.mode == 1 ? "Live" : "Demo"}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Mode
-                          </h5>
-                        </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {branch1.mode == 1 ? "Live" : "Demo"}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Status
-                          </h5>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Status
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {branch1.status == 1 ? "Active" : "Blocked"}
+                            </p>
+                          </div>
                         </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {branch1.status == 1 ? "Active" : "Blocked"}
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex  items-center m-2 text-black dark:text-white ">
-                        <div className=" w-36">
-                          <h5 className="text-md font-robotoLight font-bold ">
-                            Date Created{" "}
-                          </h5>
-                        </div>
-                        <div className=" ">
-                          <p className="text-sm font-robotoLight ">
-                            : {branch1.created_at}
-                          </p>
+                        <div className="flex  items-center m-2 text-black dark:text-white ">
+                          <div className=" w-36">
+                            <h5 className="text-md font-robotoLight font-bold ">
+                              Date Created{" "}
+                            </h5>
+                          </div>
+                          <div className=" flex-1">
+                            <p className="text-sm font-robotoLight ">
+                              : {branch1.created_at}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </>
                   );
                 })}
               </div>
@@ -805,86 +806,90 @@ export default function Show() {
             )}
           </div>
         ) : (
-          <div className="panel dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
+          <div className=" dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
             {branchList.length ? (
-              <div className="table-responsive mb-5 p-3 ">
-                <>
-                  <div className=" dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-6 p-2 rounded-lg ">
-                    <div className=" flex items-center justify-center">
-                      <h3>Branch Name</h3>
-                    </div>
-                    <div className=" flex items-center justify-center">
-                      <h3>Address</h3>
-                    </div>
-                    <div className=" flex items-center justify-center">
-                      <h3>City</h3>
-                    </div>
-                    <div className=" flex items-center justify-center">
-                      <h3>Country</h3>
-                    </div>
-                    <div className=" flex items-center justify-center">
-                      <h3>Status</h3>
-                    </div>
-                    <div className=" flex items-center justify-center">
-                      <h3>View Details</h3>
-                    </div>
-                  </div>
-
-                  {branchList.map((branch: any) => {
-                    return (
-                      <div
-                        className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-6 p-2 rounded-lg mt-1"
-                        key={branch.id}
-                      >
-                        <div className=" flex items-center justify-center">
-                          <h3> {branch.branch_name}</h3>
-                        </div>
-                        <div className=" flex items-center justify-center">
-                          <h3>{branch.address}</h3>
-                        </div>
-                        <div className=" flex items-center justify-center">
-                          <h3>{branch.city}</h3>
-                        </div>
-                        <div className=" flex items-center justify-center">
-                          <h3>{branch.country}</h3>
-                        </div>
-                        <div className=" flex items-center justify-center">
-                          <div
-                            className={`badge text-center w-20 rounded-lg h-6  text-[#12DD00]  ${
-                              branch.status == "1"
-                                ? "bg-[#FFFFFF] text-[#12DD00] text-center"
-                                : "text-[#D10000] bg-[#FFFFFF] text-center"
-                            }`}
-                          >
-                            {branch.status == 1 ? "Active" : "Blocked"}
-                          </div>
-                        </div>
-                        <div className=" flex items-center justify-center">
-                          {branch.id == "1" ? (
-                            <div
-                              onClick={() => {
-                                editBranch(branch);
-                              }}
-                            >
-                              Edit
-                            </div>
-                          ) : (
-                            <img
-                              src={
-                                themeConfig.theme == "dark"
-                                  ? nextwhite
-                                  : nextblack
-                              }
-                              // src={require("./images/arrow.png")}
-                              className=" w-5 h-5"
-                            />
-                          )}
-                        </div>
+              <>
+                <div className=" mb-5 p-3 overflow-x-auto">
+                  <div className=" min-w-max md:min-w-full">
+                    <div className=" dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-6 p-2 rounded-lg ">
+                      <div className=" flex items-center justify-center">
+                        <h3>Branch Name</h3>
                       </div>
-                    );
-                  })}
-                </>
-              </div>
+                      <div className=" flex items-center justify-center">
+                        <h3>Address</h3>
+                      </div>
+                      <div className=" flex items-center justify-center">
+                        <h3>City</h3>
+                      </div>
+                      <div className=" flex items-center justify-center">
+                        <h3>Country</h3>
+                      </div>
+                      <div className=" flex items-center justify-center">
+                        <h3>Status</h3>
+                      </div>
+                      <div className=" flex items-center justify-center">
+                        <h3>View Details</h3>
+                      </div>
+                    </div>
+
+                    {branchList.map((branch: any) => {
+                      return (
+                        <>
+                          <div
+                            className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-6 p-2 rounded-lg mt-1"
+                            key={branch.id}
+                          >
+                            <div className=" flex items-center justify-center">
+                              <h3> {branch.branch_name}</h3>
+                            </div>
+                            <div className=" flex items-center justify-center">
+                              <h3>{branch.address}</h3>
+                            </div>
+                            <div className=" flex items-center justify-center">
+                              <h3>{branch.city}</h3>
+                            </div>
+                            <div className=" flex items-center justify-center">
+                              <h3>{branch.country}</h3>
+                            </div>
+                            <div className=" flex items-center justify-center">
+                              <div
+                                className={`badge text-center w-20 rounded-lg h-6  text-[#12DD00]  ${
+                                  branch.status == "1"
+                                    ? "bg-[#FFFFFF] text-[#12DD00] text-center"
+                                    : "text-[#D10000] bg-[#FFFFFF] text-center"
+                                }`}
+                              >
+                                {branch.status == 1 ? "Active" : "Blocked"}
+                              </div>
+                            </div>
+                            <div className=" flex items-center justify-center">
+                              {branch.id == "1" ? (
+                                <div
+                                  onClick={() => {
+                                    editBranch(branch);
+                                  }}
+                                >
+                                  Edit
+                                </div>
+                              ) : (
+                                <img
+                                  src={
+                                    themeConfig.theme == "dark"
+                                      ? nextwhite
+                                      : nextblack
+                                  }
+                                  // src={require("./images/arrow.png")}
+                                  className=" w-5 h-5"
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
             ) : (
               <>
                 <b>No Details Found</b>
@@ -1010,7 +1015,7 @@ export default function Show() {
                   </div>
                   <div className="px-10 pb-5 dark:bg-[#202125] bg-white">
                     <form>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 gap-x-5">
+                      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-2 gap-x-5">
                         <div className="">
                           <label
                             className="text-style roboto-light"
@@ -1136,16 +1141,16 @@ export default function Show() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                        <div className="mb-1">
-                          <div className="mt-4">
+                      <div className="flex flex-wrap mt-4 gap-3 ">
+                        <div className="">
+                          <div className="">
                             <label
                               htmlFor="status"
                               className="text-style roboto-light"
                             >
                               Mode
                             </label>
-                            <div className="mt-3">
+                            <div className="mt-3 ml-3">
                               <label className="inline-flex">
                                 <input
                                   type="radio"
@@ -1155,9 +1160,9 @@ export default function Show() {
                                     params.mode == "1" ? true : false
                                   }
                                   onChange={(e) => changeValue(e)}
-                                  className="form-radio text-success peer"
+                                  className="form-radio text-[#B3B3B3] dark:border-[#B3B3B3]  border-[#B3B3B3] peer"
                                 />
-                                <span className="peer-checked:text-success text-style roboto-light">
+                                <span className="peer-checked:text-[#5E5E5E] text-[#5E5E5E] text-[14px] font-light  roboto-light">
                                   Live
                                 </span>
                               </label>
@@ -1170,28 +1175,30 @@ export default function Show() {
                                     params.mode == "0" ? true : false
                                   }
                                   onChange={(e) => changeValue(e)}
-                                  className="form-radio text-secondary peer"
+                                  className="form-radio text-[#B3B3B3] dark:border-[#B3B3B3]  border-[#B3B3B3] peer"
                                 />
-                                <span className="peer-checked:text-secondary text-style roboto-light">
+                                <span className="peer-checked:text-[#5E5E5E] text-[#5E5E5E] text-[14px] font-light roboto-light">
                                   Demo
                                 </span>
                               </label>
                             </div>
-                            <span className="text-danger font-semibold text-sm p-2">
-                              {errors.mode}
-                            </span>
+                            {errors.mode && (
+                              <span className="text-danger font-semibold text-sm p-2">
+                                {errors.mode}
+                              </span>
+                            )}
                           </div>
                         </div>
 
                         <div className="mb-1">
-                          <div className="mt-4">
+                          <div className="">
                             <label
                               htmlFor="status"
                               className="text-style roboto-light"
                             >
                               Status
                             </label>
-                            <div className="mt-3">
+                            <div className="mt-3 ml-3">
                               <label className="inline-flex">
                                 <input
                                   type="radio"
@@ -1201,9 +1208,9 @@ export default function Show() {
                                     params.status == "1" ? true : false
                                   }
                                   onChange={(e) => changeValue(e)}
-                                  className="form-radio text-success peer"
+                                  className="form-radio text-success dark:border-success  peer"
                                 />
-                                <span className="peer-checked:text-success text-style roboto-light">
+                                <span className="peer-checked:text-success  text-[14px] font-light text-success roboto-light">
                                   Active
                                 </span>
                               </label>
@@ -1216,16 +1223,18 @@ export default function Show() {
                                     params.status == "0" ? true : false
                                   }
                                   onChange={(e) => changeValue(e)}
-                                  className="form-radio text-secondary peer"
+                                  className="form-radio text-red-500  dark:border-red-500 border-red-500 peer"
                                 />
-                                <span className="peer-checked:text-secondary text-style roboto-light">
+                                <span className="peer-checked:text-red-500 text-[14px] font-light text-red-500  roboto-light">
                                   Blocked
                                 </span>
                               </label>
                             </div>
-                            <span className="text-danger font-semibold text-sm p-2">
-                              {errors.status}
-                            </span>
+                            {errors.status && (
+                              <span className="text-danger font-semibold text-sm p-2">
+                                {errors.status}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>

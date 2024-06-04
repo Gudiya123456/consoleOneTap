@@ -34,9 +34,6 @@ const Payment = () => {
                   className=" "
                   onChange={(e) => setSelectedOption(e.target.value)}
                 />
-                {/* <div className=" mr-6 border  border-black w-3 h-3 rounded-full flex justify-center items-center ">
-                <div className=" bg-black w-2 h-2 rounded-full "></div>
-              </div> */}
               </div>
             </div>
           </div>
