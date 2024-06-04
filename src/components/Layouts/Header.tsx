@@ -180,8 +180,8 @@ const Header = () => {
   // const profileData = useSelector((state: IRootState) => state.themeConfig.profileData);
 
   const [clicked, setClicked] = useState(false);
-  console.log(userData)
-  console.log(crmToken)
+  // console.log(userData)
+  // console.log(crmToken)
   // console.log('profileData', profileData)
 
   const [btnLoading, setBtnLoading] = useState(false);
@@ -238,7 +238,7 @@ const Header = () => {
     return { totalErrors: Object.keys(errors).length };
   };
 
-  console.log('userDatte', userData);
+  // console.log('userDatte', userData);
 
   const storeOrUpdateApi = async (data: any) => {
     setBtnLoading(true)
@@ -348,6 +348,58 @@ const Header = () => {
   };
 
 
+  // search restaurants
+const[isLoading,setIsLoading]=useState(false)
+const[resList,setResList]=useState([])
+
+  const fetchRestaurantList = async () => {
+    setIsLoading(true);
+    try {
+        const response = await axios({
+            method: "get",
+            url: "https://cdn.onetapdine.com/api/restaurants",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + crmToken,
+            },
+        });
+        if (response.data.status == "success") {
+            setResList(response.data.restaurants);
+            console.log(response.data.restaurants);
+        }
+        console.log('restarants', response.data.restaurants)
+
+        if(response.data.status=='error'){
+            alert(99999)
+        }
+    } catch (error: any) {
+        if (error.response.status == 401) {
+            ErrorHandle();
+        }
+        else console.log(error);
+    } finally {
+        setIsLoading(false);
+    }
+};
+useEffect(()=>{
+  fetchRestaurantList()
+},[])
+  const[data,setData]=useState([]);
+  const[value,setValue]=useState();
+  const onChange=(e)=>{
+    setValue(e.target.value.toUpperCase());
+    fetchRestaurantList()
+    // const response=await fetch("https://jsonplaceholder.typicode.com/posts")
+    // const data=response.json()
+    setData(resList);
+  }
+  console.log('helloo search data', data);
+  console.log(value)
+
+  const clearSearch=()=>{
+    setValue('');
+  }
+const resto='/restaurant/view'
   return (
     <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
       <div className="">
@@ -371,7 +423,7 @@ const Header = () => {
           </div>
 
 
-          <div className="ltr:mr-2 rtl:ml-2 mt-5 sm:hidden md:hidden lg:block  ">
+          <div className="ltr:mr-2 rtl:ml-2 mt-5 sm:hidden md:hidden hidden lg:block  ">
             <ul className="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
               <div>
                 <div className='flex gap-2 mb-4' >
@@ -453,7 +505,7 @@ const Header = () => {
 
               <button
                 type="button"
-                onClick={() => setSearch(!search)}
+                // onClick={() => setSearch(!search)}
                 className="search_btn sm:hidden p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:bg-white-light/90 dark:hover:bg-dark/60"
               >
                 <IconSearch className="w-4.5 h-4.5 mx-auto dark:text-[#d0d2d6]" />
@@ -462,22 +514,46 @@ const Header = () => {
 
             <form
               className={`${search && '!block'} sm:relative absolute inset-x-0  sm:top-0 top-1/2 sm:translate-y-0 -translate-y-1/2 sm:mx-0 mx-4 z-10 sm:block hidden`}
-              onSubmit={() => setSearch(false)}
+              // onSubmit={() => setSearch(false)}
             >
-              <div className="relative bg-white  rounded-2xl w-[310px]  p-0 m-0 border-white">
+              <div className="relative bg-white   rounded-2xl w-[310px]  p-0 m-0 border-white">
                 <input
                   type="text"
                   className="form-input text-[13px] border border-none bg-transparent ltr:pl-9 rtl:pr-9 ltr:sm:pr-4 rtl:sm:pl-4 ltr:pr-9 rtl:pl-9 peer sm:bg-transparent  placeholder:tracking-widest"
                   placeholder="Search here..."
+                  value={value}
+                  onChange={onChange}
+                  defaultValue=""
                 />
                 <button type="button" className="absolute w-9 h-9 inset-0 ltr:ml-1 rtl:mr-1 appearance-none peer-focus:text-primary">
                   <IoSearchOutline className="mx-auto" />
                 </button>
-                <button type="button" className="hover:opacity-80 sm:hidden block absolute top-1/2 -translate-y-1/2 ltr:right-2 rtl:left-2" onClick={() => setSearch(false)}>
+                <button type="button" className="hover:opacity-80 sm:hidden block absolute top-1/2 -translate-y-1/2 ltr:right-2 rtl:left-2" onClick={(e)=>{{setValue(item.restaurant_name), clearSearch()}}}>
                   <IconXCircle />
                 </button>
               </div>
+              <div className=''>
+             {
+              value && data.length?(
+                data.filter(item=>item.restaurant_name.startsWith(value) && item.restaurant_name !== value) .map(item=>(<div className='' key={item.id} onClick={(e)=>{{setValue(item.restaurant_name), clearSearch()}}}>
+                {/* <NavLink to={`${resto}/${item.id}`}  > */}
+                <NavLink to='/restaurant/view' state={{restaurantId:item.id}} >
+                <div>
+                  
+                    {
+                      !item.restaurant_name?"noooo re":item.restaurant_name
+                    }
+
+                   
+                  
+                </div>
+                  </NavLink> 
+                  </div>))
+              ):''
+             }
+            </div>
             </form>
+           
             <div>
               {themeConfig.theme === 'light' ? (
                 <button

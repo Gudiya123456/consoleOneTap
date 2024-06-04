@@ -5,12 +5,18 @@ import Authorization from '../pages/authorization/Index';
 // import Activation from '../pages/authorization/Activation';
 import Pricing from '../pages/package/Index';
 import Payment from '../pages/payment/Index';
-
-
 import Roles from '../pages/roles/Roles';
 import Features from '../pages/features/Index';
-
 import Login from '../pages/auth/Login';
+
+import Login1 from '../pages/adminrestaurants/Login';
+import ForgotPassword from '../pages/adminrestaurants/ForgotPassword';
+import ResetPassword from '../pages/adminrestaurants/ResetPassword';
+import ActivatePassword from '../pages/adminrestaurants/ActivatePassword';
+import Maintenance from '../pages/adminrestaurants/Maintenance';
+import ErrorPage from '../pages/adminrestaurants/ErrorPage';
+import Maintenence from '../pages/adminrestaurants/Maintenance2';
+
 import Banner from '../pages/public-site/Banner';
 import Integration from '../pages/public-site/Integration';
 import Demorequest from '../pages/public-site/Demorequest';
@@ -26,6 +32,8 @@ import Activation from '../pages/auth/Activation';
 import InvoiceOverview from '../pages/invoice/InvoiceOverview';
 import ViewInvoice from '../pages/invoice/ViewInvoice';
 import ViewStatement from '../pages/invoice/ViewStatement';
+import Tables from '../pages/adminrestaurants/Tables';
+
 
 const routes = [
 
@@ -44,6 +52,50 @@ const routes = [
         element: <NewResetPassword />,
         layout: 'blank',
     },
+
+    // admin restautants route 
+    {
+        path: '/activate',
+        element: <ActivatePassword />,
+        layout: 'blank',
+    },
+    {
+        path: '/maintenance',
+        element: <Maintenance />,
+        layout: 'blank',
+    },
+    {
+        path: '/maintenance2',
+        element: <Maintenence />,
+        layout: 'blank',
+    },
+    {
+        path: '/errorpage',
+        element: <ErrorPage />,
+        layout: 'blank',
+    },
+    {
+        path: '/loginn',
+        element: <Login1 />,
+        layout: 'blank',
+    },
+    {
+        path: '/forgot',
+        element: <ForgotPassword />,
+        layout: 'blank',
+    },
+    {
+        path: '/resetpassword',
+        element: <ResetPassword />,
+        layout: 'blank',
+    },
+
+    {
+        path: '/tables',
+        element: <Tables />,
+        layout: 'blank',
+    },
+
 
     {
         path: '/',

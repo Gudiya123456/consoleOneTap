@@ -404,6 +404,7 @@ console.log('reslist', resList);
         }
         setModal(true)
     }
+    const resto='/restaurant/view';
 
     return (
         <div>
@@ -430,16 +431,13 @@ console.log('reslist', resList);
                                 {resList.map((restaurant: any) => (
                                     <div
                                         key={restaurant.id}>
-                                        {/* className={`dark:bg-[#202125] bg-[linear-gradient(to_bottom,rgba(0,0,0,0)53%,rgba(0,2,0.8)95%),url(http://cdn.onetapdine.com${restaurant.background})] bg-cover  h-[170px]   rounded-xl relative`}> */}
                                         <NavLink to='/restaurant/view' state={{restaurantId:restaurant.id}} >
+                                            {/* <NavLink to={`${resto}/${restaurant.id}`}  > */}
                                             <div className={` dark:bg-[#202125]  bg-[linear-gradient(to_bottom,rgba(0,0,0,0)53%,rgba(0,2,0.8)95%)] rounded-3xl h-[160px]  relative`}
                                             style={{height:'180px', backgroundSize:'cover', backgroundImage:`linear-gradient(to bottom, rgba(0,0,0,0)53%, rgba(0,2,0.8)95%), url(https://cdn.onetapdine.com${restaurant.background})`}}
                                             >
-                                                {/* <img src={restaurant.background?restaurant.background:'/restaurant/kot/images/auth/forgot-bg.jpeg'} alt="" className='bg-cover   bg-center bg-no-repeat saturate-20  h-[160px] w-[500px] relative   rounded-xl' /> */}
                                                 <div className="absolute bottom-0 px-2 py-2   w-full">
                                                     <h1 className="text-white font-extrabold  text-md">{restaurant.restaurant_name}</h1>
-                                                    {/* <h1 className="text-white font-extrabold  text-md">{restaurant.background}</h1> */}
-                                                    {/* <h1 className="text-white" >{restaurant.id}</h1> */}
                                                 </div>
                                             </div>
                                         </NavLink>
