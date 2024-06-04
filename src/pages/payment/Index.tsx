@@ -9,8 +9,8 @@ import amazon from "../../assets/images/amazon.png";
 const Payment = () => {
   const [selectedOption, setSelectedOption] = useState("");
   return (
-    <div className=" md:px-12 text-black dark:text-white">
-      <div className=" mt-10 text-xl font-bold">
+    <div className=" text-black dark:text-white">
+      <div className=" text-xl font-bold">
         <h1>Payment Gateway</h1>
       </div>
       <div className=" flex mt-10 flex-wrap mr-10 gap-10">

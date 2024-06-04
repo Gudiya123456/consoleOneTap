@@ -22,6 +22,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorHandle } from "../common/ErrorHandle";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { RiArrowLeftWideFill } from "react-icons/ri";
 const CrmSwal = withReactContent(Swal);
 
 export default function Show() {
@@ -44,11 +45,14 @@ export default function Show() {
   const [editModal, setEditModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [timeZones, setTimeZones] = useState([]);
+  const [branchModal, setBranchModal] = useState(false);
 
   useEffect(() => {
     dispatch(setPageTitle("Restaurant Details"));
     fetchRestaurantList();
   }, []);
+
   const fetchRestaurantList = async () => {
     try {
       const response = await axios({
@@ -60,11 +64,14 @@ export default function Show() {
         },
       });
       console.log("fetch restaiurant", response.data);
+      console.log("restaurants", response.data.restaurants);
+      console.log("Branches", response.data.branches);
 
       if (response.data.status == "success") {
         setResList(response.data.restaurant);
         setActivityList(response.data.activities);
         setBranchList(response.data.branches);
+        setTimeZones(response.data.timeZones);
         setData(response.data);
       } else if (response.data.status == "error") {
         // navigate('/restaurants')
@@ -87,6 +94,21 @@ export default function Show() {
     admin_phone: resList.admin_phone,
     mode: resList.mode,
     status: resList.status,
+
+    // branch deatils
+
+    branch_name: branchList.branch_name,
+    address: branchList.address,
+    city: branchList.city,
+    state: branchList.state,
+    pincode: branchList.pincode,
+    country: branchList.country,
+    time_zone: branchList.time_zone,
+    branch_email: branchList.branch_email,
+    branch_phone: branchList.branch_phone,
+    landline: branchList.landline,
+    // mode:branchList.,
+    // status:branchList.,
   });
 
   const [params, setParams] = useState<any>(
@@ -145,6 +167,89 @@ export default function Show() {
     if (!params.branches) {
       errors = { ...errors, branches: "Please select branches!" };
     }
+    if (!params.branch_name) {
+      errors = {
+        ...errors,
+        branch_name: " Branch Name is required",
+      };
+    }
+
+    if (!params.address) {
+      errors = {
+        ...errors,
+        address: " Address is required",
+      };
+    }
+    if (!params.city) {
+      errors = {
+        ...errors,
+        city: " city is required",
+      };
+    }
+    if (!params.state) {
+      errors = {
+        ...errors,
+        state: " state is required",
+      };
+    }
+    if (!params.pincode) {
+      errors = {
+        ...errors,
+        pincode: " pincode is required",
+      };
+    }
+
+    if (!params.country) {
+      errors = {
+        ...errors,
+        country: " country is required",
+      };
+    }
+
+    if (!params.time_zone) {
+      errors = {
+        ...errors,
+        time_zone: " time_zone is required",
+      };
+    }
+    if (!params.branch_email) {
+      errors = {
+        ...errors,
+        branch_email: " branch_email is required",
+      };
+    }
+
+    if (!params.branch_name) {
+      errors = {
+        ...errors,
+        branch_name: " branch_name is required",
+      };
+    }
+
+    if (!params.branch_phone) {
+      errors = {
+        ...errors,
+        branch_phone: " branch_phone is required",
+      };
+    }
+    if (!params.landline) {
+      errors = {
+        ...errors,
+        landline: " landline is required",
+      };
+    }
+    // if (!params.status1) {
+    //     errors = {
+    //         ...errors,
+    //         status1: " status1 is required",
+    //     };
+    // }
+    // if (!params.mode1) {
+    //     errors = {
+    //         ...errors,
+    //         mode1: " mode1 is required",
+    //     };
+    // }
 
     console.log(errors);
     setErros(errors);
@@ -175,7 +280,6 @@ export default function Show() {
       console.log(errors);
     }
   };
-
   const storeOrUpdateApi = async (data: any) => {
     setBtnLoading(true);
     try {
@@ -265,6 +369,67 @@ export default function Show() {
     setEditModal(true);
   };
 
+  // const editBranch=()=>{
+  //     setBranchModal(true)
+  // }
+
+  const editBranch = async (data: any) => {
+    setBtnLoading(true);
+    try {
+      const response = await axios({
+        method: "post",
+        url: "https://cdn.onetapdine.com/api/restaurants",
+        data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + crmToken,
+        },
+      });
+      if (response.data.status == "success") {
+        Swal.fire({
+          icon: response.data.status,
+          title: response.data.title,
+          text: response.data.message,
+          padding: "2em",
+          customClass: "sweet-alerts",
+        });
+
+        fetchRestaurantList();
+        setEditModal(false);
+      } else {
+        alert("Failed");
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response.status === 401) {
+        ErrorHandle();
+      }
+      if (error?.response?.status === 422) {
+        const serveErrors = error.response.data.errors;
+        let serverErrors = {};
+        for (var key in serveErrors) {
+          serverErrors = { ...serverErrors, [key]: serveErrors[key][0] };
+          console.log(serveErrors[key][0]);
+        }
+        setErros(serverErrors);
+        CrmSwal.fire({
+          title: "Server Validation Error! Please solve",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          showCancelButton: false,
+          width: 450,
+          timer: 2000,
+          customClass: {
+            popup: "color-danger",
+          },
+        });
+      }
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
   return (
     <div className=" font-robotoLight">
       <div className="flex justify-end gap-3 mb-5">
@@ -297,7 +462,7 @@ export default function Show() {
       <div className="  grid lg:grid-cols-3 md:grid-cols-2 gap-10">
         <div className="rounded-lg  ">
           <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
-            <h2 className=" dark:text-white text-black ml-7 font-medium text-xl">
+            <h2 className=" dark:text-white text-black ml-5 mr-3 font-medium text-xl">
               Total number of branches
             </h2>
           </div>
@@ -467,22 +632,26 @@ export default function Show() {
             </div>
           </div>
           <div className="h-[280px] overflow-auto">
-            {activityList.length
-              ? activityList.map((activity) => {
-                  return (
-                    <>
-                      <div className="p-2 px-3 dark:bg-[#3D3D3D] bg-[#EEEEEE] text-black dark:text-white rounded-xl mt-2">
-                        <h5 className="text-md font-robotoLight ">
-                          {activity.description}
-                        </h5>
-                        <h5 className="text-md font-robotoLight ">
-                          {activity.created_at}
-                        </h5>
-                      </div>
-                    </>
-                  );
-                })
-              : "No Activities Found"}
+            {activityList.length ? (
+              activityList.map((activity) => {
+                return (
+                  <>
+                    <div className="p-2 px-3 dark:bg-[#3D3D3D] bg-[#EEEEEE] text-black dark:text-white rounded-xl mt-2">
+                      <h5 className="text-md font-robotoLight ">
+                        {activity.description}
+                      </h5>
+                      <h5 className="text-md font-robotoLight ">
+                        {activity.created_at}
+                      </h5>
+                    </div>
+                  </>
+                );
+              })
+            ) : (
+              <div className="text-black dark:text-white">
+                No Activities Found
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -546,7 +715,7 @@ export default function Show() {
                         <div className=" ">
                           <p className="text-sm font-robotoLight ">
                             {" "}
-                            : {branch1.branch_name}{" "}
+                            : {resList.admin_name}{" "}
                           </p>
                         </div>
                       </div>
@@ -559,7 +728,7 @@ export default function Show() {
                         </div>
                         <div className=" ">
                           <p className="text-sm font-robotoLight ">
-                            : {branch1.branch_email}{" "}
+                            : {resList.admin_email}{" "}
                           </p>
                         </div>
                       </div>
@@ -572,7 +741,7 @@ export default function Show() {
                         </div>
                         <div className=" ">
                           <p className="text-sm font-robotoLight ">
-                            : {branch1.admin_phone}{" "}
+                            : {resList.admin_phone}{" "}
                           </p>
                         </div>
                       </div>
@@ -585,7 +754,7 @@ export default function Show() {
                         </div>
                         <div className=" ">
                           <p className="text-sm font-robotoLight ">
-                            : {branch1.branches}
+                            : {resList.branches}
                           </p>
                         </div>
                       </div>
@@ -691,15 +860,25 @@ export default function Show() {
                           </div>
                         </div>
                         <div className=" flex items-center justify-center">
-                          <img
-                            src={
-                              themeConfig.theme == "dark"
-                                ? nextwhite
-                                : nextblack
-                            }
-                            // src={require("./images/arrow.png")}
-                            className=" w-5 h-5"
-                          />
+                          {branch.id == "1" ? (
+                            <div
+                              onClick={() => {
+                                editBranch(branch);
+                              }}
+                            >
+                              Edit
+                            </div>
+                          ) : (
+                            <img
+                              src={
+                                themeConfig.theme == "dark"
+                                  ? nextwhite
+                                  : nextblack
+                              }
+                              // src={require("./images/arrow.png")}
+                              className=" w-5 h-5"
+                            />
+                          )}
                         </div>
                       </div>
                     );
@@ -784,7 +963,6 @@ export default function Show() {
       </Transition>
 
       {/* edit modal for restaurant  */}
-
       <Transition appear show={editModal} as={Fragment}>
         <Dialog as="div" open={editModal} onClose={() => setEditModal(true)}>
           <Transition.Child
@@ -811,15 +989,20 @@ export default function Show() {
               >
                 <Dialog.Panel className="panel border border-[#F2F2F2] p-0 rounded-2xl overflow-hidden w-full max-w-5xl my-8 text-black dark:text-white-dark">
                   <div className="  bg-white px-10 pb-5 pt-8 dark:bg-[#202125]">
-                    <div className="flex gap-2 ">
-                      <img
-                        src={themeConfig.theme == "dark" ? arrow : arrowLight}
-                        className="w-5"
+                    <div className="flex gap-2 items-center ">
+                      <div
+                        className=""
                         alt=""
                         onClick={() => {
                           setEditModal(false);
                         }}
-                      />
+                      >
+                        {themeConfig.theme == "dark" ? (
+                          <RiArrowLeftWideFill size="25" />
+                        ) : (
+                          <RiArrowLeftWideFill size="25" />
+                        )}
+                      </div>
                       <h5 className="text-lg font-bold dark:text-white ">
                         Edit Restaurant
                       </h5>
@@ -1056,6 +1239,480 @@ export default function Show() {
                         }}
                       >
                         Update Restaurant
+                      </button>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* edit modal for Braches  */}
+      <Transition appear show={branchModal} as={Fragment}>
+        <Dialog
+          as="div"
+          open={branchModal}
+          onClose={() => setBranchModal(true)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0" />
+          </Transition.Child>
+          <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+            <div className="flex items-start justify-center min-h-screen px-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="panel border border-[#F2F2F2] p-0 rounded-2xl overflow-hidden w-full max-w-5xl my-8 text-black dark:text-white-dark">
+                  <div className="  bg-white px-10 pb-5 pt-8 dark:bg-[#202125]">
+                    <div className="flex gap-2 items-center ">
+                      <div
+                        className=""
+                        alt=""
+                        onClick={() => {
+                          setBranchModal(false);
+                        }}
+                      >
+                        {themeConfig.theme == "dark" ? (
+                          <RiArrowLeftWideFill size="25" />
+                        ) : (
+                          <RiArrowLeftWideFill size="25" />
+                        )}
+                      </div>
+                      <h5 className="text-lg font-bold dark:text-white ">
+                        Edit Branches
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="px-10 pb-5 dark:bg-[#202125] bg-white">
+                    <form>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 gap-x-5">
+                        <div className="">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="rname"
+                          >
+                            Branch Name
+                          </label>
+                          <input
+                            type="text"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="branch_name"
+                            value={params.branch_name}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.branch_name ? (
+                            <div className="text-danger mt-1">
+                              {errors.branch_name}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            Address
+                          </label>
+                          <input
+                            type="text"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="address"
+                            value={params.address}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.address ? (
+                            <div className="text-danger mt-1">
+                              {errors.address}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="name"
+                          >
+                            City
+                          </label>
+                          <input
+                            type="text"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="city"
+                            value={params.city}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.city ? (
+                            <div className="text-danger mt-1">
+                              {errors.city}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="phone"
+                          >
+                            State
+                          </label>
+                          <input
+                            type="text"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="state"
+                            value={params.state}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.state ? (
+                            <div className="text-danger mt-1">
+                              {errors.state}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            Pincode
+                          </label>
+                          <input
+                            type="number"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="pincode"
+                            value={params.pincode}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.pincode ? (
+                            <div className="text-danger mt-1">
+                              {errors.pincode}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            htmlFor="name"
+                            className="text-style roboto-light"
+                          >
+                            Country
+                          </label>
+
+                          <select
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="country"
+                            value={params.country ? params.country : ""}
+                            onChange={(e) => changeValue(e)}
+                          >
+                            <option value="">Select Country</option>
+                            <option value="INDIA">INDIA</option>
+                            <option value="USA">USA</option>
+                            <option value="UAE">UAE</option>
+                          </select>
+                          {errors?.country ? (
+                            <div className="text-danger mt-1">
+                              {errors.country}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            TimeZone
+                          </label>
+                          <input
+                            type="number"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="time_zone"
+                            value={params.time_zone}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.time_zone ? (
+                            <div className="text-danger mt-1">
+                              {errors.time_zone}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            Branch Email
+                          </label>
+                          <input
+                            type="number"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="branch_email"
+                            value={params.branch_email}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.branch_email ? (
+                            <div className="text-danger mt-1">
+                              {errors.branch_email}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            Branch Phone
+                          </label>
+                          <input
+                            type="number"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="branch_phone"
+                            value={params.branch_phone}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.branch_phone ? (
+                            <div className="text-danger mt-1">
+                              {errors.branch_phone}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="mb-1">
+                          <label
+                            className="text-style roboto-light"
+                            htmlFor="email"
+                          >
+                            Landline
+                          </label>
+                          <input
+                            type="number"
+                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
+                            name="landline"
+                            value={params.landline}
+                            onChange={(e) => {
+                              changeValue(e);
+                            }}
+                          />
+                          {errors?.landline ? (
+                            <div className="text-danger mt-1">
+                              {errors.landline}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+
+                        <div className="mb-1">
+                          <div className="mt-4">
+                            <label
+                              htmlFor="status"
+                              className="text-style roboto-light"
+                            >
+                              Mode
+                            </label>
+                            <div className="mt-3">
+                              <label className="inline-flex">
+                                <input
+                                  type="radio"
+                                  name="mode"
+                                  value="1"
+                                  defaultChecked={
+                                    params.mode == "1" ? true : false
+                                  }
+                                  onChange={(e) => changeValue(e)}
+                                  className="form-radio text-success peer"
+                                />
+                                <span className="peer-checked:text-success text-style roboto-light">
+                                  Live
+                                </span>
+                              </label>
+                              <label className="inline-flex px-5">
+                                <input
+                                  type="radio"
+                                  name="mode"
+                                  value="0"
+                                  defaultChecked={
+                                    params.mode == "0" ? true : false
+                                  }
+                                  onChange={(e) => changeValue(e)}
+                                  className="form-radio text-secondary peer"
+                                />
+                                <span className="peer-checked:text-secondary text-style roboto-light">
+                                  Demo
+                                </span>
+                              </label>
+                            </div>
+                            <span className="text-danger font-semibold text-sm p-2">
+                              {errors.mode}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="mb-1">
+                          <div className="mt-4">
+                            <label
+                              htmlFor="status"
+                              className="text-style roboto-light"
+                            >
+                              Status
+                            </label>
+                            <div className="mt-3">
+                              <label className="inline-flex">
+                                <input
+                                  type="radio"
+                                  name="status"
+                                  value="1"
+                                  defaultChecked={
+                                    params.status == "1" ? true : false
+                                  }
+                                  onChange={(e) => changeValue(e)}
+                                  className="form-radio text-success peer"
+                                />
+                                <span className="peer-checked:text-success text-style roboto-light">
+                                  Active
+                                </span>
+                              </label>
+                              <label className="inline-flex px-5">
+                                <input
+                                  type="radio"
+                                  name="status"
+                                  value="0"
+                                  defaultChecked={
+                                    params.status == "0" ? true : false
+                                  }
+                                  onChange={(e) => changeValue(e)}
+                                  className="form-radio text-secondary peer"
+                                />
+                                <span className="peer-checked:text-secondary text-style roboto-light">
+                                  Blocked
+                                </span>
+                              </label>
+                            </div>
+                            <span className="text-danger font-semibold text-sm p-2">
+                              {errors.status}
+                            </span>
+                          </div>
+                        </div>
+                        {/* <div className="mb-1">
+                                                    <label htmlFor="name" className='text-style roboto-light'>
+                                                        Timezone
+                                                    </label>
+
+                                                    <select className="input-form dark:border-[#5E5E5E] dark:bg-transparent" name='time_zone' value={params.time_zone ? params.time_zone : ''} onChange={(e) => changeValue(e)} >
+                                                        <option value=''>Select Timezone</option>
+                                                        {timeZones[params.country]?.map((z) => (
+                                                            <option value={z} key={z}>{z}</option>
+                                                        ))}
+                                                    </select>
+                                                    {errors?.time_zone ? (
+                                                        <div className="text-danger mt-1">{errors.time_zone}</div>
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                </div> */}
+                      </div>
+
+                      {/* <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+
+                                                <div className="mb-1">
+                                                    <div className="mt-4">
+                                                        <label htmlFor="status" className='text-style roboto-light'>Mode</label>
+                                                        <div className="mt-3">
+                                                            <label className="inline-flex">
+                                                                <input type="radio" name="mode" value="1"  defaultChecked={params.mode == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
+                                                                <span className="peer-checked:text-success text-style roboto-light">Live</span>
+                                                            </label>
+                                                            <label className="inline-flex px-5">
+                                                                <input type="radio" name="mode" value="0" defaultChecked={params.mode == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
+                                                                <span className="peer-checked:text-secondary text-style roboto-light">Demo</span>
+                                                            </label>
+                                                        </div>
+                                                        <span className="text-danger font-semibold text-sm p-2">{errors.mode}</span>
+                                                    </div>
+                                                </div>
+
+                                                
+
+                                                <div className="mb-1">
+                                                    <div className="mt-4">
+                                                        <label htmlFor="status" className='text-style roboto-light'>Status</label>
+                                                        <div className="mt-3">
+                                                            <label className="inline-flex">
+                                                                <input type="radio" name="status" value='1' defaultChecked={params.status == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
+                                                                <span className="peer-checked:text-success text-style roboto-light">Active</span>
+                                                            </label>
+                                                            <label className="inline-flex px-5">
+                                                                <input type="radio" name="status" value='0' defaultChecked={params.status == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
+                                                                <span className="peer-checked:text-secondary text-style roboto-light">Blocked</span>
+                                                            </label>
+                                                        </div>
+                                                        <span className="text-danger font-semibold text-sm p-2">{errors.status}</span>
+                                                    </div>
+                                                </div>
+
+
+                                                
+
+                                            </div> */}
+                    </form>
+                    <div className="mt-8 flex items-center justify-end">
+                      <button
+                        type="button"
+                        className="btn  btn-dark btn-sm px-10 rounded-2xl dark:bg-white dark:text-black "
+                        onClick={() => {
+                          formSubmit();
+                        }}
+                      >
+                        Update Branch
                       </button>
                     </div>
                   </div>
