@@ -5,6 +5,9 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 /* tippy css */
 @import "./assets/css/tippy.css";
 
@@ -52,6 +55,116 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+ /* popins  */
+
+ .poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.poppins-black {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.poppins-thin-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.poppins-extralight-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.poppins-light-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.poppins-regular-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.poppins-medium-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.poppins-semibold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.poppins-bold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.poppins-extrabold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.poppins-black-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
 
 .roboto-thin {
   font-family: "Roboto", sans-serif;
@@ -125,7 +238,7 @@
   font-style: italic;
 }
 .text-style {
-  @apply text-[14px] font-light  dark:text-white text-black dark:font-light ml-3 dark:border-[#5E5E5E];
+  @apply text-[14px] font-light  dark:text-white text-black dark:font-light ml-1 dark:border-[#5E5E5E];
 }
 .text-style-profile {
   @apply text-[14px] font-light  dark:text-white text-black dark:font-light ml-10 dark:border-[#5E5E5E];
@@ -213,7 +326,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
   }
 
   .main-container .main-content {
-    @apply transition-all duration-300 lg:ltr:ml-[260px] lg:rtl:mr-[260px];
+    @apply transition-all duration-300 lg:rtl:ml-[260px]  lg:rtl:mr-[260px];
   }
 
   /* Horizontal layouts */
@@ -227,7 +340,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
     @apply ltr:ml-0 rtl:mr-0;
   }
   .horizontal .sidebar {
-    @apply ltr:-left-[260px] rtl:-right-[260px];
+    @apply ltr:-left-[260px] lg:ltr:ml-[260px]  rtl:-right-[260px];
   }
   .horizontal.toggle-sidebar .sidebar {
     @apply ltr:left-0 rtl:right-0 lg:ltr:-left-[260px] lg:rtl:-right-[260px];
@@ -264,6 +377,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
   .horizontal-menu ul.sub-menu button.active {
     @apply bg-gray-100 text-primary dark:bg-primary/10;
   }
+
 
 /* Restaurant loader  */
 
@@ -529,6 +643,7 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
     transform: scaleX(1.065);
  }
 }
+/* Loader closes  */
 
 
   .horizontal-menu > li.nav-item:hover > ul.sub-menu,
@@ -719,8 +834,9 @@ hover:text-primary hover:before:!bg-primary ltr:before:mr-2 rtl:before:ml-2 dark
   }
 
   .input-form {
-    @apply w-full rounded-xl text-sm border border-black bg-white px-2 py-1;
+    @apply w-full rounded-md text-[13px] border border-[#D2D6DB] bg-white px-2 py-1;
   }
+  /* solid 1px #D2D6DB !important */
 
   /* Form */
   .form-input,

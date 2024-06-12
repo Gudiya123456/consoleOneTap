@@ -86,8 +86,6 @@ export default function Activation() {
         return { totalErrors: Object.keys(errors).length };
     };
 
-
-
     const activateApi = async (data: any) => {
         setIsBtnLoading(true)
         try {

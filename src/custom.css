@@ -1,0 +1,27 @@
+/* poppins font for sidebar  */
+.poppins-font {
+    font-family: 'Poppins';
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 25px;
+    letter-spacing: 1px;
+}
+
+.poppins-btn {
+    font-family: 'Poppins';
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 25px;
+    letter-spacing: 1px;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 767px) {
+    .poppins-font {
+        font-size: 0.75rem; /* Adjust the size as needed */
+    }
+
+    .poppins-btn {
+        font-size: 0.75rem; /* Adjust the size as needed */
+    }
+}

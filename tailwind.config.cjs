@@ -63,7 +63,7 @@ module.exports = {
                 },
             },
             fontFamily: {
-                nunito: ['Roboto', 'Roboto'],
+                nunito: ['Poppins', 'Poppins'],
             },
             spacing: {
                 4.5: '18px',

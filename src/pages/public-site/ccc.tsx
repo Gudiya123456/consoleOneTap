@@ -1,955 +1,604 @@
-import React from "react";
-import { Tab } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import { SiRazorpay } from "react-icons/si";
-import { PiStripeLogoLight } from "react-icons/pi";
-import { SiPaytm } from "react-icons/si";
-import { SiPhonepe } from "react-icons/si";
-import { FaPaypal } from "react-icons/fa";
-import { FaCcAmazonPay } from "react-icons/fa";
-import IconEye from "../../components/Icon/IconEye";
-import { Dialog, Transition } from "@headlessui/react";
-import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import IconUserPlus from "../../components/Icon/IconUserPlus";
-import IconSearch from "../../components/Icon/IconSearch";
-import IconUser from "../../components/Icon/IconUser";
-import IconX from "../../components/Icon/IconX";
-import { LiaMoneyBillWaveSolid } from "react-icons/lia";
-import { setPageTitle } from "../../store/themeConfigSlice";
-import PageLoader from "../../components/Layouts/PageLoader";
-import axios from "axios";
-import { IRootState } from "../../../../console/store";
+import axios from 'axios';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { IRootState } from '../../store/index';
+import { setPageTitle, setCrmData } from '../../store/themeConfigSlice';
+import IconSearch from '../../components/Icon/IconSearch';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import PageLoader from '../../components/PageLoader'
+import { Link } from "react-router-dom";
+import IconBellBing from "../../components/Icon/IconBellBing";
+import { IoMdPerson } from "react-icons/io";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
+const CrmSwal = withReactContent(Swal);
 
+const Settings = () => {
 
-const Payment = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const restaurantToken = useSelector((state: IRootState) => state.themeConfig.restaurantToken);
-    const currentBranch = useSelector((state: IRootState) => state.themeConfig.currentBranch);
+    const [setting, setSetting] = useState<any>({});
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
-        dispatch(setPageTitle('Payment'));
-    });
+        fetchSettings();
+    }, [])
 
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [paymentGateways, setPaymentGateways] = useState([]);
-
-    const fetchPaymentGteWay = async () => {
+    const fetchSettings = async () => {
         setIsLoading(true)
         try {
             const response = await axios({
                 method: 'get',
-                url: window.location.origin + "/api/restaurant/dashboard/payment-gateways",
+                url: window.location.origin + "/api/dashboard/public-site/settings",
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + restaurantToken,
-                    'Current-Branch': currentBranch.id
+                    Authorization: 'Bearer ' + crmToken,
                 },
             });
 
-            if (response.data.status == "success") {
-                setPaymentGateways(response.data.paymentGateways)
+            if (response.data.status == 'success') {
+                if (response.data.settings) storeOrUpdate(response.data.settings)
+                else storeOrUpdate()
             }
+
+
+            console.log(response)
         } catch (error) {
-
-            alert("errror")
-
+            if (error.response.status == 401) navigate('/login')
         } finally {
             setIsLoading(false)
         }
-
     }
 
-    useEffect(() => {
-        fetchPaymentGteWay()
-    }, [])
+    const fileLogoRef = useRef<HTMLInputElement>(null);
+    const fileIconRef = useRef<HTMLInputElement>(null);
+    const [logoPriview, setLogoPriview] = useState<any>('https://dummyimage.com/600x400/000/fff');
+    const [iconPriview, setIconPriview] = useState<any>('https://dummyimage.com/600x400/000/fff');
 
-    const [gateWay, setGateWay] = useState({});
-    const [enabledGateay, setEnabledGateway] = useState('');
-    const [razorPay, setRazorPay] = useState<any>('');
-    const [stripe, setStripe] = useState<any>('');
-    const [paytm, setPaytm] = useState<any>('');
-    const [phonePe, setPhonePe] = useState<any>('');
-    const [payPal, setPayPal] = useState<any>('');
-    const [amazonPay, setAmazonPay] = useState<any>('');
-    useEffect(() => {
+    const [defaultParams] = useState({
+        id: '',
+        logo: '',
+        fav_icon: '',
+        mode: '',
+        facebook_link: '',
+        linkedin_link: '',
+        x_link: '',
+        pinterest_link: '',
+        youtube_link: '',
+        instagram_link: '',
+        whatsapp_number: '',
+        seo_title: '',
+        site_name: '',
+        email: '',
+        phone: ''
+    });
 
-        const z = paymentGateways.find((p: any) => p.is_enabled == true);
-        if (z) setEnabledGateway(z.gateway_name)
-        const a = paymentGateways.find((p: any) => p.gateway_name == "RazorPay");
-        setRazorPay(a ? a : { gateway_name: "RazorPay", environment: '0', is_enabled: '0' })
-        const b = paymentGateways.find((p: any) => p.gateway_name == "Stripe");
-        setStripe(b ? b : { gateway_name: "Stripe", environment: '0', is_enabled: '0' })
-        const c = paymentGateways.find((p: any) => p.gateway_name == "Paytm");
-        setPaytm(c ? c : { gateway_name: "Paytm", environment: '0', is_enabled: '0' })
-        const d = paymentGateways.find((p: any) => p.gateway_name == "PhonePe");
-        setPhonePe(d ? d : { gateway_name: "PhonePe", environment: '0', is_enabled: '0' })
-        const e = paymentGateways.find((p: any) => p.gateway_name == "PayPal");
-        setPayPal(e ? e : { gateway_name: "PayPal", environment: '0', is_enabled: '0' })
-        const f = paymentGateways.find((p: any) => p.gateway_name == "AmazonPay");
-        setAmazonPay(f ? f : { gateway_name: "AmazonPay", environment: '0', is_enabled: '0' })
 
-        console.log(razorPay)
-    }, [paymentGateways])
-
+    const [params, setParams] = useState<any>(JSON.parse(JSON.stringify(defaultParams)));
     const [errors, setErros] = useState<any>({});
 
-    const validate = (gateWay) => {
-        setErros({});
-        let errors = {};
-        if (!gateWay.payment_gateway_name) errors = { ...errors, payment_gateway_name: "payment gateway name is required" };
-        if (gateWay.environment == '') errors = { ...errors, environment: "environment is required" };
-        if (!gateWay.key) errors = { ...errors, key: "key is required" };
-        if (!gateWay.secret) errors = { ...errors, secret: "secret is required" };
-        setErros(errors);
-
-        console.log(errors)
-        return { totalErrors: Object.keys(errors).length };
+    const changeValue = (e: any) => {
+        const { value, name } = e.target;
+        setErros({ ...errors, [name]: '' });
+        setParams({ ...params, [name]: value });
+        console.table(params)
     };
 
-
-    const storeOrUpdateApi = async (data) => {
-
-        try {
-
-            const response = await axios({
-                method: 'post',
-                url:"https://cdn.onetapdine.com/api/payment-gateways",
-                data,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + restaurantToken,
-                    'Current-Branch': currentBranch.id
-                },
-            });
-            console.log('jdkjkgffgf')
-
-            if (response.data.status == "success") {
-                setPaymentGateways(response.data.paymentGateways)
-                Swal.fire({ title: response.data.title, text: response.data.message, icon: 'success', customClass: 'sweet-alerts' });
+    const setImage = (e: any) => {
+        const { name } = e.target;
+        setErros({ ...errors, [name]: '' });
+        if (e.target.files[0]) {
+            if (e.target.files[0].type && e.target.files[0].type.indexOf('image') === -1) {
+                setErros({ ...errors, [name]: 'file is not a valid image' });
+                return;
             }
+            const maxSizeInBytes = 2 * 1024 * 1024;
+            if (e.target.files[0].size > maxSizeInBytes) {
+                setErros({ ...errors, [name]: 'maximum file size is 2 mb' });
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (event: any) {
 
-        } catch (error) {
-            console.log(error)
+                if (name == 'logo') setLogoPriview(reader.result)
+                else setIconPriview(reader.result)
 
-        } finally {
-
-
+                setParams({ ...params, [name]: e.target.files[0] });
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
     }
 
-    const configPaymentGateWay = async (a) => {
 
-        console.log(razorPay)
-        setGateWay(a.payment_gateway_name)
-        const isValid = validate(a);
+    const validate = () => {
+        setErros({});
+        let errors = {};
+        if (!params.site_name) {
+            errors = { ...errors, site_name: 'site name is required' };
+        }
+        console.log(errors)
+        setErros(errors);
+        return { totalErrors: Object.keys(errors).length };
+    };
+
+    const [btnLoading, setBtnLoading] = useState(false);
+
+    const storeOrUpdateApi = async (data: any) => {
+        setBtnLoading(true)
+        try {
+            const response = await axios({
+                method: 'post',
+                url: window.location.origin + "/api/dashboard/public-site/settings",
+                data,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: "Bearer " + crmToken,
+                },
+            });
+
+            if (response.data.status == 'success') {
+                Swal.fire({
+                    icon: response.data.status,
+                    title: response.data.title,
+                    text: response.data.message,
+                    padding: '2em',
+                    customClass: 'sweet-alerts',
+                });
+
+
+                dispatch(setCrmData({ logo: response.data.setting.logo, fav_icon: response.data.setting.fav_icon, mode: response.data.setting.mode }))
+                fetchSettings()
+
+            } else {
+
+                alert("Failed")
+            }
+
+        } catch (error: any) {
+            console.log(error)
+            if (error.response.status == 401) navigate('/login')
+            if (error?.response?.status === 422) {
+                const serveErrors = error.response.data.errors;
+                let serverErrors = {};
+                for (var key in serveErrors) {
+                    serverErrors = { ...serverErrors, [key]: serveErrors[key][0] };
+                    console.log(serveErrors[key][0])
+                }
+                setErros(serverErrors);
+                CrmSwal.fire({
+                    title: "Server Validation Error! Please solve",
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    width: 450,
+                    timer: 2000,
+                    customClass: {
+                        popup: "color-danger"
+                    }
+                });
+            }
+        } finally {
+            setBtnLoading(false)
+        }
+    };
+
+    const formSubmit = () => {
+        const isValid = validate();
         if (isValid.totalErrors) return false;
         const data = new FormData();
-        data.append("payment_gateway_name", a.payment_gateway_name);
-        data.append("environment", a.environment);
-        data.append("secret", a.secret);
-        data.append("key", a.key);
-        data.append("is_enabled", a.is_enabled);
+        data.append("id", params.id);
+        data.append("logo", params.logo);
+        data.append("fav_icon", params.fav_icon);
+        data.append("mode", params.mode);
+        data.append("facebook_link", params.facebook_link);
+        data.append("linkedin_link", params.linkedin_link);
+        data.append("x_link", params.x_link);
+        data.append("pinterest_link", params.pinterest_link);
+        data.append("youtube_link", params.youtube_link);
+        data.append("instagram_link", params.instagram_link);
+        data.append("whatsapp_number", params.whatsapp_number);
+        data.append("seo_title", params.seo_title);
+        data.append("site_name", params.site_name);
+        data.append("email", params.email);
+        data.append("phone", params.phone);
         storeOrUpdateApi(data);
+    };
+
+
+    const storeOrUpdate = (data) => {
+        setErros({});
+        if (data) {
+            setParams({
+                id: data.id,
+                logo: '',
+                fav_icon: '',
+                mode: data.mode,
+                facebook_link: data.facebook_link ? data.facebook_link : '',
+                linkedin_link: data.linkedin_link ? data.linkedin_link : '',
+                x_link: data.x_link ? data.x_link : '',
+                pinterest_link: data.pinterest_link ? data.pinterest_link : '',
+                youtube_link: data.youtube_link ? data.youtube_link : '',
+                instagram_link: data.instagram_link ? data.instagram_link : '',
+                whatsapp_number: data.whatsapp_number ? data.whatsapp_number : '',
+                seo_title: data.seo_title ? data.seo_title : '',
+                site_name: data.site_name ? data.site_name : '',
+                email: data.email ? data.email : '',
+                phone: data.phone ? data.phone : '',
+            });
+
+            data.logo ?
+                setLogoPriview(window.location.origin + '/storage/' + data.logo) :
+                setLogoPriview('https://dummyimage.com/600x400/000/fff');
+
+            data.fav_icon ?
+                setIconPriview(window.location.origin + '/storage/' + data.fav_icon) :
+                setIconPriview('https://dummyimage.com/600x400/000/fff');
+
+        } else {
+            const defaltData = JSON.parse(JSON.stringify(defaultParams));
+            setParams(defaltData);
+            setLogoPriview('https://dummyimage.com/600x400/000/fff');
+            setIconPriview('https://dummyimage.com/600x400/000/fff');
+        }
+
     }
+
+
+
 
     return (
         <div>
 
-            {isLoading ? <PageLoader /> : (
+            {isLoading ? (<PageLoader />) : (
+                <div className="container">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-5 mb-5">
+                        <div className="panel lg:col-span-2 xl:col-span-3">
+                            <div className="mb-5">
+                                <h5 className="font-semibold text-lg dark:text-white-light">
+                                    General Settings
+                                </h5>
+                            </div>
 
-                <>
-                    <div className="mb-5 flex items-center justify-between">
-                        <h5 className="text-xl font-bold dark:text-white-light">
-                            Payment Credentials
-                        </h5>
-                    </div>
-                    <div className="panel p-1" id="line">
-                        <div className="mb-5">
-                            <Tab.Group>
-                                <Tab.List className="flex flex-wrap border-b border-white-light dark:border-[#191e3a]">
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                    before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <SiRazorpay className="ltr:mr-2 rtl:ml-2" />
-                                                Razorpay
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <PiStripeLogoLight className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                                                Stripe
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <SiPaytm className="ltr:mr-2 rtl:ml-2 text-lg" />
-                                                Paytm
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <SiPhonepe className="ltr:mr-2 rtl:ml-2" />
-                                                PhonePe
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <FaPaypal className="ltr:mr-2 rtl:ml-2" />
-                                                Paypal
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <FaCcAmazonPay className="ltr:mr-2 rtl:ml-2" />
-                                                Amazon Payment
-                                            </button>
-                                        )}
-                                    </Tab>
-                                    <Tab as={Fragment}>
-                                        {({ selected }) => (
-                                            <button
-                                                className={`${selected
-                                                    ? "text-secondary !outline-none before:!w-full"
-                                                    : ""
-                                                    }
-                                                before:inline-block' relative -mb-[1px] flex items-center p-3 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:h-1 before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                                            >
-                                                <LiaMoneyBillWaveSolid className="ltr:mr-2 rtl:ml-2" />
-                                                Offline Payment
-                                            </button>
-                                        )}
-                                    </Tab>
-                                </Tab.List>
-                                <Tab.Panels>
-                                    <Tab.Panel>
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={razorPay?.environment ? razorPay.environment : ''}
-                                                                onChange={(e) => setRazorPay({ ...razorPay, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "RazorPay" && errors.environment ? errors.environment : ''}</span>
+
+                            <div className="mb-5">
+                                <div className="table-responsive text-[#515365] dark:text-white-light font-semibold">
+                                    <form>
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                                            <div>
+                                                <label
+                                                    htmlFor="inputDefault"
+                                                    className="text-black"
+                                                >
+                                                    Site Name
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <IoMdPerson className="text-white-dark" />
                                                     </div>
-
-
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={razorPay.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setRazorPay({ ...razorPay, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={razorPay.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setRazorPay({ ...razorPay, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "RazorPay" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter Site Name"
+                                                        name='site_name'
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.site_name}
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
                                                 </div>
+                                                {errors?.site_name ? <div className="text-danger mt-1">{errors.site_name}</div> : ''}
+                                            </div>
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Test Razorpay Key{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={razorPay?.key ? razorPay.key : ''}
-                                                                onChange={(e) => setRazorPay({ ...razorPay, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "RazorPay" && errors.key ? errors.key : ''}</span>
+                                            <div>
+                                                <label
+                                                    htmlFor="inputDefault"
+                                                    className="text-black"
+                                                >
+                                                    Email
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <IoMdPerson className="text-white-dark" />
                                                     </div>
+                                                    <input
+                                                        type="text"
+                                                        name='email'
+                                                        placeholder="Enter Email Address"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.email}
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors?.email ? <div className="text-danger mt-1">{errors.email}</div> : ''}
+                                            </div>
 
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Test Razorpay Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={razorPay?.secret ? razorPay.secret : ''}
-                                                                onChange={(e) => setRazorPay({ ...razorPay, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "RazorPay" && errors.secret ? errors.secret : ''}</span>
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Phone
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
                                                     </div>
+                                                    <input
+                                                        type="tel"
+                                                        placeholder="Enter Phone Number"
+                                                        name='phone'
+                                                        maxLength={10}
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.phone}
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
                                                 </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(razorPay)}
-                                                    >
-                                                        Config
-                                                    </button>
+                                                {errors?.phone ? <div className="text-danger mt-1">{errors.phone}</div> : ''}
+                                            </div>
+
+
+
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Facebook URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="facebook_link"
+                                                        name='facebook_link'
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.facebook_link}
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
                                                 </div>
-                                            </form>
+                                                {errors?.facebook_link ? <div className="text-danger mt-1">{errors.facebook_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Linkedin URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="linkedin_link"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        name='linkedin_link'
+                                                        value={params.linkedin_link}
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors?.linkedin_link ? <div className="text-danger mt-1">{errors.linkedin_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    X URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="x_link"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.x_link}
+                                                        name='x_link'
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors?.x_link ? <div className="text-danger mt-1">{errors.x_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    YouTube URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="youtube_link"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.youtube_link}
+                                                        name='youtube_link'
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+
+                                                </div>
+                                                {errors?.youtube_link ? <div className="text-danger mt-1">{errors.youtube_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Instagram URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="instagram_link"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.instagram_link}
+                                                        name='instagram_link'
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+
+                                                    />
+                                                </div>
+                                                {errors?.instagram_link ? <div className="text-danger mt-1">{errors.instagram_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Pinterest URL
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="url"
+                                                        placeholder="pinterest_link"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.pinterest_link}
+                                                        name='pinterest_link'
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors?.pinterest_link ? <div className="text-danger mt-1">{errors.pinterest_link}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="inputDefault">
+                                                    Whatsapp Number
+                                                </label>
+                                                <div className="flex">
+                                                    <div className="bg-[#eee] flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md px-3 font-semibold border ltr:border-r-0 rtl:border-l-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
+                                                        <MdEmail className="text-white-dark" />
+                                                    </div>
+                                                    <input
+                                                        type="tel"
+                                                        placeholder="whatsapp_number"
+                                                        className="form-input ltr:rounded-l-none rtl:rounded-r-none"
+                                                        value={params.whatsapp_number}
+                                                        maxLength={10}
+                                                        name='whatsapp_number'
+                                                        onChange={(e) =>
+                                                            changeValue(e)
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors?.whatsapp_number ? <div className="text-danger mt-1">{errors.whatsapp_number}</div> : ''}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="mode">Site Mode</label>
+                                                <select id="mode" className="form-select text-white-dark" name='mode' value={params.mode}
+                                                    onChange={(e) =>
+                                                        changeValue(e)
+                                                    }>
+                                                    <option>Select Site Mode</option>
+                                                    <option value="LIVE">LIVE</option>
+                                                    <option value="MAINTENANCE">MAINTENANCE</option>
+                                                    <option value="COMMING SOON">COMMING SOON</option>
+                                                </select>
+                                                {errors?.mode ? <div className="text-danger mt-1">{errors.mode}</div> : ''}
+                                            </div>
+
+
                                         </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
 
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={stripe?.environment ? stripe.environment : ''}
-                                                                onChange={(e) => setStripe({ ...stripe, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Stripe" && errors.environment ? errors.environment : ''}</span>
-                                                    </div>
+                                            <div>
+                                                <label htmlFor="seo_title">
+                                                    SEO Title
+                                                </label>
+                                                <textarea
+                                                    rows={3}
+                                                    className="form-textarea"
+                                                    placeholder="SEO Title"
+                                                    name='seo_title'
+                                                    value={params.seo_title}
+                                                    onChange={(e) =>
+                                                        changeValue(e)
+                                                    }
+                                                ></textarea>
+                                                {errors?.seo_title ? <div className="text-danger mt-1">{errors.seo_title}</div> : ''}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="seo_description">
+                                                    SEO Description
+                                                </label>
+                                                <textarea
+                                                    rows={3}
+                                                    className="form-textarea"
+                                                    placeholder="SEO Description"
+                                                    name='seo_description'
+                                                    value={params.seo_description}
+                                                    onChange={(e) =>
+                                                        changeValue(e)
+                                                    }
+                                                ></textarea>
+                                                {errors?.seo_description ? <div className="text-danger mt-1">{errors.seo_description}</div> : ''}
+                                            </div>
 
 
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={stripe.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setStripe({ ...stripe, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={stripe.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setStripe({ ...stripe, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Stripe" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
-                                                </div>
+                                            <div className="mb-5">
+                                                <label htmlFor="image">Logo</label>
+                                                <input ref={fileLogoRef} name="logo" type="file" onChange={(e) => setImage(e)} className="form-input hidden" accept="image/*" />
+                                                <span className="w-full h-20 relative">
+                                                    <img className="w-40 h-20  overflow-hidden object-cover" id="logo" onClick={() => {
+                                                        fileLogoRef.current!.click()
+                                                    }} src={logoPriview} alt="logo" />
+                                                </span>
+                                                {errors?.logo ? <div className="text-danger mt-1">{errors.logo}</div> : ''}
+                                            </div>
 
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Test Stripe Publishable Key{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={stripe?.key ? stripe.key : ''}
-                                                                onChange={(e) => setStripe({ ...stripe, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Stripe" && errors.key ? errors.key : ''}</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Test Stripe Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={stripe?.secret ? stripe.secret : ''}
-                                                                onChange={(e) => setStripe({ ...stripe, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Stripe" && errors.secret ? errors.secret : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(stripe)}
-                                                    >
-                                                        Config
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <div className="mb-5">
+                                                <label htmlFor="fav_icon">Fave Icon</label>
+                                                <input ref={fileIconRef} name="fav_icon" type="file" onChange={(e) => setImage(e)} className="form-input hidden" accept="image/*" />
+                                                <span className="w-full h-20 relative">
+                                                    <img className="w-20 h-20  overflow-hidden object-cover" id="fav_icon" onClick={() => {
+                                                        fileIconRef.current!.click()
+                                                    }} src={iconPriview} alt="fav_icon" />
+                                                </span>
+                                                {errors?.fav_icon ? <div className="text-danger mt-1">{errors.fav_icon}</div> : ''}
+                                            </div>
                                         </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
 
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={paytm?.environment ? paytm.environment : ''}
-                                                                onChange={(e) => setPaytm({ ...paytm, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Paytm" && errors.environment ? errors.environment : ''}</span>
-                                                    </div>
-
-
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={paytm.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setPaytm({ ...paytm, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={paytm.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setPaytm({ ...paytm, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Paytm" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Test Paytm Key{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={paytm?.key ? paytm.key : ''}
-                                                                onChange={(e) => setPaytm({ ...paytm, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Paytm" && errors.key ? errors.key : ''}</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Test Paytm Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={paytm?.secret ? paytm.secret : ''}
-                                                                onChange={(e) => setPaytm({ ...paytm, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "Paytm" && errors.secret ? errors.secret : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(paytm)}
-                                                    >
-                                                        Config
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        {" "}
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={phonePe?.environment ? phonePe.environment : ''}
-                                                                onChange={(e) => setPhonePe({ ...phonePe, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PhonePe" && errors.environment ? errors.environment : ''}</span>
-                                                    </div>
-
-
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={phonePe.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setPhonePe({ ...phonePe, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={phonePe.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setPhonePe({ ...phonePe, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PhonePe" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Test PhonePe Key{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={phonePe?.key ? phonePe.key : ''}
-                                                                onChange={(e) => setPhonePe({ ...phonePe, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PhonePe" && errors.key ? errors.key : ''}</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Test PhonePe Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={phonePe?.secret ? phonePe.secret : ''}
-                                                                onChange={(e) => setPhonePe({ ...phonePe, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PhonePe" && errors.secret ? errors.secret : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(phonePe)}
-                                                    >
-                                                        save
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={payPal?.environment ? payPal.environment : ''}
-                                                                onChange={(e) => setPayPal({ ...payPal, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PayPal" && errors.environment ? errors.environment : ''}</span>
-                                                    </div>
-
-
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={payPal.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setPayPal({ ...payPal, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={payPal.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setPayPal({ ...payPal, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PayPal" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Paypal Client Id{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={payPal?.key ? payPal.key : ''}
-                                                                onChange={(e) => setPayPal({ ...payPal, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PayPal" && errors.key ? errors.key : ''}</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Paypal Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={payPal?.secret ? payPal.secret : ''}
-                                                                onChange={(e) => setPayPal({ ...payPal, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "PayPal" && errors.secret ? errors.secret : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(payPal)}
-                                                    >
-                                                        Config
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <div className="active pt-5 p-2.5">
-                                            <form>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="ctnEmail">
-                                                                Select Environment
-                                                            </label>
-                                                            <select className="form-select text-white-dark"
-                                                                value={amazonPay?.environment ? amazonPay.environment : ''}
-                                                                onChange={(e) => setAmazonPay({ ...amazonPay, environment: e.target.value })}
-                                                            >
-                                                                <option value="">
-                                                                    Open this select menu
-                                                                </option>
-                                                                <option value={1}>Live</option>
-                                                                <option value={0}>Demo</option>
-                                                            </select>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "AmazonPay" && errors.environment ? errors.environment : ''}</span>
-                                                    </div>
-
-
-                                                    <div className="mb-5">
-                                                        <label htmlFor="number">Status</label>
-                                                        <div>
-                                                            <label className="inline-flex">
-                                                                <input
-                                                                    id="status5"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    className="form-radio text-success peer"
-                                                                    defaultChecked={amazonPay.is_enabled == 1 ? true : false}
-                                                                    value={1}
-                                                                    onClick={(e) => setAmazonPay({ ...amazonPay, is_enabled: 1 })}
-                                                                />
-                                                                <span className="peer-checked:text-success">Enabled</span>
-                                                            </label>
-                                                            <label className="inline-flex ml-3">
-                                                                <input
-                                                                    id="status4"
-                                                                    name="status"
-                                                                    type="radio"
-                                                                    defaultChecked={amazonPay.is_enabled == 0 ? true : false}
-                                                                    value={0}
-                                                                    onClick={(e) => setAmazonPay({ ...amazonPay, is_enabled: 0 })}
-                                                                    className="form-radio text-danger peer"
-                                                                />
-                                                                <span className="peer-checked:text-danger">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "AmazonPay" && errors.is_enabled ? errors.is_enabled : ''}</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="">
-                                                                Test AmazonPay Key{" "}
-                                                                <span className="text-danger">
-                                                                    *
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                placeholder="e.g. AW-Ydt5KHz2FwhAikHsObpRrpB55qE8MyvUkHbQsFb_6_2Unv3WNBSmBxEqA8N74JzOaFTPBUI-MG4sB"
-                                                                className="form-input"
-                                                                value={amazonPay?.key ? amazonPay.key : ''}
-                                                                onChange={(e) => setAmazonPay({ ...amazonPay, key: e.target.value })}
-                                                            />
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "AmazonPay" && errors.key ? errors.key : ''}</span>
-                                                    </div>
-
-                                                    <div>
-                                                        <label htmlFor="">
-                                                            Test AmazonPay Secret{" "}
-                                                            <span className="text-danger">
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div className="flex">
-                                                            <input
-                                                                id="iconRight"
-                                                                type="text"
-                                                                className="form-input ltr:rounded-r-none rtl:rounded-l-none"
-                                                                value={amazonPay?.secret ? amazonPay.secret : ''}
-                                                                onChange={(e) => setAmazonPay({ ...amazonPay, secret: e.target.value })}
-                                                            />
-                                                            <div className="bg-[#eee] flex justify-center items-center ltr:rounded-r-md rtl:rounded-l-md px-3 font-semibold border ltr:border-l-0 rtl:border-r-0 border-white-light dark:border-[#17263c] dark:bg-[#1b2e4b]">
-                                                                <IconEye className="text-white-dark" />
-                                                            </div>
-                                                        </div>
-                                                        <span className="text-danger font-black mx-3">{gateWay == "AmazonPay" && errors.secret ? errors.secret : ''}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        onClick={() => configPaymentGateWay(amazonPay)}
-                                                    >
-                                                        Config
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
                                         <div>
-
+                                            <button className='btn btn-dark btn-sm float-end' type='button' disabled={btnLoading} onClick={() => formSubmit()}>
+                                                {btnLoading ? 'Loading...' : 'Update'}
+                                            </button>
                                         </div>
-                                    </Tab.Panel>
-                                </Tab.Panels>
-                            </Tab.Group>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </>
+
+
+
+                </div>
             )}
 
         </div>
     );
 };
 
-export default Payment;
+export default Settings;
+

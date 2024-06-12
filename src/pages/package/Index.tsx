@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 
 import { MdEdit, MdDelete } from "react-icons/md";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { FcCheckmark } from "react-icons/fc";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import { IRootState } from "../../store";
 import { Dialog, Transition } from "@headlessui/react";
 import { IoIosArrowBack } from "react-icons/io";
+import { RiHome4Line } from "react-icons/ri";
+import { NavLink } from "react-router-dom";
 const Pricing = () => {
   const [selectedplan, setSelectedPlan] = useState("monthly");
   const [packages, setPackages] = useState([]);
@@ -103,50 +105,30 @@ const Pricing = () => {
     },
   ];
   return (
+    <div>
+       <div className="panel flex flex-col md:flex-row justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none">
+                <div className="flex items-center overflow-x-auto whitespace-nowrap mb-2 md:mb-0">
+                  <div className="rounded-full p-1.5 ltr:mr-3 rtl:ml-3">
+                    <RiHome4Line className='opacity' size={20} color='gray' />
+                  </div>
+                  <IoIosArrowForward className='ltr:mr-3 opacity-25 font-thin' color='gray' />
+                  <a href="/" className="block hover:underline text-gray-600 ltr:mr-3 rtl:ml-3 poppins-font" rel="noreferrer" >
+                    Home
+                  </a>
+                  <IoIosArrowForward className='font-thin ml-3 mr-3 opacity-25' color='gray' />
+                 
+                  <p className='ltr:ml-3 text-blue-700 poppins-font' >Pricing</p>
+                </div>
+                <div className="flex gap-2 items-center overflow-x-auto">
+                  <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-info">Add Pricing</button>
+                  <NavLink to='/features' >
+                  <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-primary">Add Features</button>
+                  </NavLink>
+                </div>
+              </div>
+ 
     <div className="dark:bg-[#202125] bg-[#F2F2F2] dark:text-[#FFFFFF] text-[#000000] p-2 px-8">
-      <div className=" flex justify-center md:justify-end">
-        <div className="mt-1 flex items-center">
-          <AiFillPlusCircle size={18} onClick={() => setModal(true)} />
-
-          <h5 className=" text-[14px] font-semibold">Add Pricing</h5>
-        </div>
-        <div className="mt-1 flex items-center ml-3">
-          <AiFillPlusCircle size={18} />
-
-          <h5 className="  text-[14px]  font-semibold">Add Features</h5>
-        </div>
-      </div>
-      <div className=" flex justify-center md:justify-end mt-5 flex-wrap  gap-3">
-        <div className=" flex bg-[#FFFFFF] dark:bg-[#000000] px-2 h-[27px] items-center font-semibold text-sm  rounded-full justify-center">
-          {durations.map((duration) => (
-            <div
-              className={`${
-                selecteddurations == duration
-                  ? "bg-[#F2F2F2] dark:bg-[#202125]"
-                  : "bg-[#FFFFFF] dark:bg-[#000000]"
-              } px-2 h-[18px] flex items-center justify-center rounded-full cursor-pointer`}
-              onClick={() => setSelectedDuration(duration)}
-            >
-              <h6 className=" text-sm ">{duration}</h6>
-            </div>
-          ))}
-        </div>
-
-        <div className="relative  inline-block w-[158px] font-semibold text-sm">
-          <select
-            className="bg-[#FFFFFF] dark:text-white dark:bg-[#000000]  appearance-none w-[158px] text-sm     pl-3 rounded-full py-[2px] pr-6     flex items-center "
-            onChange={(e) => setSelectedCountry(e.target.value)}
-          >
-            <option>Select Country</option>
-            {countries.map((country) => (
-              <option value={country}>{country}</option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center  pr-2 text-gray-700">
-            <IoIosArrowDown size={17} className=" dark:text-white" />
-          </div>
-        </div>
-      </div>
+   
 
       <div className="mt-5 md:mt-10 flex justify-center">
         <div>
@@ -689,6 +671,7 @@ const Pricing = () => {
           </div>
         </Dialog>
       </Transition>
+    </div>
     </div>
   );
 };

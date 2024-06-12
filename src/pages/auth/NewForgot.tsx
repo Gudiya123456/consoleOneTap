@@ -74,11 +74,9 @@ const NewForgot = () => {
 
 
         }
-
-
-                // setParams(JSON.parse(JSON.stringify(defaultParams)))
-                // dispatch(setCrmToken(response.data.token))
-                // dispatch(setUserData(response.data.user))
+        if(response.data.status=='error'){
+            alert(response.data.message);
+        }
 
                
             } else {

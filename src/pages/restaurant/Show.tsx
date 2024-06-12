@@ -1,29 +1,29 @@
 import React, { useState, useEffect, Fragment } from "react";
-import delete1 from "../../assets/images/delete.svg";
 import { useDispatch, useSelector } from "react-redux";
-import nextwhite from "../../assets/images/nextwhite.svg";
-import nextblack from "../../assets/images/nextblack.svg";
-import edit from "../../assets/images/Edit.svg";
-import viewBlack from "../../assets/images/Group 188.svg";
-import GridBlack from "../../assets/images/View Module (3).svg";
-import gridSelect from "../../assets/images/Group 201.svg";
-import viewSelect from "../../assets/images/Group 203.svg";
 import box1 from "../../assets/images/box1.png";
 import box2 from "../../assets/images/box2.png";
 import box3 from "../../assets/images/box3.png";
-import arrowLight from "../../assets/images/box3.png";
-import arrow from "../../assets/images/box3.png";
-
-import { Dialog, Transition } from "@headlessui/react";
 import { IRootState } from "../../store";
 import axios from "axios";
 import { setPageTitle } from "../../store/themeConfigSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ErrorHandle } from "../common/ErrorHandle";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import { RiArrowLeftWideFill } from "react-icons/ri";
+import { RiArrowLeftWideFill, RiHome4Line } from "react-icons/ri";
+import PageLoader from "../../components/PageLoader";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 const CrmSwal = withReactContent(Swal);
+import IconMail from "../../components/Icon/IconMail";
+import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
+import IconPlus from '../../components/Icon/IconPlus';
+import IconChecks from '../../components/Icon/IconChecks';
+import IconFile from '../../components/Icon/IconFile';
+import IconServer from '../../components/Icon/IconServer';
+import Dropdown from '../../components/Dropdown';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import BranchList from "./BranchList";
+import IconMultipleForwardRight from '../../components/Icon/IconMultipleForwardRight';
 
 export default function Show() {
   const dispatch = useDispatch();
@@ -31,6 +31,9 @@ export default function Show() {
   const navigate = useNavigate();
   const restaurantId = location.state.restaurantId;
   console.log(restaurantId);
+  const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+  const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+
   // alert('issss', restaurantId)
   const [resList, setResList] = useState<any>([]);
   const [activityList, setActivityList] = useState<any>([]);
@@ -54,6 +57,7 @@ export default function Show() {
   }, []);
 
   const fetchRestaurantList = async () => {
+    setIsLoading(true)
     try {
       const response = await axios({
         method: "get",
@@ -82,6 +86,9 @@ export default function Show() {
         ErrorHandle();
       }
       console.log(error);
+    }
+    finally {
+      setIsLoading(false)
     }
   };
 
@@ -167,77 +174,77 @@ export default function Show() {
     if (!params.branches) {
       errors = { ...errors, branches: "Please select branches!" };
     }
-    if (!params.branch_name) {
-      errors = {
-        ...errors,
-        branch_name: " Branch Name is required",
-      };
-    }
+    // if (!params.branch_name) {
+    //   errors = {
+    //     ...errors,
+    //     branch_name: " Branch Name is required",
+    //   };
+    // }
 
-    if (!params.address) {
-      errors = {
-        ...errors,
-        address: " Address is required",
-      };
-    }
-    if (!params.city) {
-      errors = {
-        ...errors,
-        city: " city is required",
-      };
-    }
-    if (!params.state) {
-      errors = {
-        ...errors,
-        state: " state is required",
-      };
-    }
-    if (!params.pincode) {
-      errors = {
-        ...errors,
-        pincode: " pincode is required",
-      };
-    }
+    // if (!params.address) {
+    //   errors = {
+    //     ...errors,
+    //     address: " Address is required",
+    //   };
+    // }
+    // if (!params.city) {
+    //   errors = {
+    //     ...errors,
+    //     city: " city is required",
+    //   };
+    // }
+    // if (!params.state) {
+    //   errors = {
+    //     ...errors,
+    //     state: " state is required",
+    //   };
+    // }
+    // if (!params.pincode) {
+    //   errors = {
+    //     ...errors,
+    //     pincode: " pincode is required",
+    //   };
+    // }
 
-    if (!params.country) {
-      errors = {
-        ...errors,
-        country: " country is required",
-      };
-    }
+    // if (!params.country) {
+    //   errors = {
+    //     ...errors,
+    //     country: " country is required",
+    //   };
+    // }
 
-    if (!params.time_zone) {
-      errors = {
-        ...errors,
-        time_zone: " time_zone is required",
-      };
-    }
-    if (!params.branch_email) {
-      errors = {
-        ...errors,
-        branch_email: " branch_email is required",
-      };
-    }
+    // if (!params.time_zone) {
+    //   errors = {
+    //     ...errors,
+    //     time_zone: " time_zone is required",
+    //   };
+    // }
+    // if (!params.branch_email) {
+    //   errors = {
+    //     ...errors,
+    //     branch_email: " branch_email is required",
+    //   };
+    // }
 
-    if (!params.branch_name) {
-      errors = {
-        ...errors,
-        branch_name: " branch_name is required",
-      };
-    }
+    // if (!params.branch_name) {
+    //   errors = {
+    //     ...errors,
+    //     branch_name: " branch_name is required",
+    //   };
+    // }
 
-    if (!params.branch_phone) {
-      errors = {
-        ...errors,
-        branch_phone: " branch_phone is required",
-      };
-    }
-    if (!params.landline) {
-      errors = {
-        ...errors,
-        landline: " landline is required",
-      };
-    }
+    // if (!params.branch_phone) {
+    //   errors = {
+    //     ...errors,
+    //     branch_phone: " branch_phone is required",
+    //   };
+    // }
+    // if (!params.landline) {
+    //   errors = {
+    //     ...errors,
+    //     landline: " landline is required",
+    //   };
+    // }
     // if (!params.status1) {
     //     errors = {
     //         ...errors,
@@ -261,7 +268,7 @@ export default function Show() {
     try {
       const response = await axios({
         method: "delete",
-        url: "https://cdn.onetapdine.com/api/restaurants/" + user.id,
+        url: "https://cdn.onetapdine.com/api/restaurants/" + restaurantId,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + crmToken,
@@ -272,6 +279,17 @@ export default function Show() {
         console.log("sucesss");
         // alert("Restaurant has been deleted successfully.");
         navigate("/restaurants");
+      }
+      if (response.data.status == 'error') {
+        Swal.fire({
+          icon: response.data.status,
+          title: response.data.title,
+          text: response.data.message,
+          padding: "2em",
+          customClass: "sweet-alerts",
+        });
+        // alert(response.data.message)
+        setModal(false);
       }
     } catch (error) {
       // if (error.response.status == 401) navigate('/login')
@@ -378,7 +396,7 @@ export default function Show() {
     try {
       const response = await axios({
         method: "post",
-        url: "https://cdn.onetapdine.com/api/restaurants",
+        url: "https://cdn.onetapdine.com/api/restaurants/" + restaurantId + "/branch",
         data,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -395,7 +413,7 @@ export default function Show() {
         });
 
         fetchRestaurantList();
-        setEditModal(false);
+        setBranchModal(false);
       } else {
         alert("Failed");
       }
@@ -430,1307 +448,266 @@ export default function Show() {
     }
   };
 
+
+
   return (
-    <div className=" font-robotoLight">
-      <div className="flex justify-end gap-3 mb-5">
-        <div className="flex gap-1 ">
-          <img src={edit} />
-          <button
-            type="button"
-            onClick={() => {
-              storeOrUpdate(resList);
-            }}
-            className=" text-black dark:text-white font-extrabold text-[15px]"
-          >
-            Edit Restaurant
-          </button>
-        </div>
-        <div className="flex gap-1">
-          <img src={delete1} />
-          <button
-            type="button"
-            onClick={() => {
-              setModal(true);
-            }}
-            className=" text-black dark:text-white whitespace-nowrap font-extrabold text-[15px]"
-          >
-            Delete Restaurant
-          </button>
-        </div>
-      </div>
-
-      <div className="  grid xl:grid-cols-3 md:grid-cols-2 gap-10">
-        <div className="rounded-lg  ">
-          <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
-            <h2 className=" dark:text-white text-black ml-5 mr-3 font-medium text-xl">
-              Total number of branches
-            </h2>
-          </div>
-          <div className=" flex ">
-            <div className=" flex-1 dark:text-white text-black dark:bg-black bg-white rounded-b-3xl  secondbox">
-              <h1 className=" ml-7 font-bold dark:text-white text-black text-4xl">
-                {data.branchCount}
-              </h1>
-            </div>
-            <div className=" w-5 h-5 dark:bg-black bg-white  "></div>
-            <div className=" dark:bg-[#202125] bg-[#f2f2f2]     w-28   flex  justify-center items-center rounded-tl-2xl  -ml-5 -mt-0">
-              <img src={box1} alt="" className=" object-contain  w-12 h-12 " />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg  ">
-          <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
-            <h2 className=" dark:text-white text-black ml-7 font-medium text-xl">
-              Total number of employees
-            </h2>
-          </div>
-          <div className=" flex ">
-            <div className=" flex-1 dark:text-white text-black dark:bg-black bg-white rounded-b-3xl  secondbox">
-              <h1 className=" ml-7 font-bold dark:text-white text-black text-4xl">
-                {data.employeeCount}
-              </h1>
-            </div>
-            <div className=" w-5 h-5 dark:bg-black bg-white  "></div>
-            <div className=" dark:bg-[#202125] bg-[#f2f2f2]     w-28   flex  justify-center items-center rounded-tl-2xl  -ml-5 -mt-0">
-              <img src={box2} alt="" className=" object-contain  w-12 h-12 " />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg  ">
-          <div className="dark:bg-black bg-white  rounded-t-3xl rounded-br-3xl  firstbox flex items-center">
-            <h2 className=" dark:text-white text-black ml-7 font-medium text-xl">
-              Total number of items
-            </h2>
-          </div>
-          <div className=" flex ">
-            <div className=" flex-1 dark:text-white text-black dark:bg-black bg-white rounded-b-3xl  secondbox">
-              <h1 className=" ml-7 font-bold dark:text-white text-black text-4xl">
-                {data.itemCount}
-              </h1>
-            </div>
-            <div className=" w-5 h-5 dark:bg-black bg-white  "></div>
-            <div className=" dark:bg-[#202125] bg-[#f2f2f2]     w-28   flex  justify-center items-center rounded-tl-2xl  -ml-5 -mt-0">
-              <img src={box3} alt="" className=" object-contain  w-12 h-12 " />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid xl:grid-cols-2 gap-5 mt-5">
-        <div className=" dark:bg-black bg-white p-3 pl-7 rounded-lg text-white">
-          <div className=" flex">
-            <div className=" dark:bg-[#3D3D3D] bg-[#F2F2F2] rounded-3xl w-56 text-center mb-1 py-1">
-              <h1 className="text-lg font-robotoLight dark:text-white text-black ">
-                Restaurants Details
-              </h1>
-            </div>
-          </div>
-
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">
-                Restaurants Name{" "}
-              </h5>
-            </div>
-            <div className=" flex-1">
-              <p className="text-sm font-robotoLight ">
-                {" "}
-                : {resList?.restaurant_name}{" "}
-              </p>
-            </div>
-          </div>
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">
-                Contact Name
-              </h5>
-            </div>
-            <div className="flex-1 ">
-              <p className="text-sm font-robotoLight ">
-                {" "}
-                : {resList?.admin_name}{" "}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex  m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">Email</h5>
-            </div>
-            <div className=" flex-1">
-              <p className="text-sm font-robotoLight ">
-                : {resList?.admin_email}{" "}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">
-                Contact Number
-              </h5>
-            </div>
-            <div className="flex-1 ">
-              <p className="text-sm font-robotoLight ">
-                : {resList?.admin_phone}{" "}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">Branches</h5>
-            </div>
-            <div className="flex-1 ">
-              <p className="text-sm font-robotoLight ">: {resList.branches}</p>
-            </div>
-          </div>
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">Mode</h5>
-            </div>
-            <div className="flex-1 ">
-              <p className="text-sm font-robotoLight ">
-                : {resList.mode == 1 ? "Live" : "Demo"}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex   m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">Status</h5>
-            </div>
-            <div className="flex-1 ">
-              <p className="text-sm font-robotoLight ">
-                : {resList.mode == 1 ? "Active" : "Blocked"}
-              </p>
-            </div>
-          </div>
-          <div className="flex  m-2 text-black dark:text-white ">
-            <div className=" w-36">
-              <h5 className="text-md font-robotoLight font-bold ">
-                Date Created{" "}
-              </h5>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-robotoLight ">
-                : {resList.created_at}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className=" dark:bg-black bg-white p-3 px-7  rounded-lg text-white">
-          <div className=" flex">
-            <div className=" dark:bg-[#3D3D3D] bg-[#F2F2F2]  rounded-3xl w-56 text-center mb-1 py-1">
-              <h1 className="text-lg font-robotoLight dark:text-white text-black ">
-                Recent Activities{" "}
-              </h1>
-            </div>
-          </div>
-          <div className="h-[280px] overflow-auto">
-            {activityList.length ? (
-              activityList.map((activity) => {
-                return (
-                  <>
-                    <div className="p-2 px-3 dark:bg-[#3D3D3D] bg-[#EEEEEE] text-black dark:text-white rounded-xl mt-2">
-                      <h5 className="text-md font-robotoLight ">
-                        {activity.description}
-                      </h5>
-                      <h5 className="text-md font-robotoLight ">
-                        {activity.created_at}
-                      </h5>
-                    </div>
-                  </>
-                );
-              })
-            ) : (
-              <div className="text-black dark:text-white">
-                No Activities Found
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-5 ">
-        <div className="flex justify-between">
-          <h1 className=" font-robotoLight text-black dark:text-white text-lg">
-            Branch Details
-          </h1>
-          <div className="flex bg-white px-2 py-1 gap-2 rounded-2xl">
-            <img
-              className={`${grid == false ? "" : "w-5"}`}
-              src={grid == false ? viewSelect : viewBlack}
-              alt=""
-              onClick={() => {
-                setGrid(false);
-              }}
-            />
-            <img
-              className={`${grid == true ? "" : "w-5"}`}
-              src={grid == true ? gridSelect : GridBlack}
-              alt=""
-              onClick={() => {
-                setGrid(true);
-              }}
-            />
-          </div>
-        </div>
-        {grid == true ? (
+    <>
+      {
+        isLoading ? <PageLoader /> : (
           <div>
-            {branchList.length ? (
-              <div className="mt-2  grid xl:grid-cols-2 gap-5 ">
-                {branchList.map((branch1) => {
-                  return (
-                    <>
-                      <div className=" bg-white dark:bg-black p-3 pl-7 rounded-lg text-white">
-                        <div className=" flex text-center justify-center items-center">
-                          <h1 className="text-lg font-robotoLight dark:text-white text-black">
-                            Branch Details{" "}
-                          </h1>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Branch Name{" "}
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              {" "}
-                              : {branch1.branch_name}{" "}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Contact Name
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              {" "}
-                              : {resList.admin_name}{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Email
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {resList.admin_email}{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Contact Number
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {resList.admin_phone}{" "}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Branches
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {resList.branches}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Mode
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {branch1.mode == 1 ? "Live" : "Demo"}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Status
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {branch1.status == 1 ? "Active" : "Blocked"}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex  items-center m-2 text-black dark:text-white ">
-                          <div className=" w-36">
-                            <h5 className="text-md font-robotoLight font-bold ">
-                              Date Created{" "}
-                            </h5>
-                          </div>
-                          <div className=" flex-1">
-                            <p className="text-sm font-robotoLight ">
-                              : {branch1.created_at}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  );
-                })}
+            <div>
+              <div className="panel flex flex-col md:flex-row justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none">
+                <div className="flex items-center overflow-x-auto whitespace-nowrap mb-2 md:mb-0">
+                  <div className="rounded-full p-1.5 ltr:mr-3 rtl:ml-3">
+                    <RiHome4Line className='opacity' size={20} color='gray' />
+                  </div>
+                  <IoIosArrowForward className='ltr:mr-3 opacity-25 font-thin' color='gray' />
+                  <a href="/" className="block hover:underline text-gray-600 ltr:mr-3 rtl:ml-3 poppins-font" rel="noreferrer" >
+                    Home
+                  </a>
+                  <IoIosArrowForward className='font-thin ml-3 mr-3 opacity-25' color='gray' />
+                  <a href="/restaurants" className="block hover:underline text-gray-600 ltr:mr-3 rtl:ml-3 poppins-font" rel="noreferrer" >
+                    Restaurants
+                  </a>
+                  <IoIosArrowForward className='font-thin ml-3 opacity-25' color='gray' />
+                  <p className='ltr:ml-3 text-blue-700 poppins-font' >View</p>
+                </div>
+                <div className="flex gap-2 items-center overflow-x-auto">
+                  <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-info">Add Branch</button>
+                  <a href={`https://${resList.sub_domain}.onetapdine.com`} target="_blank" className="text-black dark:text-white font-extrabold text-[15px]">
+                    <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-primary">View Restaurants</button>
+                  </a>
+                  <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-danger">Delete</button>
+                </div>
               </div>
-            ) : (
-              "No Branch Details  Found"
-            )}
-          </div>
-        ) : (
-          <div className=" dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
-            {branchList.length ? (
-              <>
-                <div className=" mb-5 p-3 overflow-x-auto">
-                  <div className=" min-w-max md:min-w-full">
-                    <div className=" dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white grid grid-cols-6 p-2 rounded-lg ">
-                      <div className=" flex items-center justify-center">
-                        <h3>Branch Name</h3>
-                      </div>
-                      <div className=" flex items-center justify-center">
-                        <h3>Address</h3>
-                      </div>
-                      <div className=" flex items-center justify-center">
-                        <h3>City</h3>
-                      </div>
-                      <div className=" flex items-center justify-center">
-                        <h3>Country</h3>
-                      </div>
-                      <div className=" flex items-center justify-center">
-                        <h3>Status</h3>
-                      </div>
-                      <div className=" flex items-center justify-center">
-                        <h3>View Details</h3>
-                      </div>
-                    </div>
 
-                    {branchList.map((branch: any) => {
-                      return (
-                        <>
-                          <div
-                            className=" dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-6 p-2 rounded-lg mt-1"
-                            key={branch.id}
-                          >
-                            <div className=" flex items-center justify-center">
-                              <h3> {branch.branch_name}</h3>
+            </div>
+
+            <div className=" px-6 py-8 font-robotoLight">
+
+              <div className="  grid xl:grid-cols-3 md:grid-cols-2 gap-5 lg:gap-10">
+                <div className="panel h-full p-0">
+                  <div className="flex p-5">
+                    <div className="shrink-0 bg-primary/10 text-primary rounded-xl w-11 h-11 flex justify-center items-center dark:bg-primary dark:text-white-light">
+                      {/* <IconUsersGroup className="w-5 h-5" /> */}
+                      <img src={box1} alt='' />
+                    </div>
+                    <div className="ltr:ml-3 rtl:mr-3 ">
+                      <p className="text-lg lg:text-xl dark:text-white-light">31.6K</p>
+                      <h5 className="text-[#506690] text-xs">Total number of branches</h5>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="panel h-full p-0">
+                  <div className="flex p-5">
+                    <div className="shrink-0 bg-danger/10 text-danger rounded-xl w-11 h-11 flex justify-center items-center dark:bg-danger dark:text-white-light">
+                      <img src={box2} alt='' />
+
+                    </div>
+                    <div className="ltr:ml-3 rtl:mr-3 ">
+                      <p className="text-xl dark:text-white-light">1,900</p>
+                      <h5 className="text-[#506690] text-xs"> Total number of employees</h5>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="panel h-full p-0">
+                  <div className="flex p-5">
+                    <div className="shrink-0 bg-success/10 text-success rounded-xl w-11 h-11 flex justify-center items-center dark:bg-success dark:text-white-light">
+                      <img src={box3} alt='' />
+
+
+                    </div>
+                    <div className="ltr:ml-3 rtl:mr-3 ">
+                      <p className="text-xl  dark:text-white-light">1800</p>
+                      <h5 className="text-[#506690] text-xs"> Total number of items
+                      </h5>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 mt-5">
+                <div className="panel h-full w-full">
+                  <div className="flex items-center justify-between p-2 border-b border-white-light dark:border-[#1b2e4b]">
+                    <h5 className="poppins-btn text-lg">Restaurant Details</h5>
+                  </div>
+                  <div className="table-responsive">
+                    <table className="min-w-full">
+                      <tbody>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="min-w-[150px] text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Restaurants Name</p>
                             </div>
-                            <div className=" flex items-center justify-center">
-                              <h3>{branch.address}</h3>
+                          </td>
+                          <td>KFC</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Contact Name</p>
                             </div>
-                            <div className=" flex items-center justify-center">
-                              <h3>{branch.city}</h3>
+                          </td>
+                          <td>Raja Moham Sarraf</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Email</p>
                             </div>
-                            <div className=" flex items-center justify-center">
-                              <h3>{branch.country}</h3>
+                          </td>
+                          <td>rajamohan@gmail.com</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Contact Number</p>
                             </div>
-                            <div className=" flex items-center justify-center">
-                              <div
-                                className={`badge text-center w-20 rounded-lg h-6  text-[#12DD00]  ${
-                                  branch.status == "1"
-                                    ? "bg-[#FFFFFF] text-[#12DD00] text-center"
-                                    : "text-[#D10000] bg-[#FFFFFF] text-center"
-                                }`}
-                              >
-                                {branch.status == 1 ? "Active" : "Blocked"}
-                              </div>
+                          </td>
+                          <td>+91 9988776655</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Branch</p>
                             </div>
-                            <div className=" flex items-center justify-center">
-                              {branch.id == "1" ? (
-                                <div
-                                  onClick={() => {
-                                    editBranch(branch);
-                                  }}
-                                >
-                                  Edit
-                                </div>
-                              ) : (
-                                <img
-                                  src={
-                                    themeConfig.theme == "dark"
-                                      ? nextwhite
-                                      : nextblack
-                                  }
-                                  // src={require("./images/arrow.png")}
-                                  className=" w-5 h-5"
-                                />
-                              )}
+                          </td>
+                          <td>Bangalore</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Mode</p>
                             </div>
-                          </div>
-                        </>
-                      );
-                    })}
+                          </td>
+                          <td>Demo</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Status</p>
+                            </div>
+                          </td>
+                          <td>Live</td>
+                        </tr>
+                        <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
+                          <td className="text-black dark:text-white">
+                            <div className="flex">
+                              <p className="whitespace-nowrap">Registered Date</p>
+                            </div>
+                          </td>
+                          <td>20-june-2024</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              </>
-            ) : (
-              <>
-                <b>No Details Found</b>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* deletee modal for restaurant  */}
-      <Transition appear show={model} as={Fragment}>
-        <Dialog as="div" open={model} onClose={() => setModal(false)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0" />
-          </Transition.Child>
-          <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen px-4">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel
-                  as="div"
-                  className="panel border-0 py-8 rounded-xl overflow-hidden w-full max-w-[460px] my-8 text-black dark:text-white  bg-white dark:bg-[#202125]"
-                >
-                  <form>
-                    <div className="grid grid-cols-1 gap-2  ">
-                      <div className=" flex justify-center text-center">
-                        <label
-                          className=" text-[18px] font-robotoLight font-bold roboto-light"
-                          htmlFor="rname"
-                        >
-                          Are you sure you want to delete this resturaunt?
-                        </label>
+                <div className="panel h-full">
+                  <div className="flex items-start justify-between dark:text-white-light mb-5 -mx-5 p-5 pt-0 border-b border-white-light dark:border-[#1b2e4b]">
+                    <h5 className="poppins-btn text-lg">Activity Log</h5>
+                  </div>
+                  <PerfectScrollbar className="perfect-scrollbar relative h-[360px] ltr:pr-3 rtl:pl-3 ltr:-mr-3 rtl:-ml-3">
+                    <div className="space-y-7">
+                      <div className="flex">
+                        <div className="shrink-0 ltr:mr-2 rtl:ml-2 relative z-10 before:w-[2px] before:h-[calc(100%-24px)] before:bg-white-dark/30 before:absolute before:top-10 before:left-4">
+                          <div className="bg-secondary shadow shadow-secondary w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconPlus className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">
+                            New project created :{' '}
+                            <button type="button" className="text-success">
+                              [VRISTO Admin Template]
+                            </button>
+                          </h5>
+                          <p className="text-white-dark text-xs">27 Feb, 2020</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        <div className="shrink-0 ltr:mr-2 rtl:ml-2 relative z-10 before:w-[2px] before:h-[calc(100%-24px)] before:bg-white-dark/30 before:absolute before:top-10 before:left-4">
+                          <div className="bg-success shadow-success w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconMail className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">
+                            Mail sent to{' '}
+                            <button type="button" className="text-white-dark">
+                              HR
+                            </button>{' '}
+                            and{' '}
+                            <button type="button" className="text-white-dark">
+                              Admin
+                            </button>
+                          </h5>
+                          <p className="text-white-dark text-xs">28 Feb, 2020</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        <div className="shrink-0 ltr:mr-2 rtl:ml-2 relative z-10 before:w-[2px] before:h-[calc(100%-24px)] before:bg-white-dark/30 before:absolute before:top-10 before:left-4">
+                          <div className="bg-primary w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconChecks className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">Server Logs Updated</h5>
+                          <p className="text-white-dark text-xs">27 Feb, 2020</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        <div className="shrink-0 ltr:mr-2 rtl:ml-2 relative z-10 before:w-[2px] before:h-[calc(100%-24px)] before:bg-white-dark/30 before:absolute before:top-10 before:left-4">
+                          <div className="bg-danger w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconChecks className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">
+                            Task Completed :
+                            <button type="button" className="text-success ml-1">
+                              [Backup Files EOD]
+                            </button>
+                          </h5>
+                          <p className="text-white-dark text-xs">01 Mar, 2020</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        <div className="shrink-0 ltr:mr-2 rtl:ml-2 relative z-10 before:w-[2px] before:h-[calc(100%-24px)] before:bg-white-dark/30 before:absolute before:top-10 before:left-4">
+                          <div className="bg-warning w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconFile className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">
+                            Documents Submitted from <button type="button">Sara</button>
+                          </h5>
+                          <p className="text-white-dark text-xs">10 Mar, 2020</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        <div className="ltr:mr-2 rtl:ml-2">
+                          <div className="bg-dark w-8 h-8 rounded-full flex items-center justify-center text-white">
+                            <IconServer className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <div>
+                          <h5 className="dark:text-white-light">Server rebooted successfully</h5>
+                          <p className="text-white-dark text-xs">06 Apr, 2020</p>
+                        </div>
                       </div>
                     </div>
-                  </form>
-                  <div className="mt-3 flex items-center justify-center gap-4">
-                    <button
-                      type="button"
-                      className=" px-6 p-[3px]  text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
-                      onClick={() => {
-                        setModal(false);
-                      }}
-                    >
-                      No
-                    </button>
-                    <button
-                      onClick={() => {
-                        deleteUser(resList);
-                      }}
-                      type="button"
-                      className=" px-6 p-[3px] text-[15px] rounded-2xl font-bold  text-black dark:text-white border border-black dark:border-white "
-                    >
-                      Yes
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                  </PerfectScrollbar>
+                </div>
+              </div>
+              <BranchList />
             </div>
           </div>
-        </Dialog>
-      </Transition>
-
-      {/* edit modal for restaurant  */}
-      <Transition appear show={editModal} as={Fragment}>
-        <Dialog as="div" open={editModal} onClose={() => setEditModal(true)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0" />
-          </Transition.Child>
-          <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-            <div className="flex items-start justify-center min-h-screen px-4">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="panel border border-[#F2F2F2] p-0 rounded-2xl overflow-hidden w-full max-w-5xl my-8 text-black dark:text-white-dark">
-                  <div className="  bg-white px-10 pb-5 pt-8 dark:bg-[#202125]">
-                    <div className="flex gap-2 items-center ">
-                      <div
-                        className=""
-                        alt=""
-                        onClick={() => {
-                          setEditModal(false);
-                        }}
-                      >
-                        {themeConfig.theme == "dark" ? (
-                          <RiArrowLeftWideFill size="25" />
-                        ) : (
-                          <RiArrowLeftWideFill size="25" />
-                        )}
-                      </div>
-                      <h5 className="text-lg font-bold dark:text-white ">
-                        Edit Restaurant
-                      </h5>
-                    </div>
-                  </div>
-                  <div className="px-10 pb-5 dark:bg-[#202125] bg-white">
-                    <form>
-                      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-2 gap-x-5">
-                        <div className="">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="rname"
-                          >
-                            Restaurant Name
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="restaurant_name"
-                            value={params.restaurant_name}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.restaurant_name ? (
-                            <div className="text-danger mt-1">
-                              {errors.restaurant_name}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Admin Name
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="admin_name"
-                            value={params.admin_name}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.admin_name ? (
-                            <div className="text-danger mt-1">
-                              {errors.admin_name}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="name"
-                          >
-                            Admin Phone
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="admin_phone"
-                            value={params.admin_phone}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.admin_phone ? (
-                            <div className="text-danger mt-1">
-                              {errors.admin_phone}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="phone"
-                          >
-                            Email Id
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="admin_email"
-                            value={params.admin_email}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.admin_email ? (
-                            <div className="text-danger mt-1">
-                              {errors.admin_email}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Branches
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="branches"
-                            value={params.branches}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.branches ? (
-                            <div className="text-danger mt-1">
-                              {errors.branches}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap mt-4 gap-3 ">
-                        <div className="">
-                          <div className="">
-                            <label
-                              htmlFor="status"
-                              className="text-style roboto-light"
-                            >
-                              Mode
-                            </label>
-                            <div className="mt-3 ml-3">
-                              <label className="inline-flex">
-                                <input
-                                  type="radio"
-                                  name="mode"
-                                  value="1"
-                                  defaultChecked={
-                                    params.mode == "1" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-[#B3B3B3] dark:border-[#B3B3B3]  border-[#B3B3B3] peer"
-                                />
-                                <span className="peer-checked:text-[#5E5E5E] text-[#5E5E5E] text-[14px] font-light  roboto-light">
-                                  Live
-                                </span>
-                              </label>
-                              <label className="inline-flex px-5">
-                                <input
-                                  type="radio"
-                                  name="mode"
-                                  value="0"
-                                  defaultChecked={
-                                    params.mode == "0" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-[#B3B3B3] dark:border-[#B3B3B3]  border-[#B3B3B3] peer"
-                                />
-                                <span className="peer-checked:text-[#5E5E5E] text-[#5E5E5E] text-[14px] font-light roboto-light">
-                                  Demo
-                                </span>
-                              </label>
-                            </div>
-                            {errors.mode && (
-                              <span className="text-danger font-semibold text-sm p-2">
-                                {errors.mode}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="mb-1">
-                          <div className="">
-                            <label
-                              htmlFor="status"
-                              className="text-style roboto-light"
-                            >
-                              Status
-                            </label>
-                            <div className="mt-3 ml-3">
-                              <label className="inline-flex">
-                                <input
-                                  type="radio"
-                                  name="status"
-                                  value="1"
-                                  defaultChecked={
-                                    params.status == "1" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-success dark:border-success  peer"
-                                />
-                                <span className="peer-checked:text-success  text-[14px] font-light text-success roboto-light">
-                                  Active
-                                </span>
-                              </label>
-                              <label className="inline-flex px-5">
-                                <input
-                                  type="radio"
-                                  name="status"
-                                  value="0"
-                                  defaultChecked={
-                                    params.status == "0" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-red-500  dark:border-red-500 border-red-500 peer"
-                                />
-                                <span className="peer-checked:text-red-500 text-[14px] font-light text-red-500  roboto-light">
-                                  Blocked
-                                </span>
-                              </label>
-                            </div>
-                            {errors.status && (
-                              <span className="text-danger font-semibold text-sm p-2">
-                                {errors.status}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                    <div className="mt-8 flex items-center justify-end">
-                      <button
-                        type="button"
-                        className="btn  btn-dark btn-sm px-10 rounded-2xl dark:bg-white dark:text-black "
-                        onClick={() => {
-                          formSubmit();
-                        }}
-                      >
-                        Update Restaurant
-                      </button>
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-
-      {/* edit modal for Braches  */}
-      <Transition appear show={branchModal} as={Fragment}>
-        <Dialog
-          as="div"
-          open={branchModal}
-          onClose={() => setBranchModal(true)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0" />
-          </Transition.Child>
-          <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-            <div className="flex items-start justify-center min-h-screen px-4">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="panel border border-[#F2F2F2] p-0 rounded-2xl overflow-hidden w-full max-w-5xl my-8 text-black dark:text-white-dark">
-                  <div className="  bg-white px-10 pb-5 pt-8 dark:bg-[#202125]">
-                    <div className="flex gap-2 items-center ">
-                      <div
-                        className=""
-                        alt=""
-                        onClick={() => {
-                          setBranchModal(false);
-                        }}
-                      >
-                        {themeConfig.theme == "dark" ? (
-                          <RiArrowLeftWideFill size="25" />
-                        ) : (
-                          <RiArrowLeftWideFill size="25" />
-                        )}
-                      </div>
-                      <h5 className="text-lg font-bold dark:text-white ">
-                        Edit Branches
-                      </h5>
-                    </div>
-                  </div>
-                  <div className="px-10 pb-5 dark:bg-[#202125] bg-white">
-                    <form>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 gap-x-5">
-                        <div className="">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="rname"
-                          >
-                            Branch Name
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="branch_name"
-                            value={params.branch_name}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.branch_name ? (
-                            <div className="text-danger mt-1">
-                              {errors.branch_name}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Address
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="address"
-                            value={params.address}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.address ? (
-                            <div className="text-danger mt-1">
-                              {errors.address}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="name"
-                          >
-                            City
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="city"
-                            value={params.city}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.city ? (
-                            <div className="text-danger mt-1">
-                              {errors.city}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="phone"
-                          >
-                            State
-                          </label>
-                          <input
-                            type="text"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="state"
-                            value={params.state}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.state ? (
-                            <div className="text-danger mt-1">
-                              {errors.state}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Pincode
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="pincode"
-                            value={params.pincode}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.pincode ? (
-                            <div className="text-danger mt-1">
-                              {errors.pincode}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="mb-1">
-                          <label
-                            htmlFor="name"
-                            className="text-style roboto-light"
-                          >
-                            Country
-                          </label>
-
-                          <select
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="country"
-                            value={params.country ? params.country : ""}
-                            onChange={(e) => changeValue(e)}
-                          >
-                            <option value="">Select Country</option>
-                            <option value="INDIA">INDIA</option>
-                            <option value="USA">USA</option>
-                            <option value="UAE">UAE</option>
-                          </select>
-                          {errors?.country ? (
-                            <div className="text-danger mt-1">
-                              {errors.country}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            TimeZone
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="time_zone"
-                            value={params.time_zone}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.time_zone ? (
-                            <div className="text-danger mt-1">
-                              {errors.time_zone}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Branch Email
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="branch_email"
-                            value={params.branch_email}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.branch_email ? (
-                            <div className="text-danger mt-1">
-                              {errors.branch_email}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Branch Phone
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="branch_phone"
-                            value={params.branch_phone}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.branch_phone ? (
-                            <div className="text-danger mt-1">
-                              {errors.branch_phone}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <label
-                            className="text-style roboto-light"
-                            htmlFor="email"
-                          >
-                            Landline
-                          </label>
-                          <input
-                            type="number"
-                            className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                            name="landline"
-                            value={params.landline}
-                            onChange={(e) => {
-                              changeValue(e);
-                            }}
-                          />
-                          {errors?.landline ? (
-                            <div className="text-danger mt-1">
-                              {errors.landline}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="mb-1">
-                          <div className="mt-4">
-                            <label
-                              htmlFor="status"
-                              className="text-style roboto-light"
-                            >
-                              Mode
-                            </label>
-                            <div className="mt-3">
-                              <label className="inline-flex">
-                                <input
-                                  type="radio"
-                                  name="mode"
-                                  value="1"
-                                  defaultChecked={
-                                    params.mode == "1" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-success peer"
-                                />
-                                <span className="peer-checked:text-success text-style roboto-light">
-                                  Live
-                                </span>
-                              </label>
-                              <label className="inline-flex px-5">
-                                <input
-                                  type="radio"
-                                  name="mode"
-                                  value="0"
-                                  defaultChecked={
-                                    params.mode == "0" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-secondary peer"
-                                />
-                                <span className="peer-checked:text-secondary text-style roboto-light">
-                                  Demo
-                                </span>
-                              </label>
-                            </div>
-                            <span className="text-danger font-semibold text-sm p-2">
-                              {errors.mode}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mb-1">
-                          <div className="mt-4">
-                            <label
-                              htmlFor="status"
-                              className="text-style roboto-light"
-                            >
-                              Status
-                            </label>
-                            <div className="mt-3">
-                              <label className="inline-flex">
-                                <input
-                                  type="radio"
-                                  name="status"
-                                  value="1"
-                                  defaultChecked={
-                                    params.status == "1" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-success peer"
-                                />
-                                <span className="peer-checked:text-success text-style roboto-light">
-                                  Active
-                                </span>
-                              </label>
-                              <label className="inline-flex px-5">
-                                <input
-                                  type="radio"
-                                  name="status"
-                                  value="0"
-                                  defaultChecked={
-                                    params.status == "0" ? true : false
-                                  }
-                                  onChange={(e) => changeValue(e)}
-                                  className="form-radio text-secondary peer"
-                                />
-                                <span className="peer-checked:text-secondary text-style roboto-light">
-                                  Blocked
-                                </span>
-                              </label>
-                            </div>
-                            <span className="text-danger font-semibold text-sm p-2">
-                              {errors.status}
-                            </span>
-                          </div>
-                        </div>
-                        {/* <div className="mb-1">
-                                                    <label htmlFor="name" className='text-style roboto-light'>
-                                                        Timezone
-                                                    </label>
-
-                                                    <select className="input-form dark:border-[#5E5E5E] dark:bg-transparent" name='time_zone' value={params.time_zone ? params.time_zone : ''} onChange={(e) => changeValue(e)} >
-                                                        <option value=''>Select Timezone</option>
-                                                        {timeZones[params.country]?.map((z) => (
-                                                            <option value={z} key={z}>{z}</option>
-                                                        ))}
-                                                    </select>
-                                                    {errors?.time_zone ? (
-                                                        <div className="text-danger mt-1">{errors.time_zone}</div>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                </div> */}
-                      </div>
-
-                      {/* <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-
-                                                <div className="mb-1">
-                                                    <div className="mt-4">
-                                                        <label htmlFor="status" className='text-style roboto-light'>Mode</label>
-                                                        <div className="mt-3">
-                                                            <label className="inline-flex">
-                                                                <input type="radio" name="mode" value="1"  defaultChecked={params.mode == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
-                                                                <span className="peer-checked:text-success text-style roboto-light">Live</span>
-                                                            </label>
-                                                            <label className="inline-flex px-5">
-                                                                <input type="radio" name="mode" value="0" defaultChecked={params.mode == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
-                                                                <span className="peer-checked:text-secondary text-style roboto-light">Demo</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-semibold text-sm p-2">{errors.mode}</span>
-                                                    </div>
-                                                </div>
-
-                                                
-
-                                                <div className="mb-1">
-                                                    <div className="mt-4">
-                                                        <label htmlFor="status" className='text-style roboto-light'>Status</label>
-                                                        <div className="mt-3">
-                                                            <label className="inline-flex">
-                                                                <input type="radio" name="status" value='1' defaultChecked={params.status == '1' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-success peer" />
-                                                                <span className="peer-checked:text-success text-style roboto-light">Active</span>
-                                                            </label>
-                                                            <label className="inline-flex px-5">
-                                                                <input type="radio" name="status" value='0' defaultChecked={params.status == '0' ? true : false} onChange={(e) => changeValue(e)} className="form-radio text-secondary peer" />
-                                                                <span className="peer-checked:text-secondary text-style roboto-light">Blocked</span>
-                                                            </label>
-                                                        </div>
-                                                        <span className="text-danger font-semibold text-sm p-2">{errors.status}</span>
-                                                    </div>
-                                                </div>
-
-
-                                                
-
-                                            </div> */}
-                    </form>
-                    <div className="mt-8 flex items-center justify-end">
-                      <button
-                        type="button"
-                        className="btn  btn-dark btn-sm px-10 rounded-2xl dark:bg-white dark:text-black "
-                        onClick={() => {
-                          formSubmit();
-                        }}
-                      >
-                        Update Branch
-                      </button>
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-    </div>
+        )
+      }
+    </>
   );
 }

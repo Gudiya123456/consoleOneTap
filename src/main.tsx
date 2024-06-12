@@ -6,6 +6,10 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 // Tailwind css
 import './tailwind.css';
+import "./custom.css"
+// import './tailwind2.css';
+
+
 
 // i18n (needs to be bundled)
 import './i18n';

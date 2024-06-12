@@ -34,6 +34,10 @@ import ViewInvoice from "../pages/invoice/ViewInvoice";
 import ViewStatement from "../pages/invoice/ViewStatement";
 import Tables from "../pages/adminrestaurants/Tables";
 import InvoiceFormat from "../pages/invoice/InvoiceFormat";
+import AddRestaurant from "../pages/restaurant/AddRestaurant";
+import EditRestaurant from "../pages/restaurant/EditRestaurant";
+import EditBranch from "../pages/restaurant/EditBranch";
+import ViewFeatures from "../pages/features/ViewFeature";
 
 const routes = [
   {
@@ -108,6 +112,21 @@ const routes = [
     layout: "default",
   },
   {
+    path: "/restaurants/add",
+    element: <AddRestaurant />,
+    layout: "default",
+  },
+  {
+    path: "/restaurants/edit",
+    element: <EditRestaurant />,
+    layout: "default",
+  },
+  {
+    path: "/restaurants/editbranch",
+    element: <EditBranch />,
+    layout: "default",
+  },
+  {
     path: "/restaurant/view",
     element: <Show />,
     layout: "default",
@@ -172,6 +191,11 @@ const routes = [
   {
     path: "/pricing/features",
     element: <Features />,
+    layout: "default",
+  },
+  {
+    path: "/features",
+    element: <ViewFeatures />,
     layout: "default",
   },
 

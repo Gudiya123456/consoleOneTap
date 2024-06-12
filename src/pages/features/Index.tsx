@@ -9,40 +9,40 @@ const AddFeatures = () => {
 
   const features = [
     {
-      slno: 1,
-      fn: "Live Monitoring",
+      id: 1,
+      feature: "Live Monitoring",
     },
     {
-      slno: 2,
-      fn: "Customer Support",
+      id: 2,
+      feature: "Customer Support",
     },
     {
-      slno: 3,
-      fn: "Oboarding Setup",
+      id: 3,
+      feature: "Oboarding Setup",
     },
     {
-      slno: 4,
-      fn: "menu Setup",
+      id: 4,
+      feature: "menu Setup",
     },
     {
-      slno: 6,
-      fn: "POS System",
+      id: 6,
+      feature: "POS System",
     },
     {
-      slno: 7,
-      fn: "Takeaway",
+      id: 7,
+      feature: "Takeaway",
     },
     {
-      slno: 8,
-      fn: "KOT Dashboard",
+      id: 8,
+      feature: "KOT Dashboard",
     },
     {
-      slno: 9,
-      fn: "Payment Gateway",
+      id: 9,
+      feature: "Payment Gateway",
     },
     {
-      slno: 10,
-      fn: "Menus",
+      id: 10,
+      feature: "Menus",
     },
   ];
 
@@ -52,6 +52,7 @@ const AddFeatures = () => {
         fetchFeatures();
 
     }, []);
+    
     const [resList, setResList] = useState<any>([]);
     const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
     const navigate = useNavigate();
@@ -220,7 +221,7 @@ const AddFeatures = () => {
           Features
         </div>
       </div>
-      {filteredItems.map((f) => (
+      {features.map((f) => (
         <div
           key={f.id}
           className=" grid grid-cols-12 bg-[#F2F2F2] h-[53px] items-center rounded-lg mt-1 dark:bg-[#202125]"

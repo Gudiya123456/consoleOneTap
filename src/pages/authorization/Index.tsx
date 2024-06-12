@@ -1,582 +1,448 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import darkview from "../../assets/images/darkview.png";
-import view from "../../assets/images/view.png";
-import { useDispatch, useSelector } from "react-redux";
-import { IRootState } from "../../store";
-import PlusDark from "../../assets/images/PlusDark.svg";
-import Plus from "../../assets/images/Plus (1).svg";
-import leftarrow from "../../assets/images/leftarrow.png";
-import leftDark from "../../assets/images/Chevron Left (1).svg";
-import axios from "axios";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import { setPageTitle } from "../../store/themeConfigSlice";
-import { ErrorHandle } from "../common/ErrorHandle";
-import PageLoader from "../../components/PageLoader";
-import { useNavigate } from "react-router-dom";
-const CrmSwal = withReactContent(Swal);
+import { DataTable, DataTableSortStatus } from 'mantine-datatable';
+import React, { Fragment, useEffect, useState } from 'react';
+import sortBy from 'lodash/sortBy';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import { setPageTitle } from '../../store/themeConfigSlice';
+import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { RiHome4Line } from 'react-icons/ri';
+import { AiOutlineEdit } from "react-icons/ai";
 import { MdRemoveRedEye } from "react-icons/md";
+import TableDrawer from './TableDrawer';
+import { Dialog, Transition } from "@headlessui/react";
 
-const Authorization = () => {
-  const [modal, setModal] = useState(false);
-  const [permissionmodal, setpermissionModal] = useState(false);
-  const [status, setStatus] = useState("");
-  const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-  const [isLoading, setIsLoading] = useState(true);
-  const crmToken = useSelector(
-    (state: IRootState) => state.themeConfig.crmToken
-  );
-  const [authList, setAuthList] = useState<any>([]);
+const rowData = [
+  {
+    id: 1,
+    firstName: 'Caroline',
+    lastName: 'Jensen',
+    email: 'carolinejensen@zidant.com',
+    dob: '2004-05-28',
+    address: {
+      street: '529 Scholes Street',
+      city: 'Temperanceville',
+      zipcode: 5235,
+      geo: {
+        lat: 23.806115,
+        lng: 164.677197,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: true,
+    age: 39,
+    company: 'POLARAX',
+  },
+  {
+    id: 2,
+    firstName: 'Celeste',
+    lastName: 'Grant',
+    email: 'celestegrant@polarax.com',
+    dob: '1989-11-19',
+    address: {
+      street: '639 Kimball Street',
+      city: 'Bascom',
+      zipcode: 8907,
+      geo: {
+        lat: 65.954483,
+        lng: 98.906478,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 32,
+    company: 'MANGLO',
+  },
+  {
+    id: 3,
+    firstName: 'Tillman',
+    lastName: 'Forbes',
+    email: 'tillmanforbes@manglo.com',
+    dob: '2016-09-05',
+    address: {
+      street: '240 Vandalia Avenue',
+      city: 'Thynedale',
+      zipcode: 8994,
+      geo: {
+        lat: -34.949388,
+        lng: -82.958111,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 2,
+    company: 'APPLIDECK',
+  },
+  {
+    id: 4,
+    firstName: 'Daisy',
+    lastName: 'Whitley',
+    email: 'daisywhitley@applideck.com',
+    dob: '1987-03-23',
+    address: {
+      street: '350 Pleasant Place',
+      city: 'Idledale',
+      zipcode: 9369,
+      geo: {
+        lat: -54.458809,
+        lng: -127.476556,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: true,
+    age: 21,
+    company: 'VOLAX',
+  },
+  {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 16,
+    company: 'ORBAXTER',
+  },
+
+  {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  }, {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  }, {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  }, {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  }, {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  }, {
+    id: 5,
+    firstName: 'Weber',
+    lastName: 'Bowman',
+    email: 'weberbowman@volax.com',
+    dob: '1983-02-24',
+    address: {
+      street: '154 Conway Street',
+      city: 'Broadlands',
+      zipcode: 8131,
+      geo: {
+        lat: 54.501351,
+        lng: -167.47138,
+      },
+    },
+    phone: '+91 9988774455',
+    isActive: false,
+    age: 26,
+    company: 'ORBAXTER',
+  },
+
+
+];
+
+const MultipleTables = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(setPageTitle('Multiple Tables'));
+  });
+  const [page, setPage] = useState(1);
+  const PAGE_SIZES = [10, 20, 30, 50, 100];
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [initialRecords, setInitialRecords] = useState(sortBy(rowData, 'firstName'));
+  const [recordsData, setRecordsData] = useState(initialRecords);
+
+  const [search, setSearch] = useState('');
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
+    columnAccessor: 'firstName',
+    direction: 'asc',
+  });
 
   useEffect(() => {
-    dispatch(setPageTitle("Authorization"));
-    fetchAuthorization();
-  }, []);
+    setPage(1);
+  }, [pageSize]);
 
-  // fetch Restaurant data
-  const fetchAuthorization = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios({
-        method: "get",
-        url: "https://cdn.onetapdine.com/api/authorizations",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + crmToken,
-        },
+  useEffect(() => {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize;
+    setRecordsData([...initialRecords.slice(from, to)]);
+  }, [page, pageSize, initialRecords]);
+
+  useEffect(() => {
+    setInitialRecords(() => {
+      return rowData.filter((item) => {
+        return (
+          item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+          item.company.toLowerCase().includes(search.toLowerCase()) ||
+          item.age.toString().toLowerCase().includes(search.toLowerCase()) ||
+          item.dob.toLowerCase().includes(search.toLowerCase()) ||
+          item.email.toLowerCase().includes(search.toLowerCase()) ||
+          item.phone.toLowerCase().includes(search.toLowerCase())
+        );
       });
-      if (response.data.status == "success") {
-        setAuthList(response.data.users);
-      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
-      console.log(response.data);
-    } catch (error: any) {
-      if (error.response.status == 401) {
-        ErrorHandle();
-      } else console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const data = sortBy(initialRecords, sortStatus.columnAccessor);
+    setInitialRecords(sortStatus.direction === 'desc' ? data.reverse() : data);
+    setPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortStatus]);
 
-  const [defaultParams] = useState({
-    id: "",
-    email: "",
-    name: "",
-    phone: "",
-    role: "",
-    status: "1",
+  const [page2, setPage2] = useState(1);
+  const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
+  const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'firstName'));
+  const [recordsData2, setRecordsData2] = useState(initialRecords2);
+
+  const [search2, setSearch2] = useState('');
+  const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
+    columnAccessor: 'firstName',
+    direction: 'asc',
   });
-  const [params, setParams] = useState<any>(
-    JSON.parse(JSON.stringify(defaultParams))
-  );
-  const [errors, setErros] = useState<any>({});
-  const [btnLoading, setBtnLoading] = useState(false);
-  const changeValue = (e: any) => {
-    const { value, name } = e.target;
-    setErros({ ...errors, [name]: "" });
-    setParams({ ...params, [name]: value });
-  };
 
-  const validate = () => {
-    setErros({});
-    let errors = {};
+  useEffect(() => {
+    setPage2(1);
+  }, [pageSize2]);
 
-    if (!params.name) {
-      errors = { ...errors, name: "name is required!" };
-    }
+  useEffect(() => {
+    const from = (page2 - 1) * pageSize2;
+    const to = from + pageSize2;
+    setRecordsData2([...initialRecords2.slice(from, to)]);
+  }, [page2, pageSize2, initialRecords2]);
 
-    if (!params.email) {
-      errors = { ...errors, email: "email is required" };
-    }
-    if (!params.phone) {
-      errors = { ...errors, phone: "phone is required" };
-    }
-
-    if (!params.role) {
-      errors = { ...errors, role: "roles is required" };
-    }
-
-    if (!params.status) {
-      errors = { ...errors, status: "Please select status!" };
-    }
-
-    console.log(errors);
-    setErros(errors);
-    return { totalErrors: Object.keys(errors).length };
-  };
-  const storeOrUpdateApi = async (data: any) => {
-    setBtnLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: "https://cdn.onetapdine.com/api/authorizations",
-        data,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Bearer " + crmToken,
-        },
+  useEffect(() => {
+    setInitialRecords2(() => {
+      return rowData.filter((item: any) => {
+        return (
+          item.firstName.toLowerCase().includes(search2.toLowerCase()) ||
+          item.company.toLowerCase().includes(search2.toLowerCase()) ||
+          item.age.toString().toLowerCase().includes(search2.toLowerCase()) ||
+          item.dob.toLowerCase().includes(search2.toLowerCase()) ||
+          item.email.toLowerCase().includes(search2.toLowerCase()) ||
+          item.phone.toLowerCase().includes(search2.toLowerCase())
+        );
       });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search2]);
 
-      if (response.data.status == "success") {
-        Swal.fire({
-          icon: response.data.status,
-          title: response.data.title,
-          text: response.data.message,
-          padding: "2em",
-          customClass: "sweet-alerts",
-        });
+  useEffect(() => {
+    const data2 = sortBy(initialRecords2, sortStatus2.columnAccessor);
+    setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortStatus2]);
 
-        if (response.data.status == "success") {
-          fetchAuthorization();
-          setModal(false);
-        } else {
-          alert(9);
-        }
-      } else {
-        alert("Failed");
-      }
-    } catch (error: any) {
-      console.log(error);
-      if (error.response.status == 401) {
-        ErrorHandle();
-      }
-      if (error?.response?.status === 422) {
-        const serveErrors = error.response.data.errors;
-        let serverErrors = {};
-        for (var key in serveErrors) {
-          serverErrors = { ...serverErrors, [key]: serveErrors[key][0] };
-          console.log(serveErrors[key][0]);
-        }
-        setErros(serverErrors);
-        CrmSwal.fire({
-          title: "Server Validation Error! Please solve",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          showCancelButton: false,
-          width: 450,
-          timer: 2000,
-          customClass: {
-            popup: "color-danger",
-          },
-        });
-      }
-    } finally {
-      setBtnLoading(false);
-    }
-  };
-  const formSubmit = () => {
-    const isValid = validate();
-    if (isValid.totalErrors) return false;
-    const data = new FormData();
-    data.append("id", params.id);
-    data.append("email", params.email);
-    data.append("name", params.name);
-    data.append("phone", params.phone);
-    data.append("role", params.role);
-    data.append("status", params.status);
-    storeOrUpdateApi(data);
-  };
-  const storeOrUpdate = (data) => {
-    setErros({});
-    if (data) {
-      setParams({
-        id: data.id,
-        status: data.status,
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        role: data.role,
-      });
-    } else {
-      const defaltData = JSON.parse(JSON.stringify(defaultParams));
-      setParams(defaltData);
-    }
-    setModal(true);
-  };
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [permissionmodal, setpermissionModal] = useState(false)
 
   return (
-    <>
-      <div className=""></div>
-      <div className="flex justify-between mb-2">
-        <div></div>
-        <div
-          className="flex gap-1"
-          onClick={() => {
-            storeOrUpdate();
-          }}
-        >
-          <img src={themeConfig.theme == "dark" ? PlusDark : Plus} />
-          <button
-            type="button"
-            className=" text-black dark:text-white font-extrabold text-[15px]"
-          >
-            Add Authoriation
-          </button>
+    <div>
+      <div className="panel flex md:flex-row  justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none ">
+        <div className="flex  items-center overflow-x-auto whitespace-nowrap " >
+          <div className="rounded-full p-1.5   ltr:mr-3 rtl:ml-3">
+            <RiHome4Line className=' opacity' size={20} color='gray' />
+
+          </div>
+          <IoIosArrowForward className='ltr:mr-3 opacity-25 font-thin' color='gray' />
+
+          <a href="/"  className=" poppins-font block hover:underline text-gray-600  ltr:mr-3 rtl:ml-3" rel="noreferrer">
+            Home
+          </a>
+          <IoIosArrowForward className='font-thin opacity-25' color='gray' />
+
+          <p  className=' poppins-font ltr:ml-3 text-blue-700' >Authorization</p>
+
+        </div>
+        <div>
+          <a href="/restaurants"  className="flex  items-center hover:underline text-gray-600 text-[13px] poppins-font  ltr:mr-10 rtl:ml-3" rel="noreferrer">
+            <IoIosArrowBack
+              className='font-thin ml-2 mr-2 ' color='gray' />  Back
+          </a>
+
         </div>
       </div>
-      {isLoading ? (
-        <PageLoader />
-      ) : (
-        <>
-          <div className=" dark:bg-black dark:text-white bg-white text-black rounded-xl mt-2">
-            {authList.length ? (
-              <div className="table-responsive mb-5 p-3">
-                <div className="overflow-x-auto ">
-                  {/* <div className="w-svw "> */}
-                  <div className="min-w-max  md:min-w-full">
-                    <div className="dark:bg-[#35373C] bg-[#DDDDDD] text-black dark:text-white  grid grid-cols-8 p-2 rounded-lg md:gap-3 break-all">
-                      <div className="flex items-center justify-center ">
-                        <h3>Sl.no</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Name</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Email</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Role</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Phone</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Status</h3>
-                      </div>
-                      <div className="flex items-center justify-center">
-                        <h3>Permission</h3>
-                      </div>
-                    </div>
-
-                    {authList.map((data, index) => (
-                      <div
-                        className="dark:bg-[#202125] bg-[#F2F2F2] dark:text-white text-black grid grid-cols-8 p-2 rounded-lg mt-1 md:gap-3 break-all"
-                        key={data.id}
-                      >
-                        <div className="flex items-center justify-center ">
-                          <h3>{index + 1}</h3>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <h3>{data.name}</h3>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <h3>{data.email}</h3>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <h3>{data.role}</h3>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <h3>{data.phone}</h3>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <div
-                            className={`badge text-center w-20 rounded-lg h-6 ${
-                              data.status == 1
-                                ? "bg-[#FFFFFF] text-[#12DD00]"
-                                : "text-[#D10000] bg-[#FFFFFF]"
-                            }`}
-                          >
-                            {data.status == 1 ? "Active" : "Disable"}
-                          </div>
-                        </div>
-                        <div
-                          onClick={() => {
-                            setpermissionModal(true);
-                          }}
-                          className="flex items-center justify-center"
-                        >
-                          <MdRemoveRedEye className="object-contain w-4 h-4 cursor-pointer" />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <button
-                            onClick={() => {
-                              storeOrUpdate(data);
-                            }}
-                            className="w-[56px] h-[26px] bg-[#DDDDDD] rounded-2xl text-black"
-                          >
-                            Edit
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <b>No Details Found</b>
-            )}
+      <TableDrawer showDrawer={showDrawer} setShowDrawer={setShowDrawer} />
+      <div className="panel mx-4 mt-6">
+        <div className="flex flex-col md:flex-row md:items-center mb-5 gap-5">
+          <div className="flex justify-between w-full md:w-auto">
+            <h5 className="font-semibold text-lg dark:text-white-light">Authorization</h5>
+            <button onClick={() => { setShowDrawer(true) }} type="button" className="btn btn-sm btn-dark shadow-none mr-5 md:hidden">Add Authorization</button>
           </div>
-        </>
-      )}
-
-      {/* Add / Edit Authoriation? modal */}
-      <Transition appear show={modal} as={Fragment}>
-        <Dialog as="div" open={modal} onClose={() => setModal(true)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0" />
-          </Transition.Child>
-          <div
-            className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
-            onClick={() => {
-              setModal(false);
-            }}
-          >
-            <div className="flex items-center justify-center min-h-screen px-4">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" border-0     my-8 text-black dark:text-white-dark ">
-                  <div className=" dark:bg-[#202125]  max-w-[600px] bg-[#FFFFFF] text-black dark:text-white p-4 px-6 rounded-2xl ">
-                    <div className=" flex gap-2 items-center">
-                      <img
-                        src={themeConfig.theme == "dark" ? leftDark : leftarrow}
-                        alt=""
-                        className=" object-contain w-4 h-4"
-                        onClick={() => setModal(false)}
-                      />
-                      <h3 className=" font-bold dark:text-white text-xl">
-                        {params.id ? "Edit Authorization" : "Add Authorization"}
-                      </h3>
-                    </div>
-
-                    <form>
-                      <div className=" grid md:grid-cols-2 mt-2 gap-5">
-                        <div className=" ">
-                          <label
-                            className="text-style roboto-light ml-2"
-                            htmlFor="status"
-                          >
-                            Name
-                          </label>
-                          <div className="flex items-center border border-[#101012] dark:border-white rounded-3xl">
-                            <div className="flex    px-[10px] py-[2px] items-center">
-                              <input
-                                type="text"
-                                className=" dark:bg-transparent  focus:outline-none "
-                                name="name"
-                                value={params.name}
-                                onChange={(e) => changeValue(e)}
-                              />
-                            </div>
-                          </div>
-                          {errors?.name ? (
-                            <div className="text-danger mt-1">
-                              {errors.name}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        <div className="">
-                          <label
-                            className="text-style roboto-light ml-2"
-                            htmlFor="status"
-                          >
-                            Email
-                          </label>
-                          <div className="flex items-center border border-[#101012] dark:border-white rounded-3xl">
-                            <div className="flex  flex-1   px-[10px] py-[2px] items-center">
-                              <input
-                                type="text"
-                                className="flex-1 focus:outline-none dark:bg-transparent "
-                                name="email"
-                                value={params.email}
-                                onChange={(e) => changeValue(e)}
-                              />
-                            </div>
-                          </div>
-                          {errors?.email ? (
-                            <div className="text-danger mt-1">
-                              {errors.email}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                      <div className=" grid md:grid-cols-2 mt-2 gap-5">
-                        <div className=" ">
-                          <label
-                            className="text-style roboto-light ml-2"
-                            htmlFor="status"
-                          >
-                            Phone
-                          </label>
-                          <div className="flex items-center border border-[#101012] dark:border-white rounded-3xl">
-                            <div className="flex  flex-1   px-[10px] py-[2px] items-center">
-                              <input
-                                type="text"
-                                className=" flex-1 focus:outline-none  dark:bg-transparent"
-                                name="phone"
-                                value={params.phone}
-                                onChange={(e) => changeValue(e)}
-                              />
-                            </div>
-                          </div>
-                          {errors?.phone && (
-                            <div className="text-danger mt-1">
-                              {errors.phone}
-                            </div>
-                          )}
-                        </div>
-                        <div className=" ">
-                          <label
-                            className="text-style roboto-light ml-2"
-                            htmlFor="status"
-                          >
-                            Role
-                          </label>
-                          <div className="flex items-center border border-[#101012] dark:border-white rounded-3xl">
-                            <div className="flex  flex-1   px-[10px] py-[2px] items-center">
-                              <input
-                                type="text"
-                                className=" flex-1 border-none focus:outline-none dark:bg-transparent "
-                                name="role"
-                                value={params.role}
-                                onChange={(e) => changeValue(e)}
-                              />
-                            </div>
-                          </div>
-                          {errors?.role ? (
-                            <div className="text-danger mt-1">
-                              {errors.role}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                      <div className=" mt-2">
-                        <label
-                          htmlFor="status"
-                          className="text-style roboto-light ml-2"
-                        >
-                          Status
-                        </label>
-                        <div className="mt-3 ml-2">
-                          <label className="inline-flex">
-                            <input
-                              type="radio"
-                              name="status"
-                              value="1"
-                              defaultChecked={
-                                params.status == "1" ? true : false
-                              }
-                              onChange={(e) => changeValue(e)}
-                              className="form-radio text-success peer"
-                            />
-                            <span
-                              style={{ color: "#32e01d" }}
-                              className="peer-checked:text-success text-style roboto-light"
-                            >
-                              Active
-                            </span>
-                          </label>
-                          <label className="inline-flex px-5">
-                            <input
-                              type="radio"
-                              name="status"
-                              value="0"
-                              defaultChecked={
-                                params.status == "0" ? true : false
-                              }
-                              onChange={(e) => changeValue(e)}
-                              className=" form-radio border-danger  w-5 h-5 text-danger peer"
-                            />
-                            <span
-                              style={{ color: "red" }}
-                              className="peer-checked:text-denger text-style roboto-light"
-                            >
-                              Disable
-                            </span>
-                          </label>
-                        </div>
-                        <span className="text-danger font-semibold text-sm p-2">
-                          {errors.status}
-                        </span>
-                      </div>
-                      {/* <div className=" mt-2 ml-2">
-                                                <h5 className="text-style roboto-light ">Status</h5>
-                                                <div className="flex mt-1">
-                                                    <div className=" flex items-center">
-                                                        <div
-                                                            className=" border border-[#12DD00] w-[20px] h-[20px] rounded-full flex justify-center items-center"
-                                                            onClick={() => setStatus("active")}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    display: status == "active" ? "flex" : "none",
-                                                                }}
-                                                                className=" bg-[#12DD00] w-[14px] h-[14px] rounded-full "
-                                                            ></div>
-                                                        </div>
-                                                        <div className=" ml-1 text-[#12DD00]">Active</div>
-                                                    </div>
-                                                    <div className=" flex items-center ml-3">
-                                                        <div
-                                                            className=" border border-[#FF0000] w-[20px] h-[20px] rounded-full flex justify-center items-center"
-                                                            onClick={() => setStatus("disable")}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    display:
-                                                                        status == "disable" ? "flex" : "none",
-                                                                }}
-                                                                className=" bg-[#FF0000] w-[14px] h-[14px] rounded-full"
-                                                            ></div>
-                                                        </div>
-                                                        <div className=" ml-1 text-[#FF0000]">Disable</div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
-                    </form>
-                    <div className="mt-4 flex items-center justify-end">
-                      <button
-                        type="button"
-                        className="btn  btn-dark btn-sm  py-0 rounded-full border border-black dark:border-white     text-sm mr-2"
-                        onClick={() => setModal(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        className="btn  btn-dark btn-sm  py-0 rounded-full border border-black dark:bg-white dark:text-black     text-sm mr-2"
-                        onClick={() => formSubmit()}
-                      >
-                        {btnLoading
-                          ? "Loading..."
-                          : params.id
-                          ? "Update"
-                          : "Add"}
-                      </button>
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+          <div className="w-full md:w-auto ltr:ml-auto rtl:mr-auto">
+            <input
+              type="text"
+              className="form-input w-full md:w-[350px]"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </Dialog>
-      </Transition>
+          <button onClick={() => { setShowDrawer(true) }} type="button" className="btn btn-sm btn-dark shadow-none hidden md:block">Add Authorization</button>
+        </div>
 
+        <div className="datatables">
+          <DataTable
+            className="whitespace-nowrap table-hover"
+            records={recordsData}
+            columns={[
+              {
+                accessor: 'firstName',
+                title: ' Name',
+                sortable: true,
+                render: ({ firstName, lastName, id }) => (
+                  <NavLink to='/restaurant/view' state={{ restaurantId: 26 }} > <div className="flex items-center w-max">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAACUCAMAAAD26AbpAAAAbFBMVEX///8AAACPj4/8/Pz39/dzc3MEBATY2NhMTEyHh4eioqLT09Pb29v09PTf39/o6OgNDQ2pqallZWXu7u60tLQmJiYgICA0NDTKyspUVFQTExNdXV2AgIBtbW0ZGRktLS08PDyZmZlFRUW9vb2oiDsEAAADxUlEQVR4nO2ai46qMBCGW1uQixQRWVHwgr7/O56WLqvHA9K60paT+WKyiW7C/zMzHWgHIQAAAAAAAAAAAAAAAAAAAAD4JYR/yNNXAjtq3oAgqTWJo/rIqaOYdj/Mw0UbAsqaAD8QRIwiNA8DSAilpSd0+77f/pEu6pLOIwoiBnG4fozAtwV8CuMZOBA1S6MdHuCSUeR6WXN1yeb0c9+f8PGXl7ieTATlgaiBgSjw7/fOe0ivQ0nUeQhy2xoHabtBWg0l0Z1N7uzqKuog9Mcs+Hi9SFz1wMOwPeFRC7ymb66WA0FpgBWiwEs6dXNh5UFYjJVBR2RbbD88CKoOMHZ1VQrVLSxsax3goG7hbFtrP+XoatTB/y22rbaXUNmCq5lE9+p5hHHl4qLKzupB8PEuta23h7jQsVAsbevtQTxcqMMfMtwj01hT+Uvo1rbeHqL1uPA7h8y23h70LDgZhf+gFspCp7UVLrZn3hc0cLIv5K9f/J/YU9t6+/B0LNS21fay1bFQ2lbbC9WxYFtsLwTV6g4WTu7CEBSrW1jZVtsLIaQWu0RjvUEcOtQuxqDdzIvP4/tIwuXOxb6G5EFapNagM4cP3dLNqHxu8Zi666Dd2RYiB0MhfqhcfLZ4IH71mNE6CxwthA6CyuCFhxk4EDm+HPYgzqmWTja1J1go5fp/i29ZOF4HHXRbPMq+s7s5+Yj9L5Sv+tnucL/70sthJ16XZ5BF6Fslzbzr1/3+F1cv6xmPcRzCtk3obapq44XNlpH7hMy8yFPGUlePdPSY4+1v6c41Z1YCvczGwmyEDqFpwFm/VAlX5edlxvuAErxPlIltvRLys+awqLqcT8rb8+uv86WKUplOVt9Cibw6iQOts4WOw35J7BcFv35y0zqt/aF9+KtuCbH+4BEfpZzBebwXFvhn7cXWAiHzl0TXbwO6DnDn+hrJMWLzPtoyyDW2UYep26FJCxb4JVn1CQcYb5iVeuAW2Ht1/Izfbi1ZqAeCVp9xILfHmHkPvA6On3EgEYPQJltcm7jNJx20E4cmxyaFhdsbq+gwPl6XRkta3C2N0R01D8bH9ZRHUtVpzFb0svi8hTMz6UDncFMdoyOHq5Ed+PfYmwxD9tb7wRgng2NWSf3Z5Uji49rcxvfL06hfEJgbm7xNkkc+PhgbFaPNFA4EjalMyrUmj3SoTW3NpIHOFJ4Oxo6k2QStWXIx1RlWUznAB1MWlhMZ8M3NKU1lAYMFByyYTaRp1tT5RwEs6JCGi6mYyaAMAAAAAAAAAAAAAAAAAAAAYI8/VVUttF5/IxwAAAAASUVORK5CYII=" alt="" className='w-9 h-9 rounded ltr:mr-2 rtl:ml-2 object-cover ' />
+                    <div>{firstName + ' ' + lastName}</div>
+                  </div></NavLink>
+                ),
+              },
+
+              { accessor: 'email', title: 'Email', sortable: true },
+              { accessor: 'phone', title: 'Phone.', sortable: true },
+              { accessor: 'company', title: 'Role', sortable: true },
+
+              {
+                accessor: 'status',
+                title: 'Status',
+                sortable: true,
+                render: () => <label onClick={() => { alert(999) }} className="w-12 h-6 relative">
+                  <input type="checkbox" className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
+                  <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-success before:transition-all before:duration-300"></span>
+                </label>,
+              },
+              {
+                accessor: 'action',
+                title: 'Action',
+                titleClassName: '!text-center',
+                render: () => (
+                  <div className="flex items-center gap-2 w-max mx-auto">
+                    <Tippy content="Permission">
+                      <button type="button" onClick={() => { setpermissionModal(true) }} >
+                        {/* <BiCreditCardFront size={20} /> */}
+                        <MdRemoveRedEye className="object-contain w-4 h-4 cursor-pointer" />
+
+                      </button>
+                    </Tippy>
+                    <Tippy content="Edit">
+                      {/* <NavLink to='/restaurants/edit' > */}
+                      <button type="button" onClick={() => { setShowDrawer(true) }} >
+                        <AiOutlineEdit size={20} />
+                      </button>
+                      {/* </NavLink> */}
+                    </Tippy>
+
+                  </div>
+                ),
+              },
+            ]}
+            totalRecords={initialRecords.length}
+            recordsPerPage={pageSize}
+            page={page}
+            onPageChange={(p) => setPage(p)}
+            recordsPerPageOptions={PAGE_SIZES}
+            onRecordsPerPageChange={setPageSize}
+            sortStatus={sortStatus}
+            onSortStatusChange={setSortStatus}
+            minHeight={200}
+            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+          />
+        </div>
+      </div>
       {/* permission modal  */}
       <Transition appear show={permissionmodal} as={Fragment}>
         <Dialog
@@ -614,14 +480,14 @@ const Authorization = () => {
                 <Dialog.Panel className=" border-0   overflow-hidden  my-8 text-black dark:text-white ">
                   <div className=" bg-white dark:bg-[#202125] p-4 px-6 rounded-2xl w-[595px]">
                     <div className=" flex items-center">
-                      <img
+                      <div
                         onClick={() => {
                           setpermissionModal(false);
                         }}
-                        src={themeConfig.theme == "dark" ? leftDark : leftarrow}
-                        alt=""
+                        // src={themeConfig.theme == "dark" ? leftDark : leftarrow}
+
                         className=" object-contain w-4 h-4 "
-                      />
+                      > </div>
                       <h3 className=" font-bold dark:text-white text-lg">
                         Permissions
                       </h3>
@@ -789,8 +655,8 @@ const Authorization = () => {
           </div>
         </Dialog>
       </Transition>
-    </>
+    </div>
   );
 };
 
-export default Authorization;
+export default MultipleTables;
