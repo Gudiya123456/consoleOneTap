@@ -1,30 +1,6 @@
-// import React from 'react'
-
-// export default function Index() {
-//   return (
-//     <div className='p-6' >
-//       <div className='grid grid-cols-5 gap-2' >
-      
-//          <h1 className='panel' >jhhhjjh</h1>
-//          <h1 className='panel' >jhhhjjh</h1>
-//          <h1 className='panel' >jhhhjjh</h1>
-//          <h1 className='panel' >jhhhjjh</h1>
-//          <h1 className='panel' >jhhhjjh</h1>
-//          <h1 className='panel' >jhhhjjh</h1>
-
-//       </div>
-//     </div>
-//   )
-// }
-
 
 import React, { useEffect, useState } from 'react';
 import AccountingCard from './AccountingCard';
-// import tallyImage from './assets/tally.png';
-// import dataLakeImage from './assets/data-lake.png';
-// import eInvoiceImage from './assets/e-invoice.png';
-// import zohoImage from './assets/zoho.png';
-// import busyImage from './assets/busy.png';
 import rozorpay from "../../assets/images/rozorpay.png";
 import gpay from "../../assets/images/gpay.png";
 import stripe1 from "../../assets/images/stripe.png";
