@@ -5,13 +5,15 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { RiHome4Line } from 'react-icons/ri';
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { MdRemoveRedEye } from "react-icons/md";
 import TableDrawer from './TableDrawer';
 import { Dialog, Transition } from "@headlessui/react";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const rowData = [
   {
@@ -328,7 +330,191 @@ const MultipleTables = () => {
   }, [sortStatus2]);
 
   const [showDrawer, setShowDrawer] = useState(false);
-  const [permissionmodal, setpermissionModal] = useState(false)
+  const [permissionmodal, setpermissionModal] = useState(false);
+
+  // fetch functionality for Authorization 
+  const [isLoading, setIsLoading] = useState(false);
+  const [authList, setAuthList] = useState([]);
+  const [filteredItem, setFilteredItems] = useState<any>(authList);
+  const[data,setData]=useState<any>([])
+  const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+const navigate=useNavigate();
+  const fetchAuthorization = async () => {
+    setIsLoading(true);
+    try {
+
+      const response = await axios({
+        method: 'get',
+        url: 'https://cdn.onetapdine.com/api/authorizations',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + crmToken
+        }
+      })
+      if (response.data.status == 'success') {
+        setAuthList(response.data.users);
+        setData(response.data.users);
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+    finally {
+      setIsLoading(false);
+    }
+
+  }
+
+  useEffect(() => {
+    fetchAuthorization();
+  }, []);
+
+  useEffect(() => {
+    setFilteredItems(() => {
+      return authList.filter((item: any) => {
+        return item.name.toLowerCase().includes(search);
+      });
+    });
+  }, [search, authList]);
+
+  const handleDrawer=(data)=>{
+    setData(data);
+    setShowDrawer(true);
+    
+  }
+
+  const handleStatus=(data)=>{
+    setData(data);
+  }
+
+  const distroy = (hello: any) => {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+    }).then(async (result) => {
+        if (result.value) {
+            try {
+                const response = await axios({
+                    method: 'delete',
+                    url: 'https://cdn.onetapdine.com/api/authorizations/' + hello.id,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: "Bearer " + crmToken,
+                    },
+                });
+                if (response.data.status === "success") {
+                    // setCategories(categories.filter((d: any) => d.id !== id))
+                    Swal.fire({ title: response.data.title, text: response.data.message, icon: 'success', customClass: 'sweet-alerts' });
+
+                    fetchAuthorization()
+                }
+            } catch (error: any) {
+
+                if (error.response.status == 401) navigate('/login')
+            } finally {
+
+            }
+        }
+    });
+
+}
+
+const disableData = (data: any) => {
+  console.log("datadatadatadata",data)
+  Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: "You want to change Status ?",
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      padding: '2em',
+      customClass: 'sweet-alerts',
+  }).then(async (result) => {
+      if (result.value) {
+          try {
+              const response = await axios({
+                  method: 'post',
+                  url: 'https://cdn.onetapdine.com/api/authorizations',
+                 data,
+                  headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: "Bearer " + crmToken,
+                  },
+              });
+              if (response.data.status === "success") {
+                alert('updatedddddd')
+                  Swal.fire({ title: response.data.title, text: response.data.message, icon: 'success', customClass: 'sweet-alerts' });
+
+                  fetchAuthorization()
+              }
+          } catch (error: any) {
+
+             console.log(error)
+          } finally {
+
+          }
+      }
+  });
+
+}
+console.log("data datatatatt", data)
+const defaultParams = {
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+    image: "",
+    status: "1",
+    role:''
+};
+const [params, setParams] = useState<any>(
+    defaultParams
+);
+useEffect(() => {
+    if (data?.id) {
+        setParams(
+            {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                image: data.image,
+                status: data.status,
+                role: data.role,
+            }
+        )
+    }
+    else {
+
+        setParams(defaultParams)
+    }
+}, [data])
+
+console.log(defaultParams)
+console.log(params)
+
+
+
+const formSubmit1 = () => {
+    // const isValid = validate();
+    // if (isValid.totalErrors) return false;
+    const data = new FormData();
+    data.append("id", params.id);
+    data.append("name", params.name);
+    data.append("email", params.email);
+    data.append("phone", params.phone);
+    data.append("image", params.image);
+    data.append("status", params.status);
+    data.append("role", params.role);
+
+    // storeOrUpdateApi(data);
+    disableData(data)
+};
 
   return (
     <div>
@@ -340,28 +526,28 @@ const MultipleTables = () => {
           </div>
           <IoIosArrowForward className='ltr:mr-3 opacity-25 font-thin' color='gray' />
 
-          <a href="/"  className=" poppins-font block hover:underline text-gray-600  ltr:mr-3 rtl:ml-3" rel="noreferrer">
+          <a href="/" className=" poppins-font block hover:underline text-gray-600  ltr:mr-3 rtl:ml-3" rel="noreferrer">
             Home
           </a>
           <IoIosArrowForward className='font-thin opacity-25' color='gray' />
 
-          <p  className=' poppins-font ltr:ml-3 text-blue-700' >Authorization</p>
+          <p className=' poppins-font ltr:ml-3 text-blue-700' >Authorization</p>
 
         </div>
         <div>
-          <a href="/restaurants"  className="flex  items-center hover:underline text-gray-600 text-[13px] poppins-font  ltr:mr-10 rtl:ml-3" rel="noreferrer">
+          <a href="/restaurants" className="flex  items-center hover:underline text-gray-600 text-[13px] poppins-font  ltr:mr-10 rtl:ml-3" rel="noreferrer">
             <IoIosArrowBack
               className='font-thin ml-2 mr-2 ' color='gray' />  Back
           </a>
 
         </div>
       </div>
-      <TableDrawer showDrawer={showDrawer} setShowDrawer={setShowDrawer} />
+      <TableDrawer showDrawer={showDrawer} data={data} fetchAuthorization={fetchAuthorization} setShowDrawer={setShowDrawer} />
       <div className="panel mx-4 mt-6">
         <div className="flex flex-col md:flex-row md:items-center mb-5 gap-5">
           <div className="flex justify-between w-full md:w-auto">
             <h5 className="font-semibold text-lg dark:text-white-light">Authorization</h5>
-            <button onClick={() => { setShowDrawer(true) }} type="button" className="btn btn-sm btn-dark shadow-none mr-5 md:hidden">Add Authorization</button>
+            <button onClick={() => { handleDrawer() }} type="button" className="btn btn-sm btn-dark shadow-none mr-5 md:hidden">Add Authorization</button>
           </div>
           <div className="w-full md:w-auto ltr:ml-auto rtl:mr-auto">
             <input
@@ -375,72 +561,84 @@ const MultipleTables = () => {
           <button onClick={() => { setShowDrawer(true) }} type="button" className="btn btn-sm btn-dark shadow-none hidden md:block">Add Authorization</button>
         </div>
 
-        <div className="datatables">
-          <DataTable
-            className="whitespace-nowrap table-hover"
-            records={recordsData}
-            columns={[
-              {
-                accessor: 'firstName',
-                title: ' Name',
-                sortable: true,
-                render: ({ firstName, lastName, id }) => (
-                  <NavLink to='/restaurant/view' state={{ restaurantId: 26 }} > <div className="flex items-center w-max">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAACUCAMAAAD26AbpAAAAbFBMVEX///8AAACPj4/8/Pz39/dzc3MEBATY2NhMTEyHh4eioqLT09Pb29v09PTf39/o6OgNDQ2pqallZWXu7u60tLQmJiYgICA0NDTKyspUVFQTExNdXV2AgIBtbW0ZGRktLS08PDyZmZlFRUW9vb2oiDsEAAADxUlEQVR4nO2ai46qMBCGW1uQixQRWVHwgr7/O56WLqvHA9K60paT+WKyiW7C/zMzHWgHIQAAAAAAAAAAAAAAAAAAAAD4JYR/yNNXAjtq3oAgqTWJo/rIqaOYdj/Mw0UbAsqaAD8QRIwiNA8DSAilpSd0+77f/pEu6pLOIwoiBnG4fozAtwV8CuMZOBA1S6MdHuCSUeR6WXN1yeb0c9+f8PGXl7ieTATlgaiBgSjw7/fOe0ivQ0nUeQhy2xoHabtBWg0l0Z1N7uzqKuog9Mcs+Hi9SFz1wMOwPeFRC7ymb66WA0FpgBWiwEs6dXNh5UFYjJVBR2RbbD88CKoOMHZ1VQrVLSxsax3goG7hbFtrP+XoatTB/y22rbaXUNmCq5lE9+p5hHHl4qLKzupB8PEuta23h7jQsVAsbevtQTxcqMMfMtwj01hT+Uvo1rbeHqL1uPA7h8y23h70LDgZhf+gFspCp7UVLrZn3hc0cLIv5K9f/J/YU9t6+/B0LNS21fay1bFQ2lbbC9WxYFtsLwTV6g4WTu7CEBSrW1jZVtsLIaQWu0RjvUEcOtQuxqDdzIvP4/tIwuXOxb6G5EFapNagM4cP3dLNqHxu8Zi666Dd2RYiB0MhfqhcfLZ4IH71mNE6CxwthA6CyuCFhxk4EDm+HPYgzqmWTja1J1go5fp/i29ZOF4HHXRbPMq+s7s5+Yj9L5Sv+tnucL/70sthJ16XZ5BF6Fslzbzr1/3+F1cv6xmPcRzCtk3obapq44XNlpH7hMy8yFPGUlePdPSY4+1v6c41Z1YCvczGwmyEDqFpwFm/VAlX5edlxvuAErxPlIltvRLys+awqLqcT8rb8+uv86WKUplOVt9Cibw6iQOts4WOw35J7BcFv35y0zqt/aF9+KtuCbH+4BEfpZzBebwXFvhn7cXWAiHzl0TXbwO6DnDn+hrJMWLzPtoyyDW2UYep26FJCxb4JVn1CQcYb5iVeuAW2Ht1/Izfbi1ZqAeCVp9xILfHmHkPvA6On3EgEYPQJltcm7jNJx20E4cmxyaFhdsbq+gwPl6XRkta3C2N0R01D8bH9ZRHUtVpzFb0svi8hTMz6UDncFMdoyOHq5Ed+PfYmwxD9tb7wRgng2NWSf3Z5Uji49rcxvfL06hfEJgbm7xNkkc+PhgbFaPNFA4EjalMyrUmj3SoTW3NpIHOFJ4Oxo6k2QStWXIx1RlWUznAB1MWlhMZ8M3NKU1lAYMFByyYTaRp1tT5RwEs6JCGi6mYyaAMAAAAAAAAAAAAAAAAAAAAYI8/VVUttF5/IxwAAAAASUVORK5CYII=" alt="" className='w-9 h-9 rounded ltr:mr-2 rtl:ml-2 object-cover ' />
-                    <div>{firstName + ' ' + lastName}</div>
-                  </div></NavLink>
-                ),
-              },
+        <div>
+          {
+            isLoading ? 'Loading.....' : (
+              <div className="datatables">
+                <DataTable
+                  className="whitespace-nowrap table-hover"
+                  records={filteredItem}
+                  columns={[
+                    {
+                      accessor: 'name',
+                      title: ' Name',
+                      sortable: true,
+                      render: ({ name }) => (
+                        <NavLink to='#'  > <div className="flex items-center w-max">
+                          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAACUCAMAAAD26AbpAAAAbFBMVEX///8AAACPj4/8/Pz39/dzc3MEBATY2NhMTEyHh4eioqLT09Pb29v09PTf39/o6OgNDQ2pqallZWXu7u60tLQmJiYgICA0NDTKyspUVFQTExNdXV2AgIBtbW0ZGRktLS08PDyZmZlFRUW9vb2oiDsEAAADxUlEQVR4nO2ai46qMBCGW1uQixQRWVHwgr7/O56WLqvHA9K60paT+WKyiW7C/zMzHWgHIQAAAAAAAAAAAAAAAAAAAAD4JYR/yNNXAjtq3oAgqTWJo/rIqaOYdj/Mw0UbAsqaAD8QRIwiNA8DSAilpSd0+77f/pEu6pLOIwoiBnG4fozAtwV8CuMZOBA1S6MdHuCSUeR6WXN1yeb0c9+f8PGXl7ieTATlgaiBgSjw7/fOe0ivQ0nUeQhy2xoHabtBWg0l0Z1N7uzqKuog9Mcs+Hi9SFz1wMOwPeFRC7ymb66WA0FpgBWiwEs6dXNh5UFYjJVBR2RbbD88CKoOMHZ1VQrVLSxsax3goG7hbFtrP+XoatTB/y22rbaXUNmCq5lE9+p5hHHl4qLKzupB8PEuta23h7jQsVAsbevtQTxcqMMfMtwj01hT+Uvo1rbeHqL1uPA7h8y23h70LDgZhf+gFspCp7UVLrZn3hc0cLIv5K9f/J/YU9t6+/B0LNS21fay1bFQ2lbbC9WxYFtsLwTV6g4WTu7CEBSrW1jZVtsLIaQWu0RjvUEcOtQuxqDdzIvP4/tIwuXOxb6G5EFapNagM4cP3dLNqHxu8Zi666Dd2RYiB0MhfqhcfLZ4IH71mNE6CxwthA6CyuCFhxk4EDm+HPYgzqmWTja1J1go5fp/i29ZOF4HHXRbPMq+s7s5+Yj9L5Sv+tnucL/70sthJ16XZ5BF6Fslzbzr1/3+F1cv6xmPcRzCtk3obapq44XNlpH7hMy8yFPGUlePdPSY4+1v6c41Z1YCvczGwmyEDqFpwFm/VAlX5edlxvuAErxPlIltvRLys+awqLqcT8rb8+uv86WKUplOVt9Cibw6iQOts4WOw35J7BcFv35y0zqt/aF9+KtuCbH+4BEfpZzBebwXFvhn7cXWAiHzl0TXbwO6DnDn+hrJMWLzPtoyyDW2UYep26FJCxb4JVn1CQcYb5iVeuAW2Ht1/Izfbi1ZqAeCVp9xILfHmHkPvA6On3EgEYPQJltcm7jNJx20E4cmxyaFhdsbq+gwPl6XRkta3C2N0R01D8bH9ZRHUtVpzFb0svi8hTMz6UDncFMdoyOHq5Ed+PfYmwxD9tb7wRgng2NWSf3Z5Uji49rcxvfL06hfEJgbm7xNkkc+PhgbFaPNFA4EjalMyrUmj3SoTW3NpIHOFJ4Oxo6k2QStWXIx1RlWUznAB1MWlhMZ8M3NKU1lAYMFByyYTaRp1tT5RwEs6JCGi6mYyaAMAAAAAAAAAAAAAAAAAAAAYI8/VVUttF5/IxwAAAAASUVORK5CYII=" alt="" className='w-9 h-9 rounded ltr:mr-2 rtl:ml-2 object-cover ' />
+                          <div>{name}</div>
+                        </div></NavLink>
+                      ),
+                    },
 
-              { accessor: 'email', title: 'Email', sortable: true },
-              { accessor: 'phone', title: 'Phone.', sortable: true },
-              { accessor: 'company', title: 'Role', sortable: true },
+                    { accessor: 'email', title: 'Email', sortable: true },
+                    { accessor: 'phone', title: 'Phone.', sortable: true },
+                    { accessor: 'role', title: 'Role', sortable: true },
 
-              {
-                accessor: 'status',
-                title: 'Status',
-                sortable: true,
-                render: () => <label onClick={() => { alert(999) }} className="w-12 h-6 relative">
-                  <input type="checkbox" className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
-                  <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-success before:transition-all before:duration-300"></span>
-                </label>,
-              },
-              {
-                accessor: 'action',
-                title: 'Action',
-                titleClassName: '!text-center',
-                render: () => (
-                  <div className="flex items-center gap-2 w-max mx-auto">
-                    <Tippy content="Permission">
-                      <button type="button" onClick={() => { setpermissionModal(true) }} >
-                        {/* <BiCreditCardFront size={20} /> */}
-                        <MdRemoveRedEye className="object-contain w-4 h-4 cursor-pointer" />
+                    // { accessor: 'id', title: 'ID', sortable: true },
 
-                      </button>
-                    </Tippy>
-                    <Tippy content="Edit">
-                      {/* <NavLink to='/restaurants/edit' > */}
-                      <button type="button" onClick={() => { setShowDrawer(true) }} >
-                        <AiOutlineEdit size={20} />
-                      </button>
-                      {/* </NavLink> */}
-                    </Tippy>
 
-                  </div>
-                ),
-              },
-            ]}
-            totalRecords={initialRecords.length}
-            recordsPerPage={pageSize}
-            page={page}
-            onPageChange={(p) => setPage(p)}
-            recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
-            sortStatus={sortStatus}
-            onSortStatusChange={setSortStatus}
-            minHeight={200}
-            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-          />
+                    {
+                      accessor: 'status',
+                      title: 'Status',
+                      sortable: true,
+                      render: (hello1) => <label onClick={() => { handleStatus(hello1)}} className="w-12 h-6 relative">
+                        <input type="checkbox" defaultChecked={hello1.status==1?true:false} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
+                        <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-success before:transition-all before:duration-300"></span>
+                      </label>,
+                    },
+                    {
+                      accessor: 'action',
+                      title: 'Action',
+                      titleClassName: '!text-center',
+                      render: (hello) => (
+                        <div className="flex items-center gap-2 w-max mx-auto">
+                          <Tippy content="Permission">
+                            <button type="button" onClick={() => { setpermissionModal(true) }} >
+                              <MdRemoveRedEye className="object-contain w-4 h-4 cursor-pointer" />
+                            </button>
+                          </Tippy>
+                         
+                          <Tippy content="Edit">
+                            <button type="button" onClick={() => { handleDrawer(hello)}} >
+                              <AiOutlineEdit size={20} />
+                            </button>
+                          </Tippy>
+
+                          <Tippy content="Delete">
+                            <button type="button" onClick={() => {  distroy(hello)}} >
+                              <AiOutlineDelete size={20} />
+                            </button>
+                          </Tippy>
+
+                        </div>
+                      ),
+                    },
+                  ]}
+                  totalRecords={initialRecords.length}
+                  recordsPerPage={pageSize}
+                  page={page}
+                  onPageChange={(p) => setPage(p)}
+                  recordsPerPageOptions={PAGE_SIZES}
+                  onRecordsPerPageChange={setPageSize}
+                  sortStatus={sortStatus}
+                  onSortStatusChange={setSortStatus}
+                  minHeight={200}
+                  paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                />
+              </div>
+            )
+          }
         </div>
       </div>
       {/* permission modal  */}

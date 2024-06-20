@@ -137,9 +137,9 @@ const App = () => {
 
             <div className="p-6">
       <h1 className="text-xl font-semibold mb-4">Payment</h1>
-       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {accountingTools.map((tool, index) => (
-          <AccountingCard key={index} title={tool.title} imageSrc={tool.imageSrc} stripe={stripe}  paymentGateways={paymentGateways} />
+       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {paymentGateways.map((tool, index) => (
+          <AccountingCard key={index} title={tool.gateway_name} imageSrc={tool.imageSrc} alldata={tool} paymentGateways={paymentGateways}  />
         ))}
       </div>
     </div>

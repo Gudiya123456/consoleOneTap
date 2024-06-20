@@ -6,43 +6,36 @@ import box3 from "../../assets/images/box3.png";
 import { IRootState } from "../../store";
 import axios from "axios";
 import { setPageTitle } from "../../store/themeConfigSlice";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorHandle } from "../common/ErrorHandle";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import { RiArrowLeftWideFill, RiHome4Line } from "react-icons/ri";
+import {  RiHome4Line } from "react-icons/ri";
 import PageLoader from "../../components/PageLoader";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 const CrmSwal = withReactContent(Swal);
 import IconMail from "../../components/Icon/IconMail";
-import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
 import IconPlus from '../../components/Icon/IconPlus';
 import IconChecks from '../../components/Icon/IconChecks';
 import IconFile from '../../components/Icon/IconFile';
 import IconServer from '../../components/Icon/IconServer';
-import Dropdown from '../../components/Dropdown';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import BranchList from "./BranchList";
-import IconMultipleForwardRight from '../../components/Icon/IconMultipleForwardRight';
 
 export default function Show() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const restaurantId = location.state.restaurantId;
-  console.log(restaurantId);
-  const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
-  const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
-  // alert('issss', restaurantId)
+  console.log("restaurantId",restaurantId);
+  const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
   const [resList, setResList] = useState<any>([]);
   const [activityList, setActivityList] = useState<any>([]);
   const [branchList, setBranchList] = useState<any>([]);
   const [data, setData] = useState<any>([]);
-  const crmToken = useSelector(
-    (state: IRootState) => state.themeConfig.crmToken
-  );
-  const [grid, setGrid] = useState(false);
+  // const crmToken = useSelector(
+  //   (state: IRootState) => state.themeConfig.crmToken
+  // );
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const [model, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -92,6 +85,7 @@ export default function Show() {
     }
   };
 
+  console.log('branchlist', branchList);
   const [defaultParams] = useState({
     id: resList.id,
     restaurant_name: resList.restaurant_name ? resList.restaurant_name : "",
@@ -473,7 +467,7 @@ export default function Show() {
                   <p className='ltr:ml-3 text-blue-700 poppins-font' >View</p>
                 </div>
                 <div className="flex gap-2 items-center overflow-x-auto">
-                  <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-info">Add Branch</button>
+                  {/* <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-info">Add Branch</button> */}
                   <a href={`https://${resList.sub_domain}.onetapdine.com`} target="_blank" className="text-black dark:text-white font-extrabold text-[15px]">
                     <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-primary">View Restaurants</button>
                   </a>
@@ -489,11 +483,10 @@ export default function Show() {
                 <div className="panel h-full p-0">
                   <div className="flex p-5">
                     <div className="shrink-0 bg-primary/10 text-primary rounded-xl w-11 h-11 flex justify-center items-center dark:bg-primary dark:text-white-light">
-                      {/* <IconUsersGroup className="w-5 h-5" /> */}
                       <img src={box1} alt='' />
                     </div>
                     <div className="ltr:ml-3 rtl:mr-3 ">
-                      <p className="text-lg lg:text-xl dark:text-white-light">31.6K</p>
+                      <p className="text-lg lg:text-xl dark:text-white-light">{data.branchCount}</p>
                       <h5 className="text-[#506690] text-xs">Total number of branches</h5>
                     </div>
                   </div>
@@ -507,7 +500,7 @@ export default function Show() {
 
                     </div>
                     <div className="ltr:ml-3 rtl:mr-3 ">
-                      <p className="text-xl dark:text-white-light">1,900</p>
+                      <p className="text-xl dark:text-white-light">{data.employeeCount}</p>
                       <h5 className="text-[#506690] text-xs"> Total number of employees</h5>
                     </div>
                   </div>
@@ -522,7 +515,7 @@ export default function Show() {
 
                     </div>
                     <div className="ltr:ml-3 rtl:mr-3 ">
-                      <p className="text-xl  dark:text-white-light">1800</p>
+                      <p className="text-xl  dark:text-white-light">{data.itemCount}</p>
                       <h5 className="text-[#506690] text-xs"> Total number of items
                       </h5>
                     </div>
@@ -531,6 +524,7 @@ export default function Show() {
                 </div>
               </div>
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 mt-5">
+                {/* restaiurant details  */}
                 <div className="panel h-full w-full">
                   <div className="flex items-center justify-between p-2 border-b border-white-light dark:border-[#1b2e4b]">
                     <h5 className="poppins-btn text-lg">Restaurant Details</h5>
@@ -544,7 +538,7 @@ export default function Show() {
                               <p className="whitespace-nowrap">Restaurants Name</p>
                             </div>
                           </td>
-                          <td>KFC</td>
+                          <td>{resList?.restaurant_name}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -552,7 +546,7 @@ export default function Show() {
                               <p className="whitespace-nowrap">Contact Name</p>
                             </div>
                           </td>
-                          <td>Raja Moham Sarraf</td>
+                          <td>{resList?.admin_name}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -560,7 +554,7 @@ export default function Show() {
                               <p className="whitespace-nowrap">Email</p>
                             </div>
                           </td>
-                          <td>rajamohan@gmail.com</td>
+                          <td>{resList?.admin_email}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -568,15 +562,15 @@ export default function Show() {
                               <p className="whitespace-nowrap">Contact Number</p>
                             </div>
                           </td>
-                          <td>+91 9988776655</td>
+                          <td>{resList?.admin_phone}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
                             <div className="flex">
-                              <p className="whitespace-nowrap">Branch</p>
+                              <p className="whitespace-nowrap">No Of Branch</p>
                             </div>
                           </td>
-                          <td>Bangalore</td>
+                          <td>{resList?.no_of_branches}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -584,7 +578,7 @@ export default function Show() {
                               <p className="whitespace-nowrap">Mode</p>
                             </div>
                           </td>
-                          <td>Demo</td>
+                          <td>{resList?.mode==1?'Live':'Demo'}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -592,7 +586,7 @@ export default function Show() {
                               <p className="whitespace-nowrap">Status</p>
                             </div>
                           </td>
-                          <td>Live</td>
+                          <td>{resList?.status==1?'Active':'Blocked'}</td>
                         </tr>
                         <tr className="text-white-dark hover:text-black dark:hover:text-white-light/90 group">
                           <td className="text-black dark:text-white">
@@ -600,12 +594,13 @@ export default function Show() {
                               <p className="whitespace-nowrap">Registered Date</p>
                             </div>
                           </td>
-                          <td>20-june-2024</td>
+                          <td>{resList?.created_at}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
+                
                 <div className="panel h-full">
                   <div className="flex items-start justify-between dark:text-white-light mb-5 -mx-5 p-5 pt-0 border-b border-white-light dark:border-[#1b2e4b]">
                     <h5 className="poppins-btn text-lg">Activity Log</h5>
@@ -703,7 +698,7 @@ export default function Show() {
                   </PerfectScrollbar>
                 </div>
               </div>
-              <BranchList />
+              <BranchList restaurantId={restaurantId} />
             </div>
           </div>
         )

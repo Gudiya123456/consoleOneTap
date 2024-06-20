@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { RiHome4Line, RiPencilFill } from "react-icons/ri";
 import { useState, Fragment, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { IRootState } from "../../store/index";
@@ -10,8 +10,6 @@ import Swal from "sweetalert2";
 import PageLoader from "../../components/PageLoader";
 import withReactContent from "sweetalert2-react-content";
 import { ErrorHandle } from "../common/ErrorHandle";
-import arrow from "../../assets/images/arrow.svg";
-import arrowLight from "../../assets/images/Back To.svg";
 import logo from "../../assets/images/logo.svg";
 import dlogo from "../../assets/images/dlogo.svg";
 import favicon from "../../assets/images/favicon.svg";
@@ -19,60 +17,130 @@ import dfavicon from "../../assets/images/dfavicon.svg";
 const CrmSwal = withReactContent(Swal);
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-const AddRestaurant = () => {
-    const navigate = useNavigate();
-    const [resList, setResList] = useState<any>([]);
-    const [timeZones, setTimeZones] = useState([]);
+const AddRestaurant = ({editRest,editRestaurant}) => {
+    let location = useLocation();
     const dispatch = useDispatch();
-    const crmToken = useSelector(
-        (state: IRootState) => state.themeConfig.crmToken
-    );
+    const navigate = useNavigate();
 
-    console.log(crmToken);
+    const restaurantId=location?.state?.restaurantId?location.state.restaurantId:null
+    const timeZone=location?.state?.timeZone;
+    console.log(timeZone);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(()=>{
+
+    if(restaurantId)fetchRestaurantData();
+    else setIsLoading(false)
+    },[restaurantId])
+const [restauratData,setRestaurantData]=useState<any>(null)
+   
+
+
+useEffect(()=>{
+    if(restauratData)
+        setParams(
+        {
+            id:restaurantId,
+            app_name:restauratData.app_name,
+            restaurant_name:restauratData.restaurant_name,
+            no_of_branches:restauratData.no_of_branches,
+            admin_email:restauratData.admin_email,
+            admin_name:restauratData.admin_name,
+            admin_phone:restauratData.admin_phone,
+            mode: restauratData.mode,
+            status:restauratData.status,
+            logo: restauratData.logo,
+            fav_icon: restauratData.fav_icon,
+        
+            branch_name: restauratData?.branch?restauratData?.branch.branch_name:'',
+            area: restauratData?.branch?restauratData?.branch.area:'',
+            city: restauratData?.branch?restauratData?.branch.city:'',
+            state: restauratData?.branch?restauratData?.branch.state:'',
+            pincode:  restauratData?.branch?restauratData?.branch.pincode:'',
+            country: restauratData?.branch?restauratData?.branch.country:'',
+            time_zone: restauratData?.branch?restauratData?.branch.time_zone:'',
+        
+            address_line_1: restauratData?.branch?restauratData?.branch.address_line_1:'',
+            address_line_2: restauratData?.branch?restauratData?.branch.address_line_2:'',
+            branch_email: restauratData?.branch?restauratData?.branch.branch_email:'',
+            branch_phone: restauratData?.branch?restauratData?.branch.branch_phone:'',
+        
+        
+        })
+    },[restauratData])
+
+    
+const fetchRestaurantData=async()=>{
+    setIsLoading(true)
+    try {
+        const response=await axios({
+            method:'get',
+            url:`https://cdn.onetapdine.com/api/restaurants/${restaurantId}/edit`,
+            headers:{
+                'Content-Type':'application/json',
+                Authorization:'Bearer '+ crmToken
+            }
+        })
+        if(response.data.status=='success'){
+            setRestaurantData(response.data.restaurant)
+            setTimeZones(response.data.timeZones)
+        }
+
+    } catch (error) {
+        
+    }
+    finally{
+        setIsLoading(false)
+    }
+}
+
+console.log('restaurantData', restauratData)
+const [defaultParams] = useState({
+    id:'',
+    app_name:'',
+    restaurant_name:'',
+    no_of_branches:'',
+    admin_email:'',
+    admin_name:'',
+    admin_phone:'',
+    mode: '',
+    status:'',
+    logo: '',
+    fav_icon: '',
+
+    branch_name: '',
+    area: '',
+    city: '',
+    state: '',
+    pincode:  '',
+    country: '',
+    time_zone: '',
+
+    address_line_1:'',
+    address_line_2: '',
+    branch_email: '',
+    branch_phone: '',
+
+
+});
+    
+    const [timeZones, setTimeZones] = useState([]);
+ 
+    // const crmToken = useSelector(
+    //     (state: IRootState) => state.themeConfig.crmToken
+    // );
+
+    // console.log(crmToken);
+    const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e'
+
+   
     const [btnLoading, setBtnLoading] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-    const [modal, setModal] = useState(false);
+   
     useEffect(() => {
         dispatch(setPageTitle("Restaurant"));
     }, []);
-
-    useEffect(() => {
-        dispatch(setPageTitle("Restaurant"));
-        fetchRestaurantList();
-    }, []);
-    // fetch Restaurant data
-    const fetchRestaurantList = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios({
-                method: "get",
-                url: "https://cdn.onetapdine.com/api/restaurants",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + crmToken,
-                },
-            });
-            if (response.data.status == "success") {
-                setResList(resList.filter((d: any) => d.id !== resList.id));
-                setResList(response.data.restaurants);
-                setTimeZones(response.data.timeZones);
-                console.log(response.data.restaurantss);
-            }
-
-            if (response.data.status == "error") {
-                alert(99999);
-            }
-        } catch (error: any) {
-            if (error.response.status == 401) {
-                ErrorHandle();
-            } else console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    console.log("reslist", resList);
+   
     const fileLogoRef = useRef<HTMLInputElement>(null);
     const fileIconRef = useRef<HTMLInputElement>(null);
     const [logoPriview, setLogoPriview] = useState<any>(
@@ -82,27 +150,6 @@ const AddRestaurant = () => {
         themeConfig.theme == "dark" ? dfavicon : favicon
     );
 
-    const [defaultParams] = useState({
-        id: "",
-        sub_domain: "",
-        restaurant_name: "",
-        branches: "",
-        admin_email: "",
-        admin_name: "",
-        admin_phone: "",
-        branch_name: "",
-        mode: "",
-        status: "",
-        logo: "",
-        fav_icon: "",
-        area: "",
-        city: "",
-        state: "",
-        address: "",
-        pincode: "",
-        country: "",
-        time_zone: "",
-    });
 
     const setImage = (e: any) => {
         const { name } = e.target;
@@ -141,21 +188,7 @@ const AddRestaurant = () => {
         setErros({ ...errors, [name]: "" });
         setParams({ ...params, [name]: value });
     };
-    console.table(params);
-    const [search, setSearch] = useState<any>("");
-
-    const [filteredItems, setFilteredItems] = useState<any>(resList);
-
-    useEffect(() => {
-        setFilteredItems(() => {
-            return resList.filter((item: any) => {
-                return item.restaurant_name
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
-            });
-        });
-    }, [search, resList]);
-
+   
     const validate = () => {
         setErros({});
         let errors = {};
@@ -166,8 +199,8 @@ const AddRestaurant = () => {
                 restaurant_name: "restaurant name is required!",
             };
         }
-        if (!params.sub_domain) {
-            errors = { ...errors, sub_domain: "sub domain is required" };
+        if (!params.app_name) {
+            errors = { ...errors, app_name: "app name is required" };
         }
 
         if (!params.admin_email) {
@@ -194,18 +227,13 @@ const AddRestaurant = () => {
                 branch_name: "Branch Name is required",
             };
         }
-        if (!params.branches) {
+        if (!params.no_of_branches) {
             errors = {
                 ...errors,
-                branches: "No of Branch is required",
+                no_of_branches: "No of Branch is required",
             };
         }
-        if (!params.address) {
-            errors = {
-                ...errors,
-                address: "Address is required",
-            };
-        }
+       
         if (!params.area) {
             errors = {
                 ...errors,
@@ -235,8 +263,8 @@ const AddRestaurant = () => {
             errors = { ...errors, status: "The status field is required." };
         if (params.mode == "")
             errors = { ...errors, mode: "The mode field is required." };
-        if (!params.branches) {
-            errors = { ...errors, branches: "Please select branches!" };
+        if (!params.no_of_branches) {
+            errors = { ...errors, no_of_branches: "Please select no_of_branches!" };
         }
         if (!params.id) {
             if (!params.country) {
@@ -270,7 +298,6 @@ const AddRestaurant = () => {
                     customClass: "sweet-alerts",
                 });
 
-                fetchRestaurantList();
                 navigate('/restaurants')
             } else {
                 alert("Failed");
@@ -311,9 +338,9 @@ const AddRestaurant = () => {
         if (isValid.totalErrors) return false;
         const data = new FormData();
         data.append("id", params.id);
-        data.append("sub_domain", params.sub_domain);
+        data.append("app_name", params.app_name);
         data.append("restaurant_name", params.restaurant_name);
-        data.append("branches", params.branches);
+        data.append("no_of_branches", params.no_of_branches);
         data.append("admin_name", params.admin_name);
         data.append("admin_email", params.admin_email);
         data.append("admin_phone", params.admin_phone);
@@ -328,49 +355,48 @@ const AddRestaurant = () => {
         data.append("country", params.country);
         data.append("time_zone", params.time_zone);
         data.append("branch_name", params.branch_name);
-        data.append("address", params.address);
-
+        data.append("address_line_1", params.address_line_1);
+        data.append("address_line_2", params.address_line_2);
+        data.append("branch_email", params.branch_email);
+        data.append("branch_phone", params.branch_phone);
         storeOrUpdateApi(data);
     };
+    useEffect(()=>{
+        fetchTimeZone()
+    },[])
+    const fetchTimeZone=async()=>{
+        setIsLoading(true)
+        try {
+            const response=await axios({
+                method:'get',
+                url:'https://cdn.onetapdine.com/api/restaurants',
+                headers:{
+                    'Content-Type':'application/json',
+                    Authorization:'Bearer '+ crmToken
+                }
+            })
 
-    const storeOrUpdate = (data) => {
-        setErros({});
-        if (data) {
-            setParams({
-                id: data.id,
-                restaurant_name: data.restaurant_name,
-                branches: data.branches,
-                admin_name: data.admin_name,
-                admin_email: data.admin_email,
-                admin_phone: data.admin_phone,
-                sub_domain: data.sub_domain,
-                logo: "",
-                fav_icon: "",
-                mode: data.mode ? "1" : "0",
-                status: data.status ? "1" : "0",
-            });
-
-            data.logo
-                ? setLogoPriview(window.location.origin + data.logo)
-                : setLogoPriview(themeConfig.theme == "dark" ? dlogo : logo);
-
-            data.fav_icon
-                ? setIconPriview(window.location.origin + data.fav_icon)
-                : setIconPriview(themeConfig.theme == "dark" ? dfavicon : favicon);
-        } else {
-            setParams(defaultParams);
-            setLogoPriview(themeConfig.theme == "dark" ? dlogo : logo);
-            setIconPriview(themeConfig.theme == "dark" ? dfavicon : favicon);
+            if(response.data.status=='success'){
+                console.log(response.data.timeZones);
+                setTimeZones(response.data.timeZones);
+            }
+        } catch (error) {
+            console.log(error);
+            
         }
-        setModal(true);
-    };
-    const resto = '/restaurants'
+        finally{
+            setIsLoading(false)
+
+        }
+    }
+    console.log(timeZones)
 
     return (
         <div>
             {isLoading ? (
                 <PageLoader />
             ) : (
+             
                 <div className="">
                     <div>
                         <div className="panel flex justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none ">
@@ -450,15 +476,15 @@ const AddRestaurant = () => {
                                         <input
                                             type="text"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent "
-                                            name="sub_domain"
-                                            value={params.sub_domain}
+                                            name="app_name"
+                                            value={params.app_name}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.sub_domain ? (
+                                        {errors?.app_name ? (
                                             <div className="text-danger mt-1">
-                                                {errors.sub_domain}
+                                                {errors.app_name}
                                             </div>
                                         ) : (
                                             ""
@@ -624,20 +650,20 @@ const AddRestaurant = () => {
                                             className="text-style roboto-light"
                                             htmlFor="email"
                                         >
-                                            Branch No
+                                           No of Branches 
                                         </label>
                                         <input
                                             type="number"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                                            name="branches"
-                                            value={params.branches}
+                                            name="no_of_branches"
+                                            value={params.no_of_branches}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.branches ? (
+                                        {errors?.no_of_branches ? (
                                             <div className="text-danger mt-1">
-                                                {errors.branches}
+                                                {errors.no_of_branches}
                                             </div>
                                         ) : (
                                             ""
@@ -654,15 +680,15 @@ const AddRestaurant = () => {
                                         <input
                                             type="number"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                                            name="branches"
-                                            value={params.branches}
+                                            name="branch_phone"
+                                            value={params.branch_phone}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.branches ? (
+                                        {errors?.branch_phone ? (
                                             <div className="text-danger mt-1">
-                                                {errors.branches}
+                                                {errors.branch_phone}
                                             </div>
                                         ) : (
                                             ""
@@ -676,17 +702,17 @@ const AddRestaurant = () => {
                                              Email
                                         </label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                                            name="branches"
-                                            value={params.branches}
+                                            name="branch_email"
+                                            value={params.branch_email}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.branches ? (
+                                        {errors?.branch_email ? (
                                             <div className="text-danger mt-1">
-                                                {errors.branches}
+                                                {errors.branch_email}
                                             </div>
                                         ) : (
                                             ""
@@ -704,15 +730,15 @@ const AddRestaurant = () => {
                                         <input
                                             type="text"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                                            name="address"
-                                            value={params.address}
+                                            name="address_line_1"
+                                            value={params.address_line_1}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.address ? (
+                                        {errors?.address_line_1 ? (
                                             <div className="text-danger mt-1">
-                                                {errors.address}
+                                                {errors.address_line_1}
                                             </div>
                                         ) : (
                                             ""
@@ -728,15 +754,15 @@ const AddRestaurant = () => {
                                         <input
                                             type="text"
                                             className="input-form dark:border-[#5E5E5E] dark:bg-transparent"
-                                            name="address"
-                                            value={params.address}
+                                            name="address_line_2"
+                                            value={params.address_line_2}
                                             onChange={(e) => {
                                                 changeValue(e);
                                             }}
                                         />
-                                        {errors?.address ? (
+                                        {errors?.address_line_2 ? (
                                             <div className="text-danger mt-1">
-                                                {errors.address}
+                                                {errors.address_line_2}
                                             </div>
                                         ) : (
                                             ""
@@ -852,7 +878,7 @@ const AddRestaurant = () => {
                                         <select
                                             className="input-form h-[33px]  dark:border-[#5E5E5E] dark:bg-transparent"
                                             name="country"
-                                            value={params.country ? params.country : ""}
+                                            value={params.timeZone ? params.country : ""}
                                             onChange={(e) => changeValue(e)}
                                         >
                                             <option className="" value="">
@@ -895,10 +921,10 @@ const AddRestaurant = () => {
                                         >
                                             <option value="">Select Timezone</option>
                                             {timeZones[params.country]?.map((z) => (
-                                                <option value={z} key={z}>
-                                                    {z}
-                                                </option>
-                                            ))}
+                                       <option value={z} key={z}>
+                                           {z}
+                                       </option>
+                                   ))}
                                         </select>
                                         {errors?.time_zone ? (
                                             <div className="text-danger mt-1">
@@ -912,7 +938,6 @@ const AddRestaurant = () => {
                                     </div>
                                     </div>
                                     <hr className="my-5" />
-
 
                                     <div>
                                     <h1 className=" font-medium text-md mt-4 mb-1" >Admin Details</h1>
@@ -994,14 +1019,6 @@ const AddRestaurant = () => {
                                         
                                     </div>
                                     
-
-                                   
-                                   
-
-                                    
-
-                                   
-                                {/* </div> */}
                             </form>
                             <div className="mt-8 flex items-center justify-end">
                                 <button
