@@ -4,6 +4,8 @@ import logo from "../../assets/images/auth/profile.svg";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../store';
 
 
 
@@ -11,7 +13,9 @@ export default function TableDrawer({ showDrawer, setShowDrawer,data,fetchAuthor
   const navigate = useNavigate();
   const fileImageRef = useRef<HTMLInputElement>(null);
   const [imagePriview, setImagePriview] = useState<any>(logo);
-  const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+//   const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
   const[btnLoading,setBtnLoading]=useState(false)
 
   console.log("data", data)
@@ -49,7 +53,6 @@ export default function TableDrawer({ showDrawer, setShowDrawer,data,fetchAuthor
       }
   }, [data])
 
-  const [modal, setModal] = useState<any>(false);
   console.log(defaultParams)
   console.log(params)
   const [errors, setErros] = useState<any>({});

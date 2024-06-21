@@ -10,10 +10,11 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { RiHome4Line } from 'react-icons/ri';
 import { BiCreditCardFront } from "react-icons/bi";
 import { AiOutlineEdit } from "react-icons/ai";
-import { MdDelete } from "react-icons/md";
-import axios from 'axios'
+import axios, { all } from 'axios'
 import { AiOutlineDelete } from "react-icons/ai";
 import Swal from 'sweetalert2';
+import { ErrorHandle } from '../common/ErrorHandle';
+import { IRootState } from '../../store';
 
 const rowData = [
     {
@@ -245,12 +246,9 @@ const MultipleTables = () => {
 
     const [restList,setRestList]=useState([]);
     const[filteredItem,setFilteredItems]=useState<any>(restList);
-
-   
-    const[editRest,setEditRest]=useState([]);
     const [isLoading,setIsloading]=useState(false);
-    // const crmToken=useSelector((state:IRootState)=>state.themeConfig.crmToken);
-    const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+    const crmToken=useSelector((state:IRootState)=>state.themeConfig.crmToken);
+    // const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
     const [timeZone,setTimeZone]=useState([])
     const [search, setSearch] = useState('');
 
@@ -417,7 +415,103 @@ const navigate=useNavigate();
         setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus2]);
+   
+   
+    const handleStatus=(alldata)=>{
+        alert('Are you sure you wnat to changes status')
+        console.log(alldata);
+        const new_obj = { ...alldata, status:status==1?'true':'false' }
+        console.log('new_obj', new_obj);
+        
+    }
 
+    const HelloStatus = (data) => {
+        console.log(data)
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: "You want to change status",
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            padding: '2em',
+            customClass: 'sweet-alerts',
+        }).then(async (result) => {
+            if (result.value) {
+                try {
+                    const response = await axios({
+                        method: 'post',
+                        url: 'https://cdn.onetapdine.com/api/restaurants',
+                       
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: "Bearer " + crmToken,
+                        },
+                    });
+                    if (response.data.status === "success") {
+                        // setCategories(categories.filter((d: any) => d.id !== id))
+                        Swal.fire({ title: 'Status Updated Successfully', text: 'Status Updated', icon: 'success', customClass: 'sweet-alerts' });
+
+                        fetchRestaurantList()
+                    }
+                } catch (error: any) {
+
+                    if (error.response.status == 401) navigate('/login')
+                } finally {
+
+                }
+            }
+        });
+
+    }
+     const formSubmit = (alldata) => {
+        const data = new FormData();
+        data.append("id", alldata.id);
+        data.append("app_name", alldata.app_name);
+        data.append("restaurant_name", alldata.restaurant_name);
+        data.append("no_of_branches", alldata.no_of_branches);
+        data.append("admin_name", alldata.admin_name);
+        data.append("admin_email", alldata.admin_email);
+        data.append("admin_phone", alldata.admin_phone);
+        data.append("mode", alldata.mode);
+        data.append("status", alldata.status);
+        data.append("logo", alldata.logo);
+        data.append("fav_icon", alldata.fav_icon);
+        data.append("area", alldata.area);
+        data.append("city", alldata.city);
+        data.append("state", alldata.state);
+        data.append("pincode", alldata.pincode);
+        data.append("country", alldata.country);
+        data.append("time_zone", alldata.time_zone);
+        data.append("branch_name", alldata.branch_name);
+        data.append("address_line_1", alldata.address_line_1);
+        data.append("address_line_2", alldata.address_line_2);
+        data.append("branch_email", alldata.branch_email);
+        data.append("branch_phone", alldata.branch_phone);
+        HelloStatus(data);
+    };
+
+  
+const statusUpdate=(id)=>{
+const restaurant:any=restList.find((restaurant)=>{
+    return restaurant.id==id
+})
+const updatedRestaurant={
+    ...restaurant,  status:!restaurant.status
+}
+
+ updateStatus(updatedRestaurant)
+
+}
+const updateStatus=(updatedRestaurant)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+    finally{
+        
+    }
+}
     return (
         <div>
             <div className="panel flex justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none ">
@@ -500,8 +594,10 @@ const navigate=useNavigate();
                                 accessor: 'status',
                                 title: 'Status',
                                 sortable: true,
-                                render: ({status}) => <label className="w-12 h-6 relative">
-                                    <input type="checkbox" defaultChecked={status==1?true:false} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
+                                render: ({id,status}) => <label  className="w-12 h-6 relative">
+                                    <input type="checkbox" defaultChecked={status==1?true:false} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1"
+                                    onChange={()=>{statusUpdate(id)}}
+                                    />
                                     <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-success before:transition-all before:duration-300"></span>
                                 </label>,
                             },
@@ -517,13 +613,13 @@ const navigate=useNavigate();
                                             </button>
                                         </Tippy>
                                        
-                                        {/* <Tippy content="Edit">
+                                        <Tippy content="Edit">
                                             <NavLink to='/restaurants/add' state={{ restaurantId: id, timeZone:timeZone }}  >
                                                 <button type="button">
                                                 <AiOutlineEdit  size={20} />
                                                 </button>
                                             </NavLink>
-                                        </Tippy> */}
+                                        </Tippy>
 
                                         <Tippy content="Delete"  >
                                                 <button type="button" onClick={()=>{distroy(id)}} >

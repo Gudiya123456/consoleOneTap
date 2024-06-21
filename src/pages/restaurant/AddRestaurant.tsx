@@ -24,7 +24,7 @@ const AddRestaurant = ({editRest,editRestaurant}) => {
 
     const restaurantId=location?.state?.restaurantId?location.state.restaurantId:null
     const timeZone=location?.state?.timeZone;
-    console.log(timeZone);
+    console.log("timeZone",timeZone);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(()=>{
@@ -83,7 +83,7 @@ const fetchRestaurantData=async()=>{
         })
         if(response.data.status=='success'){
             setRestaurantData(response.data.restaurant)
-            setTimeZones(response.data.timeZones)
+            // setTimeZones(response.data.timeZones)
         }
 
     } catch (error) {
@@ -124,7 +124,7 @@ const [defaultParams] = useState({
 
 });
     
-    const [timeZones, setTimeZones] = useState([]);
+    // const [timeZones, setTimeZones] = useState([]);
  
     // const crmToken = useSelector(
     //     (state: IRootState) => state.themeConfig.crmToken
@@ -361,35 +361,7 @@ const [defaultParams] = useState({
         data.append("branch_phone", params.branch_phone);
         storeOrUpdateApi(data);
     };
-    useEffect(()=>{
-        fetchTimeZone()
-    },[])
-    const fetchTimeZone=async()=>{
-        setIsLoading(true)
-        try {
-            const response=await axios({
-                method:'get',
-                url:'https://cdn.onetapdine.com/api/restaurants',
-                headers:{
-                    'Content-Type':'application/json',
-                    Authorization:'Bearer '+ crmToken
-                }
-            })
-
-            if(response.data.status=='success'){
-                console.log(response.data.timeZones);
-                setTimeZones(response.data.timeZones);
-            }
-        } catch (error) {
-            console.log(error);
-            
-        }
-        finally{
-            setIsLoading(false)
-
-        }
-    }
-    console.log(timeZones)
+   
 
     return (
         <div>
@@ -433,6 +405,9 @@ const [defaultParams] = useState({
 
                             </div>
                         </div>
+                    </div>
+                    <div>
+                       
                     </div>
 
                     <div className="px-6 py-6" >
@@ -878,7 +853,7 @@ const [defaultParams] = useState({
                                         <select
                                             className="input-form h-[33px]  dark:border-[#5E5E5E] dark:bg-transparent"
                                             name="country"
-                                            value={params.timeZone ? params.country : ""}
+                                            value={params.time_zone ? params.country : ""}
                                             onChange={(e) => changeValue(e)}
                                         >
                                             <option className="" value="">
@@ -903,8 +878,6 @@ const [defaultParams] = useState({
                                         )}
                                     </div>
 
-                                    
-
                                     <div className="mb-1">
                                         <label
                                             htmlFor="name"
@@ -920,7 +893,7 @@ const [defaultParams] = useState({
                                             onChange={(e) => changeValue(e)}
                                         >
                                             <option value="">Select Timezone</option>
-                                            {timeZones[params.country]?.map((z) => (
+                                            {timeZone[params.country]?.map((z) => (
                                        <option value={z} key={z}>
                                            {z}
                                        </option>

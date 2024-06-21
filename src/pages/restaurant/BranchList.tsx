@@ -184,7 +184,9 @@ const BranchList = ({ restaurantId }) => {
     console.log("restaurantId", restaurantId);
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-    const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+    // const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
 
     // alert('issss', restaurantId)
     const [resList, setResList] = useState<any>([]);

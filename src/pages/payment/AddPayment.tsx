@@ -1,16 +1,17 @@
 import axios from 'axios';
 import React, { useRef, useState } from 'react'
 import { IoCloseSharp } from "react-icons/io5";
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { IRootState } from '../../store';
 
 
-export default function AddPayment({ showDrawer, setShowDrawer,stripe,title,alldata,fetchPaymentGteWay, paymentGateways }) {
+export default function AddPayment({ showDrawer, setShowDrawer,stripe,title,alldata,fetchPaymentGteWay, paymentGateways, fetchPaymentGateWay }) {
     console.log('drawer', title);
     console.log('alldata',alldata);
-
+    
   const defaultParams = {
-    // id: "",
     gateway_name:alldata?.gateway_name?alldata?.gateway_name: "",
     key:alldata?.key?alldata?.key: "",
     secret:alldata?.secret?alldata?.secret: "",
@@ -20,7 +21,9 @@ const [params, setParams] = useState<any>(
     defaultParams
 );
 const[btnLoading,setBtnLoading]=useState(false);
-const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+// const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
 const navigate=useNavigate();
 console.log(defaultParams)
 console.log(params)
@@ -64,9 +67,10 @@ const storeOrUpdateApi = async (data: any) => {
 
         if (response.data.status == 'success') {
             setShowDrawer(false)
-            setParams(defaultParams)
-            paymentGateways();
-            navigate('/payment')
+            fetchPaymentGateWay();
+            // setParams(defaultParams)
+            // paymentGateways();
+            navigate('/payment');
             Swal.fire({
                 icon: response.data.status,
                 name: response.data.name,
@@ -76,7 +80,8 @@ const storeOrUpdateApi = async (data: any) => {
             });
 
             if (response.data.status == "success") {
-              fetchPaymentGteWay()
+            //   fetchPaymentGteWay()
+            fetchPaymentGateWay();
                 setShowDrawer(false)
             } else {
                 alert(9)
@@ -89,7 +94,7 @@ const storeOrUpdateApi = async (data: any) => {
 
     } catch (error: any) {
         console.log(error)
-        if (error.response.status == 401) navigate('/login')
+        // if (error.response.status == 401) navigate('/login')
         if (error?.response?.status === 422) {
             const serveErrors = error.response.data.errors;
             let serverErrors = {};
@@ -116,6 +121,7 @@ const storeOrUpdateApi = async (data: any) => {
     }
 };
 
+
 const formSubmit = () => {
     const isValid = validate();
     if (isValid.totalErrors) return false;
@@ -126,7 +132,6 @@ const formSubmit = () => {
     data.append("environment", params.environment);
     data.append("secret", params.secret);
     data.append("is_enabled", '1');
-
 
     storeOrUpdateApi(data);
 };

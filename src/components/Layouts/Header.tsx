@@ -61,8 +61,8 @@ const Header = () => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState(false);
     const path = window.location.pathname
-    // const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
-    const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+    const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+    // const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
 
     const userData = useSelector((state: IRootState) => state.themeConfig.userData);
     const [clicked, setClicked] = useState(false);

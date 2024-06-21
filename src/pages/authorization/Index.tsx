@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { RiHome4Line } from 'react-icons/ri';
@@ -14,6 +14,7 @@ import TableDrawer from './TableDrawer';
 import { Dialog, Transition } from "@headlessui/react";
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { IRootState } from '../../store';
 
 const rowData = [
   {
@@ -337,7 +338,9 @@ const MultipleTables = () => {
   const [authList, setAuthList] = useState([]);
   const [filteredItem, setFilteredItems] = useState<any>(authList);
   const[data,setData]=useState<any>([])
-  const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+  // const crmToken = '8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+  const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
 const navigate=useNavigate();
   const fetchAuthorization = async () => {
     setIsLoading(true);
@@ -385,6 +388,7 @@ const navigate=useNavigate();
 
   const handleStatus=(data)=>{
     setData(data);
+    formSubmit1();
   }
 
   const distroy = (hello: any) => {
@@ -462,62 +466,86 @@ const disableData = (data: any) => {
   });
 
 }
-console.log("data datatatatt", data)
-const defaultParams = {
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-    image: "",
-    status: "1",
-    role:''
-};
-const [params, setParams] = useState<any>(
-    defaultParams
-);
-useEffect(() => {
-    if (data?.id) {
-        setParams(
-            {
-                id: data.id,
-                name: data.name,
-                email: data.email,
-                phone: data.phone,
-                image: data.image,
-                status: data.status,
-                role: data.role,
-            }
-        )
-    }
-    else {
-
-        setParams(defaultParams)
-    }
-}, [data])
-
-console.log(defaultParams)
-console.log(params)
 
 
+const statusUpdate=(id)=>{
+  console.log(id)
+  const authorization:any=authList.find((authorization)=>{
+      return authorization.id==id
+  })
+  console.log(authorization)
+  const updatedAuthorization={
+      ...authorization,  status:authorization.status==1?0:1
+  }
+  
+   updateStatus(updatedAuthorization)
+  
+  }
+  const updateStatus=async(updatedAuthorization)=>{
+    console.log(updatedAuthorization)
+      try {
+        const response = await axios({
+          method: "post",
+          url: "https://cdn.onetapdine.com/api/authorizations",
+          data:updatedAuthorization,
+          headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: "Bearer " + crmToken,
+          },
+      });
+      if (response.data.status == "success") {
+        fetchAuthorization();
+          Swal.fire({
+              icon: response.data.status,
+              title: response.data.title,
+              text: response.data.message,
+              padding: "2em",
+              customClass: "sweet-alerts",
+          });
 
-const formSubmit1 = () => {
-    // const isValid = validate();
-    // if (isValid.totalErrors) return false;
+      } else {
+          alert("Failed");
+      }
+      } catch (error) {
+          
+      }
+      finally{
+          
+      }
+  }
+
+ const formSubmit = (updatedAuthorization) => {
     const data = new FormData();
-    data.append("id", params.id);
-    data.append("name", params.name);
-    data.append("email", params.email);
-    data.append("phone", params.phone);
-    data.append("image", params.image);
-    data.append("status", params.status);
-    data.append("role", params.role);
-
-    // storeOrUpdateApi(data);
-    disableData(data)
+    data.append("id", updatedAuthorization.id);
+    data.append("app_name", updatedAuthorization.app_name);
+    data.append("restaurant_name", updatedAuthorization.restaurant_name);
+    data.append("no_of_branches", updatedAuthorization.no_of_branches);
+    data.append("admin_name", updatedAuthorization.admin_name);
+    data.append("admin_email", updatedAuthorization.admin_email);
+    data.append("admin_phone", updatedAuthorization.admin_phone);
+    data.append("mode", updatedAuthorization.mode);
+    data.append("status", updatedAuthorization.status);
+    data.append("logo", updatedAuthorization.logo);
+    data.append("fav_icon", updatedAuthorization.fav_icon);
+    data.append("area", updatedAuthorization.area);
+    data.append("city", updatedAuthorization.city);
+    data.append("state", updatedAuthorization.state);
+    data.append("pincode", updatedAuthorization.pincode);
+    data.append("country", updatedAuthorization.country);
+    data.append("time_zone", updatedAuthorization.time_zone);
+    data.append("branch_name", updatedAuthorization.branch_name);
+    data.append("address_line_1", updatedAuthorization.address_line_1);
+    data.append("address_line_2", updatedAuthorization.address_line_2);
+    data.append("branch_email", updatedAuthorization.branch_email);
+    data.append("branch_phone", updatedAuthorization.branch_phone);
+    updateStatus(data);
 };
-
-  return (
+return (
     <div>
+  
+      {/* <button className='btn btn-dark text-white' >
+       {currTime}
+    </button> */}
       <div className="panel flex md:flex-row  justify-between items-center overflow-x-auto whitespace-nowrap p-1.5 rounded-none ">
         <div className="flex  items-center overflow-x-auto whitespace-nowrap " >
           <div className="rounded-full p-1.5   ltr:mr-3 rtl:ml-3">
@@ -573,8 +601,11 @@ const formSubmit1 = () => {
                       accessor: 'name',
                       title: ' Name',
                       sortable: true,
-                      render: ({ name }) => (
+                      render: ({ name, image }) => (
                         <NavLink to='#'  > <div className="flex items-center w-max">
+                            {/* <img className="w-9 h-9 rounded ltr:mr-2 rtl:ml-2 object-cover"
+                                        src={`https://cdn.onetapdine.com/${logo}`}
+                                            alt="" /> */}
                           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAACUCAMAAAD26AbpAAAAbFBMVEX///8AAACPj4/8/Pz39/dzc3MEBATY2NhMTEyHh4eioqLT09Pb29v09PTf39/o6OgNDQ2pqallZWXu7u60tLQmJiYgICA0NDTKyspUVFQTExNdXV2AgIBtbW0ZGRktLS08PDyZmZlFRUW9vb2oiDsEAAADxUlEQVR4nO2ai46qMBCGW1uQixQRWVHwgr7/O56WLqvHA9K60paT+WKyiW7C/zMzHWgHIQAAAAAAAAAAAAAAAAAAAAD4JYR/yNNXAjtq3oAgqTWJo/rIqaOYdj/Mw0UbAsqaAD8QRIwiNA8DSAilpSd0+77f/pEu6pLOIwoiBnG4fozAtwV8CuMZOBA1S6MdHuCSUeR6WXN1yeb0c9+f8PGXl7ieTATlgaiBgSjw7/fOe0ivQ0nUeQhy2xoHabtBWg0l0Z1N7uzqKuog9Mcs+Hi9SFz1wMOwPeFRC7ymb66WA0FpgBWiwEs6dXNh5UFYjJVBR2RbbD88CKoOMHZ1VQrVLSxsax3goG7hbFtrP+XoatTB/y22rbaXUNmCq5lE9+p5hHHl4qLKzupB8PEuta23h7jQsVAsbevtQTxcqMMfMtwj01hT+Uvo1rbeHqL1uPA7h8y23h70LDgZhf+gFspCp7UVLrZn3hc0cLIv5K9f/J/YU9t6+/B0LNS21fay1bFQ2lbbC9WxYFtsLwTV6g4WTu7CEBSrW1jZVtsLIaQWu0RjvUEcOtQuxqDdzIvP4/tIwuXOxb6G5EFapNagM4cP3dLNqHxu8Zi666Dd2RYiB0MhfqhcfLZ4IH71mNE6CxwthA6CyuCFhxk4EDm+HPYgzqmWTja1J1go5fp/i29ZOF4HHXRbPMq+s7s5+Yj9L5Sv+tnucL/70sthJ16XZ5BF6Fslzbzr1/3+F1cv6xmPcRzCtk3obapq44XNlpH7hMy8yFPGUlePdPSY4+1v6c41Z1YCvczGwmyEDqFpwFm/VAlX5edlxvuAErxPlIltvRLys+awqLqcT8rb8+uv86WKUplOVt9Cibw6iQOts4WOw35J7BcFv35y0zqt/aF9+KtuCbH+4BEfpZzBebwXFvhn7cXWAiHzl0TXbwO6DnDn+hrJMWLzPtoyyDW2UYep26FJCxb4JVn1CQcYb5iVeuAW2Ht1/Izfbi1ZqAeCVp9xILfHmHkPvA6On3EgEYPQJltcm7jNJx20E4cmxyaFhdsbq+gwPl6XRkta3C2N0R01D8bH9ZRHUtVpzFb0svi8hTMz6UDncFMdoyOHq5Ed+PfYmwxD9tb7wRgng2NWSf3Z5Uji49rcxvfL06hfEJgbm7xNkkc+PhgbFaPNFA4EjalMyrUmj3SoTW3NpIHOFJ4Oxo6k2QStWXIx1RlWUznAB1MWlhMZ8M3NKU1lAYMFByyYTaRp1tT5RwEs6JCGi6mYyaAMAAAAAAAAAAAAAAAAAAAAYI8/VVUttF5/IxwAAAAASUVORK5CYII=" alt="" className='w-9 h-9 rounded ltr:mr-2 rtl:ml-2 object-cover ' />
                           <div>{name}</div>
                         </div></NavLink>
@@ -585,15 +616,14 @@ const formSubmit1 = () => {
                     { accessor: 'phone', title: 'Phone.', sortable: true },
                     { accessor: 'role', title: 'Role', sortable: true },
 
-                    // { accessor: 'id', title: 'ID', sortable: true },
-
-
                     {
                       accessor: 'status',
                       title: 'Status',
                       sortable: true,
-                      render: (hello1) => <label onClick={() => { handleStatus(hello1)}} className="w-12 h-6 relative">
-                        <input type="checkbox" defaultChecked={hello1.status==1?true:false} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
+                      render: ({status,id}) => <label  className="w-12 h-6 relative">
+                        <input type="checkbox"  checked={status==1?true:false} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1"
+                        onChange={()=>{statusUpdate(id)}}
+                        />
                         <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-success before:transition-all before:duration-300"></span>
                       </label>,
                     },

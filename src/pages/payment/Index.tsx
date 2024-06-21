@@ -33,16 +33,20 @@ const App = () => {
     { title: 'Paypal', imageSrc: paypal },
 
   ];
-  const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken
-  );
+  // const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken
+  // );
+  // const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+  const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
+
   const[isLoading,setIsLoading]=useState(false)
   const[paymentGateways,setPaymentGateways]=useState([])
   console.log(paymentGateways)
 
   useEffect(() => {
-    fetchPaymentGteWay();
+    fetchPaymentGateWay();
   }, []);
-  const fetchPaymentGteWay = async () => {
+  const fetchPaymentGateWay = async () => {
     setIsLoading(true);
     try {
       const response = await axios({
@@ -139,7 +143,7 @@ const App = () => {
       <h1 className="text-xl font-semibold mb-4">Payment</h1>
        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {paymentGateways.map((tool, index) => (
-          <AccountingCard key={index} title={tool.gateway_name} imageSrc={tool.imageSrc} alldata={tool} paymentGateways={paymentGateways}  />
+          <AccountingCard key={index} title={tool.gateway_name} imageSrc={tool.imageSrc} alldata={tool} paymentGateways={paymentGateways} fetchPaymentGateWay={fetchPaymentGateWay}  />
         ))}
       </div>
     </div>

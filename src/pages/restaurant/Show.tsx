@@ -28,7 +28,9 @@ export default function Show() {
   const navigate = useNavigate();
   const restaurantId = location.state.restaurantId;
   console.log("restaurantId",restaurantId);
-  const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+  // const crmToken='8|wE3Mh4SVxwrcXeqKDcQIMZYC6RDVZ4IKGQcSTF5d937ad76e';
+  const crmToken = useSelector((state: IRootState) => state.themeConfig.crmToken);
+
   const [resList, setResList] = useState<any>([]);
   const [activityList, setActivityList] = useState<any>([]);
   const [branchList, setBranchList] = useState<any>([]);
@@ -468,7 +470,7 @@ export default function Show() {
                 </div>
                 <div className="flex gap-2 items-center overflow-x-auto">
                   {/* <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-info">Add Branch</button> */}
-                  <a href={`https://${resList.sub_domain}.onetapdine.com`} target="_blank" className="text-black dark:text-white font-extrabold text-[15px]">
+                  <a href={`https://${resList.app_name}.onetapdine.com`} target="_blank" className="text-black dark:text-white font-extrabold text-[15px]">
                     <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-primary">View Restaurants</button>
                   </a>
                   <button type="button" className="btn flex items-center gap-3 btn-sm btn-outline-danger">Delete</button>
