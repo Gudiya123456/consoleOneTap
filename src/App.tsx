@@ -1,4 +1,4 @@
-import React,{ PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from './store';
 import { toggleRTL, toggleTheme, toggleLocale, toggleMenu, toggleLayout, toggleAnimation, toggleNavbar, toggleSemidark } from './store/themeConfigSlice';
@@ -23,7 +23,7 @@ function App({ children }: PropsWithChildren) {
         <div
             className={`${(store.getState().themeConfig.sidebar && 'toggle-sidebar') || ''} ${themeConfig.menu} ${themeConfig.layout} ${
                 themeConfig.rtlClass
-            } main-section antialiased relative font-nunito text-sm  font-normal dark:bg-[#202125] bg-[#f4f4f4]`}
+            } main-section antialiased relative font-nunito text-sm font-normal`}
         >
             {children}
         </div>

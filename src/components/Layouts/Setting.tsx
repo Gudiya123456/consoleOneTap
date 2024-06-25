@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { toggleAnimation, toggleLayout, toggleMenu, toggleNavbar, toggleRTL, toggleTheme, toggleSemidark } from '../../store/themeConfigSlice';
@@ -18,7 +18,7 @@ const Setting = () => {
                     (showCustomizer && 'ltr:!right-0 rtl:!left-0') || ''
                 } bg-white fixed ltr:-right-[400px] rtl:-left-[400px] top-0 bottom-0 w-full max-w-[400px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-[right] duration-300 z-[51] dark:bg-black p-4`}
             >
-                {/* <button
+                <button
                     type="button"
                     className="bg-primary ltr:rounded-tl-full rtl:rounded-tr-full ltr:rounded-bl-full rtl:rounded-br-full absolute ltr:-left-12 rtl:-right-12 top-0 bottom-0 my-auto w-12 h-10 flex justify-center items-center text-white cursor-pointer"
                     onClick={() => setShowCustomizer(!showCustomizer)}
@@ -32,7 +32,7 @@ const Setting = () => {
                             strokeWidth="1.5"
                         ></path>
                     </svg>
-                </button> */}
+                </button>
 
                 <div className="overflow-y-auto overflow-x-hidden perfect-scrollbar h-full">
                     <div className="text-center relative pb-5">

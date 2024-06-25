@@ -6,8 +6,8 @@ import { toggleSidebar } from '../../store/themeConfigSlice';
 import Footer from './Footer';
 import Header from './Header';
 import Setting from './Setting';
-import Portals from '../../components/Portals';
 import Sidebar from './Sidebar';
+import Portals from '../../components/Portals';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -47,11 +47,12 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
     return (
         <App>
-          
+            {/* BEGIN MAIN CONTAINER */}
             <div className="relative">
-              
-                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 z-50 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
-              
+                {/* sidebar menu overlay */}
+                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 bg-[black]/60 z-50 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
+
+
                 <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-50">
                     {showTopButton && (
                         <button type="button" className="btn btn-outline-primary rounded-full p-2 animate-pulse bg-[#fafafa] dark:bg-[#060818] dark:hover:bg-primary" onClick={goToTop}>
@@ -62,23 +63,24 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     )}
                 </div>
 
-               
-                <Setting />
-               
+
 
                 <div className={`${themeConfig.navbar} main-container text-black dark:text-white-dark min-h-screen`}>
-                    <Sidebar />
-                    <div className="main-content flex flex-col min-h-screen lg:ml-[260px]">
+
+
+                    <div className="main-content flex flex-col min-h-screen">
                         <Header />
+
                         <Suspense>
-                            <div className={`${themeConfig.animation}   animate__animated`}>{children}</div>
+                            <div className={`${themeConfig.animation} p-2 animate__animated`}>{children}</div>
                         </Suspense>
+
                         <Footer />
+
                         <Portals />
                     </div>
                 </div>
 
-              
             </div>
         </App>
     );
